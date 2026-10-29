@@ -1,0 +1,31 @@
+# Common build outputs
+.gradle/
+build/
+target/
+out/
+node_modules/
+dist/
+coverage/
+.vite/
+.idea/
+*.iml
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.cer
+*.crt
+*.jks
+*.keystore
+*.secret
+*.sqlite
+*.db
+*.zip
+*.xml
+*.pdf
+*.jsonl
+# XML/PDF fixtures must be synthetic; add explicit test-specific exceptions if required.
