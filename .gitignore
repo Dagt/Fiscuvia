@@ -26,6 +26,7 @@ coverage/
 *.db
 *.zip
 *.xml
+!backend/pom.xml
 *.pdf
 *.jsonl
 # XML/PDF fixtures must be synthetic; add explicit test-specific exceptions if required.

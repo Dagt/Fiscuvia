@@ -1,6 +1,6 @@
 # Fiscuvia — mapa de documentación
 
-**Estado:** propuesta v0.2; no aprobada hasta revisión del PR de documentación. Este directorio es la base documental para Codex. Estructura y jerarquía inspiradas en el repositorio real Dagt/TrailerSaas; se han adaptado los conceptos al dominio de despachos contables en México.
+**Estado:** propuesta v0.2; PR #1 integrado, sin aceptación automática de cada documento Proposed. Este directorio es la base documental para Codex. Estructura y jerarquía inspiradas en el repositorio real Dagt/TrailerSaas; se han adaptado los conceptos al dominio de despachos contables en México.
 
 ## 1. Descubrimiento y evidencia
 - [Flujo del despacho entrevistado](discovery/accounting-firm-workflow.md): OneFacture/CONTPAQi/control administrativo según explicación facilitada; observación no validada independientemente.
@@ -62,4 +62,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Sólo planificación, documentación e issues. No hay implementación funcional. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar la imagen conceptual captura real.
+Esta rama añade el [scaffold backend #20](../backend/README.md), ejecutable y probado localmente, pendiente de revisión/merge. No implementa negocio, persistencia, identidad ni UI. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar la imagen conceptual captura real.

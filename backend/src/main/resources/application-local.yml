@@ -1,0 +1,4 @@
+# Local development only. No database, OIDC issuer or remote service is required.
+spring:
+  main:
+    lazy-initialization: false

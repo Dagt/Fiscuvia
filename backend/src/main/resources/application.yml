@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: fiscuvia-backend
+  profiles:
+    default: local
+
+server:
+  address: 127.0.0.1
+  port: 8080
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+management:
+  endpoints:
+    access:
+      default: none
+    web:
+      discovery:
+        enabled: false
+      exposure:
+        include: health
+    jmx:
+      exposure:
+        exclude: '*'
+  endpoint:
+    health:
+      access: read-only
+      show-details: never
+      show-components: never
+      probes:
+        enabled: true
