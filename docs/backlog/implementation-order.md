@@ -22,7 +22,7 @@ Paralelo: #20 scaffold Java/Spring Modulith, #21 React/Vite, #22 DB/Flyway, #52 
 
 ## Wave 4 — obligaciones y documentos (dominio central)
 Documentos #46->#47->#48 (puede iniciar tras #34/seguridad). Reglas/plantillas #38->#39->#40; representación visual #41, alertas #42. Tareas #43 y revisión #44 dependen de motor y políticas aprobadas; #45 filing y pago separados, con evidencia.
-**Gate de esquema:** OQ-001..006 deben resolverse antes de emitir Flyway dominio fiscal que fije estados/pagos.
+**Gate de esquema:** [#74](https://github.com/Dagt/Fiscuvia/issues/74) debe revisarse/aprobarse y OQ-001..006 deben resolverse antes de emitir Flyway de dominio fiscal que fije estados/pagos.
 **Exit:** un mes de obligaciones generadas, revisadas, con acuse, pago separado, auditable, sin afirmación SAT falsa.
 
 ## Wave 5 — honorarios, panel y reportes
