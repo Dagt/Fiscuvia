@@ -1,6 +1,6 @@
 # Backlog de implementación Fiscuvia
 
-**Estado:** Proposed · **Tracking issue:** por vincular en GitHub antes de aprobación · **Código base:** aún no existe aplicación. El backlog incorpora metodología real de TrailerSaaS: épica (resultado) -> issue acotado (PR) -> criterios de aceptación -> pruebas -> revisión humana -> merge.
+**Estado:** Proposed · **Tracking issue:** [#73 — Fiscuvia MVP](https://github.com/Dagt/Fiscuvia/issues/73) · **Código base:** aún no existe aplicación. El backlog incorpora metodología real de TrailerSaaS: épica (resultado) -> issue acotado (PR) -> criterios de aceptación -> pruebas -> revisión humana -> merge.
 
 ## Épicas y tareas
 | Épica | Issues hijos | Resultado | Gate |
@@ -21,6 +21,10 @@
 | [#15 E13 SAT](https://github.com/Dagt/Fiscuvia/issues/15) | #65–67 | conectividad oficial y jobs | Future con ADR |
 | [#16 E14 Bancos](https://github.com/Dagt/Fiscuvia/issues/16) | #68–69 | conciliación asistida | Future |
 | [#17 E15 Operación](https://github.com/Dagt/Fiscuvia/issues/17) | #70–72 | backup/staging/UAT y lanzamiento | G5–6 |
+
+## Gate documental adicional
+
+- [#74 — Revisar esquema fiscal v0.1 antes de las primeras migraciones definitivas de obligaciones](https://github.com/Dagt/Fiscuvia/issues/74). El gate no bloquea scaffolds, pero sí la fijación de estados/datos fiscales sin aprobación de OQ-001..006.
 
 ## Contratos de ejecución
 - [Orden y oleadas](implementation-order.md)
