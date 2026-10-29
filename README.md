@@ -1,30 +1,30 @@
 # Fiscuvia
+
 **Todo tu despacho, una sola vía.**
 
-Plataforma SaaS B2B para la operación de despachos contables en México. Centraliza contribuyentes, obligaciones, expedientes, colaboración, honorarios, alertas y reportes; posteriormente incorporará CFDI, conectividad SAT y conciliación asistida.
+SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado**: especificación y planificación. No hay producto ejecutable ni integración SAT implementada. No utilizar datos fiscales reales hasta superar las puertas de seguridad y cumplimiento.
+> **Estado al 2026-10-29:** etapa documental. No existe aplicación funcional ni integración SAT. La documentación es Proposed mientras no sea aceptada mediante revisión explícita. El PR #1 sigue Draft y sin merge.
 
-## Leer antes de desarrollar
-1. [AGENTS.md](AGENTS.md): contrato operativo para Codex; PRs sin merge autónomo.
-2. [Visión y posicionamiento](docs/product/VISION.md), [PRD](docs/product/PRD.md), [alcance del MVP](docs/product/MVP.md).
-3. [Arquitectura](docs/architecture/SYSTEM.md), [modelo de datos](docs/architecture/DATA-MODEL.md) y [seguridad](docs/security/SECURITY-BASELINE.md).
-4. [Sistema de diseño](docs/ux/DESIGN-SYSTEM.md), [pantallas](docs/ux/SCREENS.md), [criterios visuales](docs/ux/VISUAL-ACCEPTANCE.md).
-5. [Épicas y dependencias](docs/delivery/EPICS.md), [roadmap](docs/delivery/ROADMAP.md), [Definition of Done](docs/delivery/DEFINITION-OF-DONE.md).
-6. [Política fiscal y de integraciones](docs/integrations/SAT-CFDI.md).
-7. [Proceso de contribución](CONTRIBUTING.md) y [gestión de riesgos](docs/delivery/RISKS.md).
+## Para Codex y desarrolladores
+1. [AGENTS.md](AGENTS.md): reglas obligatorias, documentación fuente de verdad y PR Draft sin merge.
+2. [Mapa completo de documentación](docs/README.md): descubrimiento, producto, dominio, estados, datos, contratos, ADR, UX y backlog.
+3. [Catálogo FR-###](docs/product/requirements-catalog.md), [BR-###](docs/product/business-rules-catalog.md), [NFR-###](docs/architecture/non-functional-requirements.md), [OQ-###](docs/product/open-questions.md).
+4. [MVP](docs/product/MVP.md) y [modelo de dominio](docs/domain/domain-model.md).
+5. [Decisiones ADR-###](docs/decisions/README.md), [esquema PostgreSQL v0.1](docs/data-model/schema-v0.1.md), [API](docs/api/README.md).
+6. [Sistema visual](docs/ux/DESIGN-SYSTEM.md), [pantallas](docs/ux/screen-inventory.md) y [criterios obligatorios](docs/ux/VISUAL-ACCEPTANCE.md).
+7. [Backlog](docs/backlog/README.md), [oleadas](docs/backlog/implementation-order.md), [protocolo Codex](docs/backlog/codex-workflow.md), [DoD](docs/delivery/DEFINITION-OF-DONE.md).
 
-## Decisiones vigentes
-- Java 25 LTS (previa validación de compatibilidad; Java 21 LTS como alternativa), Spring Boot estable compatible, monolito modular con Spring Modulith.
-- React + TypeScript + Vite, Tailwind, shadcn/ui, TanStack Query/Table, RHF y Zod.
-- PostgreSQL con aislamiento multitenant y RLS; almacenamiento de archivos privado tipo S3/R2.
-- Arquitectura API-first, pruebas automatizadas y trazabilidad; sin microservicios prematuros.
-- MVP: gestión y control administrativo; **no** motor de cálculo de impuestos, contabilidad general, scraping SAT ni custodia de e.firma.
-- Cada cambio mediante issue -> rama -> PR draft/revisión -> aprobación humana -> merge humano.
+## GitHub
+- [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — **Draft**, espera aprobación humana.
+- [Issue #73 — seguimiento MVP](https://github.com/Dagt/Fiscuvia/issues/73) — épicas, dependencias y gates.
+- [Issue #74 — revisión del modelo fiscal/esquema antes de migraciones](https://github.com/Dagt/Fiscuvia/issues/74).
 
-## Convenciones
-- Texto de producto/UX: español de México. Identificadores técnicos/código: inglés consistente.
-- No almacenar contraseñas, .key/.cer, tokens, RFC reales, XML reales, datos personales ni secretos en Git.
-- La imagen conceptual aprobada en conversación es una referencia de dirección de arte; las pantallas implementadas deben demostrarse mediante capturas de la app real.
+## Decisiones de dirección vigentes
+Nombre Fiscuvia, eslogan y SaaS multi-tenant con Java/Spring Boot + React/TS/PostgreSQL. Versión exacta de frameworks, proveedor OIDC, reglas fiscales y precios permanecen Proposed o Open hasta pruebas/validación.
 
-Marca y dominio: sujeto a validación legal/registral; el nombre seleccionado para trabajar es Fiscuvia.
+## Calidad UX
+La referencia aprobada es una composición conceptual de seis pantallas, con sidebar navy, acento teal y estilo limpio/premium. Todavía debe incorporarse su imagen fuente al repositorio. Cada PR frontend necesitará screenshots **reales**, accesibilidad y revisión comparativa; no se acepta un frontend genérico.
+
+## Seguridad
+Datos sintéticos hasta gates de privacidad/seguridad. No subir llaves e.firma, contraseñas SAT, RFC/CFDI reales, tokens ni información fiscal de clientes. No afirmar certificación SAT ni estados oficiales sin fuente.
