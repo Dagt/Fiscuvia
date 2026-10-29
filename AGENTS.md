@@ -1,31 +1,51 @@
-# Instructions for Codex — Fiscuvia
+# AGENTS.md — Fiscuvia
 
-## Mission and authority
-Build **Fiscuvia — Todo tu despacho, una sola vía**, a trustworthy, elegant SaaS for Mexican accounting practices. This document is binding for repository contributors and agents. Never infer implementation completion from a mockup, issue title, or unmerged PR. Source of truth: `docs/product/PRD.md`, `docs/product/MVP.md`, architecture ADRs and the explicitly assigned GitHub issue. Conflicts or ambiguity: document and request review rather than invent fiscal rules.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado del repositorio:** definición y backlog; implementación no iniciada.
 
-## Operating protocol (MANDATORY)
-1. Read relevant docs and current repository before edits; cite assigned issue and scope.
-2. One focused issue/vertical slice per branch, named `issue-<number>-<slug>`; no unrelated refactoring.
-3. Create a **Draft PR**; **do not merge**, close issues as completed, delete branches, change production infrastructure, deploy, or commit credentials without explicit user approval.
-4. Present changed files, architecture implications, data migrations, screenshots, tests run, known limitations and next steps. Don't claim CI is green if remote CI unavailable; run and report local verification.
-5. Do not silently relax tests, suppress failures, disable RLS/auth, bypass input validation, or substitute in-memory tests for required PostgreSQL/Testcontainers tests.
-6. Make minimal, reviewable commits; no fake integrations, mocked production credentials or unrequested scaffolding masquerading as shipped functionality.
+## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
+Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.
 
-## Boundaries
-- Backend modular monolith; modules own their models, services and migrations, communicate via published interfaces/events.
-- Secure tenant isolation at every entry point including background jobs, exports, search, file objects and logs.
-- RFC/customer belongs to a tenant; never equate a taxpayer with a tenant.
-- Respect domain states, evidence and approval rules; a checkbox does not prove SAT submission/payment.
-- No plaintext SAT secrets; integration and key custody require ADR and threat model first.
-- Never fetch legal/administrative data via unauthorized browser automation. Prefer official/documented integrations.
-- No real PII or customer XML in tests, screenshots, logs or fixtures.
-- Avoid adding heavy infra (Kafka/K8s/microservices) before measurable need.
+### Lectura previa obligatoria
+1. `README.md` y `docs/README.md`.
+2. `docs/discovery/evidence-matrix.md` si se interpreta una necesidad real.
+3. `docs/product/MVP.md` + `docs/product/requirements-catalog.md` + `docs/product/business-rules-catalog.md` + `docs/product/open-questions.md`.
+4. `docs/product/actors-and-permissions.md` y `docs/security/permission-capabilities.md`.
+5. ADR relevantes en `docs/decisions/` (estados Proposed no son autorizaciones).
+6. Flujos `docs/workflows/` y máquinas `docs/state-machines/`.
+7. `docs/data-model/schema-v0.1.md` y `docs/api/`.
+8. `docs/ux/README.md`, `DESIGN-SYSTEM.md`, `screen-inventory.md`, `VISUAL-ACCEPTANCE.md` para toda UI.
+9. `docs/backlog/implementation-order.md`, `docs/backlog/codex-workflow.md` y la issue exacta.
+10. `docs/delivery/DEFINITION-OF-DONE.md` y pruebas afectadas.
 
-## UX is a release requirement
-Read `docs/ux/DESIGN-SYSTEM.md`, `SCREENS.md`, `VISUAL-ACCEPTANCE.md` before any UI task. Build Fiscuvia branded components, responsive layouts, realistic Mexican fiscal workflows and intentionally designed empty/loading/error states. No generic bare CRUD screens or default scaffold. Add real browser screenshots (desktop 1440px and mobile 390px where applicable) to each frontend PR; compare explicitly against target specifications. Record deviations and obtain human review. A generated image is NOT screenshot evidence.
+### Orden de autoridad documental
+Una vez explícitamente aprobados: **Accepted ADR > FR/BR/NFR aprobados > estados/workflows aprobados > MVP aprobado > descubrimiento verificado > hipótesis**. Propuestas no pueden considerarse aceptadas por estar en GitHub o en un PR abierto. Si hay conflicto, crear/actualizar OQ y pedir revisión; no decidir silenciosamente.
 
-## Definition of done
-Read `docs/delivery/DEFINITION-OF-DONE.md`; every feature includes access control, audit, tenant tests, validation, accessibility, docs, error handling, seed data, observability and relevant E2E evidence. API contract changes require synchronization with frontend and tests.
+### Límites de producto
+- Tenant = despacho; taxpayer = contribuyente de ese despacho. RFC es identificador comercial, no primary key ni frontera de autorización.
+- Este producto NO sustituye CONTPAQi Contabilidad en MVP; enfocado a gestión de despacho, obligaciones, expedientes, honorarios y equipo. CFDI y SAT por fases; no implementar extracción SAT en MVP sin aprobación.
+- Presentación de declaración, evidencia de aceptación oficial, pago fiscal y honorarios del despacho son conceptos independientes.
+- Reglas fiscales/plazos deben provenir de expertos y documentación vigente, nunca una heurística inventada.
+- Nada de astrología, música, noticias genéricas, contabilidad por pólizas o facturación PAC propia en MVP.
 
-## Document-first first PR
-The first implementation PR must create runnable skeleton and architecture tests **only after** this documentation PR is approved and merged.
+### Arquitectura y seguridad
+- Java 25 LTS / Java 21 fallback previa prueba, Spring Boot compatible, Spring Modulith, React/TS/Vite, PostgreSQL/Flyway/RLS y object storage privado.
+- Monolito modular y transacciones; separar identidad, clientes, obligaciones, revisión, documentos, honorarios, jobs, audit; no agregar K8s/microservicios/colas externas sin ADR.
+- Usuarios verificados con OIDC, roles/capacidades/expedientes en backend, RLS con tenant context transaccional, tests de fuga entre dos despachos.
+- Nunca almacenar contraseñas SAT, llaves e.firma .key/.cer, datos reales RFC/CFDI, backups, tokens ni secretos en Git, logs, frontend o screenshots.
+- No implementar custodia de firma SAT hasta ADR-009, consentimiento/autorización, legal y threat model aprobados.
+- API comando/evento explícito para estados, expectedVersion, idempotencia y auditoría; no PATCH libre de status.
+- **Gate de diseño #74:** no generar migraciones definitivas del dominio fiscal antes de revisar OQ y esquema.
+
+### Requisito visual igual de importante que funcionalidad
+Conservar **identidad Fiscuvia navy/teal**, no replicar UI Fleet Simple de TrailerSaaS. Diseñar componentes y app shell antes que pantallas CRUD. Capturas **reales de la app ejecutándose**, al menos 1440×900 y 390×844 más estados vacíos/error, comparación con referencia aprobada y revisión de accesibilidad. Una imagen de IA NO es evidencia de UI implementada. No aceptar frontend genérico por ser funcional.
+
+### Protocolo GitHub
+1. Verificar prerequisitos, issue y latest main; rama `issue-N-descriptive-slug`.
+2. Una issue hija por PR; implementación/test/docs/UX dentro de ese alcance.
+3. Ejecutar checks locales y documentar comandos y SHA. Si CI no corre por billing, estado `REMOTE CI NOT VERIFIED`; nunca decir verde.
+4. PR **Draft** con `Refs #N`, FR/BR/NFR/ADR, tests, migraciones, capturas reales, riesgos y faltantes.
+5. **NO MERGE**, no desplegar, no cerrar issues manualmente ni marcar Ready sin indicación del owner.
+6. No desactivar tests/RLS/auth ni añadir datos reales en fixtures. El owner decide cuándo mergear.
+
+### Fuente del backlog
+Tracker #73, épicas #2–17, hijos #18–72, gate documental #74. El backlog/requisitos son trazables en `docs/backlog/`. Los números indican planificación, no avance ya entregado.
