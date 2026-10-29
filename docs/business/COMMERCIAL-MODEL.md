@@ -1,0 +1,4 @@
+# Modelo comercial (hipótesis)
+SaaS multi-tenant para independientes y despachos pequeños/medianos. Suscripción basada en usuarios, RFC, almacenamiento y capacidad de jobs; cuotas transparentes, exportación de datos y política de cancelación. La administración de suscripciones puede ser manual durante piloto; automatizar cobro e impuestos propios sólo después de elección de proveedor y asesoría contable/legal.
+Precios debatidos anteriormente ($399/$899/$1,799 MXN/mes) son **hipótesis**, no tarifas aprobadas. Validar con 5–10 entrevistas, piloto con 2–3 despachos, costo por tenant y comparación de mercado actual.
+No decir que tenemos aval SAT, certificados oficiales, resultados financieros garantizados ni testimonios ficticios. Medir activación, recurrencia, tiempo de trabajo, cancelaciones, soporte y margen de infraestructura.

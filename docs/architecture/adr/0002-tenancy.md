@@ -1,0 +1,2 @@
+# ADR-0002: PostgreSQL compartido con RLS
+**Estado: propuesto, sujeto a prueba.** Tablas compartidas con tenant_id, RLS, FK compuestas, autorización en API, contexto tenant verificado y SET LOCAL por transacción. Alternativas DB por despacho (más aislamiento pero mayor costo operativo) y schema por despacho (migraciones complejas). Condición de aprobación: pruebas negativas con dos despachos y conexiones pool, exportaciones, archivos y jobs; si falla, revisar diseño antes del piloto. Instalaciones dedicadas futuras desde el mismo código.

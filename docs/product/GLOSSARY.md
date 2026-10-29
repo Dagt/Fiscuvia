@@ -1,0 +1,19 @@
+# Shared glossary (ES-MX / technical)
+- **Despacho / Firm / Tenant:** organization subscribing to Fiscuvia.
+- **Contribuyente / Taxpayer:** individual/legal entity serviced by the firm; not a tenant.
+- **RFC:** Registro Federal de Contribuyentes.
+- **CSF:** Constancia de Situación Fiscal; content may change.
+- **e.firma:** SAT digital signature certificate/private key; sensitive identity assets.
+- **CSD:** Certificado de Sello Digital; credential for CFDI sealing.
+- **CFDI:** Comprobante Fiscal Digital por Internet (XML with UUID; statuses require appropriate verification).
+- **UUID / Folio fiscal:** unique CFDI identifier.
+- **Obligación:** configured compliance responsibility for taxpayer and applicable period.
+- **Presentado:** user recorded presentation with provenance; not SAT confirmation unless validated separately.
+- **Pagado:** tax payment evidenced/reconciled; separate from a filed declaration.
+- **Acuse:** receipt/document attached as evidence, authenticity may require validation.
+- **Honorarios:** money owed by contributor to firm; separate from government taxes.
+- **Expediente:** authorized document collection for taxpayer.
+- **RLS:** PostgreSQL Row-Level Security, defense in depth against cross-tenant queries.
+- **OIDC:** OpenID Connect, identity integration.
+- **PWA:** progressive web app.
+- **MVP:** initial limited-scope product subject to security and pilot gates.

@@ -1,0 +1,2 @@
+# ADR-0003: e.firma y SAT
+**Estado: diferido, decisión pendiente.** MVP no custodia .key/.cer ni contraseñas de e.firma y no ejecuta descargas SAT. Sólo registra vencimiento de certificados como metadato. Futuro: evaluar agente local que firme con llave del despacho vs bóveda cifrada respaldada por KMS/HSM. Requiere threat model, asesoría legal, consentimiento y autorización del contribuyente, verificación de contrato oficial vigente, revocación, auditoría, eliminación y evaluación de riesgos. No almacenar secretos en browser, repositorio ni logs; no scraping indebido.

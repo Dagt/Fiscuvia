@@ -1,0 +1,131 @@
+openapi: 3.1.0
+info:
+  title: Fiscuvia API — preliminary, incomplete draft
+  version: 0.1.0-proposed
+  description: >
+    Esqueleto documental propuesto. No representa endpoints implementados
+    ni contrato final: cada issue completa request/response y tests.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /me:
+    get:
+      operationId: getCurrentIdentity
+      summary: Consultar identidad del usuario autenticado
+      tags: [Identity]
+      responses:
+        '200':
+          description: Usuario autenticado, tenant memberships comprobadas por servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /tenants/{tenantId}/taxpayers:
+    parameters:
+      - $ref: '#/components/parameters/TenantId'
+    get:
+      operationId: listTaxpayers
+      summary: Listado tenant-scoped y autorizado por cartera
+      tags: [Taxpayers]
+      parameters:
+        - name: page
+          in: query
+          schema: {type: integer, minimum: 0, default: 0}
+        - name: size
+          in: query
+          schema: {type: integer, minimum: 1, maximum: 100, default: 20}
+      responses:
+        '200':
+          description: Página de contribuyentes visibles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxpayerPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      operationId: createTaxpayer
+      summary: Registrar contribuyente en el despacho autorizado
+      tags: [Taxpayers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaxpayer'
+      responses:
+        '201':
+          description: Contribuyente creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxpayer'
+        '422':
+          $ref: '#/components/responses/Validation'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: OIDC
+  parameters:
+    TenantId:
+      name: tenantId
+      in: path
+      required: true
+      description: Contexto solicitado; backend siempre valida membresía, rol, cartera y RLS.
+      schema: {type: string, format: uuid}
+  schemas:
+    CurrentUser:
+      type: object
+      required: [id]
+      properties:
+        id: {type: string, format: uuid}
+        displayName: {type: string}
+        memberships:
+          type: array
+          items:
+            type: object
+            properties:
+              tenantId: {type: string, format: uuid}
+              tenantName: {type: string}
+    CreateTaxpayer:
+      type: object
+      required: [rfc, legalName, personType]
+      additionalProperties: false
+      properties:
+        rfc: {type: string, description: "Formato RFC, no validación oficial SAT"}
+        legalName: {type: string, minLength: 1}
+        personType: {type: string, enum: [INDIVIDUAL, LEGAL_ENTITY]}
+    Taxpayer:
+      allOf:
+        - $ref: '#/components/schemas/CreateTaxpayer'
+        - type: object
+          required: [id, version, status]
+          properties:
+            id: {type: string, format: uuid}
+            version: {type: integer, format: int64}
+            status: {type: string, enum: [ACTIVE, INACTIVE, ARCHIVED]}
+    TaxpayerPage:
+      type: object
+      required: [items, page, size]
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/Taxpayer'}
+        page: {type: integer}
+        size: {type: integer}
+        total: {type: integer}
+  responses:
+    Unauthorized:
+      description: Autenticación requerida
+    Forbidden:
+      description: Usuario no autorizado
+    Validation:
+      description: Validación de datos/dominio fallida

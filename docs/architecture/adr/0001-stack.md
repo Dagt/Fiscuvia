@@ -1,0 +1,2 @@
+# ADR-0001: Stack y monolito modular
+**Estado: propuesto para aprobación.** Elegir Java 25 LTS (fallback Java 21), Spring Boot compatible, Spring Modulith, PostgreSQL/Flyway, React/TS/Vite, Tailwind/shadcn, R2/S3 y OIDC. Motivos: continuidad técnica, XML/SOAP/criptografía, transacciones, seguridad y modularidad. Alternativas Node.js y ASP.NET Core válidas, pero menos continuidad de trabajo. Microservicios descartados hasta necesidad demostrada. Primer issue debe confirmar matriz de compatibilidad y reproducibilidad antes de fijar números finales.

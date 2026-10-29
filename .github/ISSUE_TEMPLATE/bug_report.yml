@@ -1,0 +1,24 @@
+name: Bug report
+description: Reproducible product defect (use synthetic data)
+title: "[Bug] "
+labels: []
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Do not include real fiscal or personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Safe logs, screenshots, version and environment
+    validations:
+      required: true
