@@ -4,7 +4,21 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-29:** etapa documental. No existe aplicación funcional ni integración SAT. La documentación es Proposed mientras no sea aceptada mediante revisión explícita. El PR #1 sigue Draft y sin merge.
+> **Estado al 2026-10-29:** PR #1 integrado. Esta rama incorpora el scaffold backend de #20, ejecutable localmente y pendiente de revisión/merge. No hay funcionalidades de negocio ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+
+## Backend local — issue #20
+
+Requiere JDK 25. Maven se descarga mediante el wrapper; no requiere base de datos, Docker ni proveedor OIDC.
+
+```powershell
+cd backend
+.\mvnw.cmd -B -ntp clean verify
+.\mvnw.cmd spring-boot:run
+```
+
+En POSIX: `./mvnw -B -ntp clean verify` y `./mvnw spring-boot:run`.
+Salud: `http://127.0.0.1:8080/actuator/health`. La aplicación escucha en loopback y sólo admite perfiles local/test en este scaffold.
+Consulta [backend/README.md](backend/README.md) para versiones, límites modulares, configuración, pruebas y pendientes. La base de datos/Flyway/Docker corresponde a #22; CI a #23; seguridad a #26–30. No hay endpoints de negocio habilitados.
 
 ## Para Codex y desarrolladores
 1. [AGENTS.md](AGENTS.md): reglas obligatorias, documentación fuente de verdad y PR Draft sin merge.
@@ -16,12 +30,12 @@ SaaS B2B para la gestión operativa de despachos contables en México: contribuy
 7. [Backlog](docs/backlog/README.md), [oleadas](docs/backlog/implementation-order.md), [protocolo Codex](docs/backlog/codex-workflow.md), [DoD](docs/delivery/DEFINITION-OF-DONE.md).
 
 ## GitHub
-- [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — **Draft**, espera aprobación humana.
+- [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — integrado en `ce561482fda7889b005deaad3d822395b89a82df`.
 - [Issue #73 — seguimiento MVP](https://github.com/Dagt/Fiscuvia/issues/73) — épicas, dependencias y gates.
 - [Issue #74 — revisión del modelo fiscal/esquema antes de migraciones](https://github.com/Dagt/Fiscuvia/issues/74).
 
 ## Decisiones de dirección vigentes
-Nombre Fiscuvia, eslogan y SaaS multi-tenant con Java/Spring Boot + React/TS/PostgreSQL. Versión exacta de frameworks, proveedor OIDC, reglas fiscales y precios permanecen Proposed o Open hasta pruebas/validación.
+Nombre Fiscuvia, eslogan y SaaS multi-tenant con Java/Spring Boot + React/TS/PostgreSQL. Las versiones comprobadas del scaffold se documentan en `backend/README.md`; no implican aceptación global de ADR. Proveedor OIDC, reglas fiscales y precios permanecen Proposed o Open hasta validación.
 
 ## Calidad UX
 La referencia aprobada es una composición conceptual de seis pantallas, con sidebar navy, acento teal y estilo limpio/premium. Todavía debe incorporarse su imagen fuente al repositorio. Cada PR frontend necesitará screenshots **reales**, accesibilidad y revisión comparativa; no se acepta un frontend genérico.

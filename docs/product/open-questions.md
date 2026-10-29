@@ -32,3 +32,9 @@
 
 ## Política de decisión
 No bloquear desarrollo de scaffold por preguntas comerciales no críticas, pero no implementar reglas fiscales/estados irreversibles si OQ de dominio es blocking. Marcar cambio de estatus **Resolved** sólo tras validación explícita con fecha, dueño y referencias.
+
+## Evidencia técnica parcial de OQ-022 — issue #20, 2026-10-29
+
+El propietario autorizó explícitamente en la conversación de #20 usar Spring Boot 4.1.2, Spring Modulith 2.1.2 y JUnit 6/Jupiter, sustituyendo la petición inicial de JUnit 5. Spring Boot 3.5.16 pasó 26 pruebas exploratorias en Java 25.0.3, pero es la [última versión con soporte OSS de la línea 3.5](https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/). La base final y sus pruebas se registran en [backend/README.md](../../backend/README.md).
+
+Esta autorización técnica se limita al scaffold #20; no convierte los ADR Proposed en Accepted. OQ-022 sigue Open para validar las futuras bibliotecas y el repositorio de identidades; OQ-014 y las preguntas fiscales permanecen abiertas.

@@ -1,6 +1,6 @@
 # AGENTS.md — Fiscuvia
 
-**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado del repositorio:** definición y backlog; implementación no iniciada.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** documentación fundacional integrada; scaffold backend #20 local/test en revisión, sin funcionalidad de negocio.
 
 ## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
 Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.
