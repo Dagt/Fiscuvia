@@ -4,7 +4,18 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-29:** PR #1 integrado. Esta rama incorpora el scaffold backend de #20, ejecutable localmente y pendiente de revisión/merge. No hay funcionalidades de negocio ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-29:** documentación y backend #20 integrados (PR #75, squash `1d0590a`). Esta rama incorpora el scaffold web #21, pendiente de revisión/merge. No hay funcionalidades de negocio, autenticación ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+
+## Web local — issue #21
+
+Node 24.13.1 / npm 11.8.0. Desde `web/`:
+
+```powershell
+npm ci
+npm run dev
+```
+
+Bienvenida y estados demostrativos con identidad Fiscuvia, navegación responsive y áreas futuras deshabilitadas. No requiere backend, variables de entorno ni datos de clientes. Consulta [web/README.md](web/README.md) para arquitectura, versiones y comandos de validación; [capturas y evidencia real](docs/ux/evidence/issue-21/README.md). #52 y #56 conservan sus alcances independientes.
 
 ## Backend local — issue #20
 
@@ -31,6 +42,7 @@ Consulta [backend/README.md](backend/README.md) para versiones, límites modular
 
 ## GitHub
 - [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — integrado en `ce561482fda7889b005deaad3d822395b89a82df`.
+- [PR #75 — scaffold backend #20](https://github.com/Dagt/Fiscuvia/pull/75) — integrado mediante squash en `1d0590a`.
 - [Issue #73 — seguimiento MVP](https://github.com/Dagt/Fiscuvia/issues/73) — épicas, dependencias y gates.
 - [Issue #74 — revisión del modelo fiscal/esquema antes de migraciones](https://github.com/Dagt/Fiscuvia/issues/74).
 

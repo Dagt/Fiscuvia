@@ -1,0 +1,26 @@
+:root {
+  --navy: #0c1d31;
+  --navy-hover: #18344f;
+  --primary: #087e80;
+  --primary-hover: #07696b;
+  --selected: #0d9997;
+  --teal-light: #e9f6f4;
+  --canvas: #f5f8fb;
+  --surface: #ffffff;
+  --line: #dce5ed;
+  --ink: #15283b;
+  /* Darkened from proposed #667A8F for small text on the pale canvas. */
+  --muted: #536b80;
+  --danger: #a43535;
+  --danger-light: #fff0ee;
+  --radius: 12px;
+  --font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-background: var(--canvas);
+  --color-foreground: var(--ink);
+  --color-border: var(--line);
+  --font-sans: var(--font-family);
+}

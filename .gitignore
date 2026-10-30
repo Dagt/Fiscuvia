@@ -7,6 +7,8 @@ node_modules/
 dist/
 coverage/
 .vite/
+/web/test-results/
+/web/playwright-report/
 .idea/
 *.iml
 .DS_Store
