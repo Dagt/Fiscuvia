@@ -1,6 +1,14 @@
 # Fiscuvia web — scaffold #21
 
-Aplicación navegable de desarrollo con identidad Fiscuvia. No es un dashboard operativo: no contiene clientes, métricas fiscales, sesión, autorización ni conexión API. El backend de #20 permanece intacto.
+## Cliente API #24 (para revisión)
+
+Transporte headless tipado/validado para GET /api/v1/public/info; la UI no hace solicitudes nuevas ni cambia estilos. [Cliente y configuración](src/shared/api/README.md), [contrato implementado](../docs/api/openapi-v1.yaml). `VITE_API_BASE_URL` opcional, default /api/v1, ejemplo sin secretos; Vite dev proxy al backend local. No tokens/cookies/localStorage, reintentos automáticos ni autenticación ficticia. Preview necesita mismo origen/gateway o configuración CORS futura autorizada.
+
+Tipos/metadatos se regeneran desde la raíz con `npm run generate:api --prefix tools/ci`; `npm run openapi --prefix tools/ci` exige coincidencia exacta. Web conserva sus 13 tests UI y añade 8 de cliente (**21 Vitest**), además de 13 Playwright. Sin cambios visuales: no se añaden capturas ni baselines #56.
+
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** Presupuesto $0, pruebas locales completas, sin modificar la política de workflows.
+
+Aplicación navegable de desarrollo con identidad Fiscuvia. No es un dashboard operativo: no contiene clientes, métricas fiscales, sesión ni autorización. El cliente público #24 es headless; las pantallas no consultan APIs de negocio.
 
 ## Instalación y comandos
 
@@ -112,6 +120,6 @@ Resultados, capturas y revisión visual: [evidencia #21](../docs/ux/evidence/iss
 
 ## CI #23
 
-`Web CI` ejecuta todos los comandos anteriores en Ubuntu 24.04 con Node de `.nvmrc` y npm 11.8.0. Instala Chromium con `npx --no-install playwright install --with-deps chromium`, respetando Playwright 1.64.1 del lockfile; ejecuta los cinco proyectos, sin reintentos ni exclusiones Draft. Exige al menos 13 Vitest y 13 Playwright, cero omitidos/fallidos/flaky. Se cachean descargas npm, sin reutilizar node_modules/build.
+`Web CI` define todos los comandos anteriores en Ubuntu 24.04 con Node de `.nvmrc` y npm 11.8.0. Instala Chromium con `npx --no-install playwright install --with-deps chromium`, respetando Playwright 1.64.1 del lockfile; conserva cinco proyectos sin reintentos ni exclusiones Draft. Desde #24 exige 21 Vitest y 13 Playwright, cero omitidos/fallidos/flaky. Cache de descargas npm, sin reutilizar node_modules/build. Ejecución remota pendiente #79.
 
 Los JSON temporales se escriben en `../.ci-work/`; sólo se publica un resumen depurado. Capturas regeneradas, HTML, trazas y logs quedan locales al runner y no se suben automáticamente. Las capturas de #21 conservan su condición de evidencia histórica; #56 no se implementa aquí. Ver [guía CI](../docs/delivery/CI.md).

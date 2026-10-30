@@ -29,6 +29,7 @@
 - [Convenciones HTTP](api/conventions.md)
 - [Catálogo de endpoints](api/endpoint-catalog.md)
 - [OpenAPI mínimo propuesto](api/openapi-v1-draft.yaml), explícitamente INCOMPLETO.
+- [OpenAPI implementado #24](api/openapi-v1.yaml), [infraestructura/cliente/validación](api/foundation-24.md).
 - [Conector CFDI/SAT y fases](integrations/SAT-CFDI.md)
 
 ## 6. UX y diseño
@@ -64,4 +65,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Backend #20, [web #21](../web/README.md) e [infraestructura PostgreSQL/Flyway #22](../infra/README.md) están integrados mediante PR #75–77, con [evidencia #22](../backend/VALIDATION-22.md). Esta rama prepara [CI #23](delivery/CI.md) para revisión. Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes en sus alcances. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar una imagen conceptual captura real.
+Base #20–23 integrada mediante PR #75–78. Esta rama prepara [API #24](api/foundation-24.md) para revisión. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.

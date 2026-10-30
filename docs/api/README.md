@@ -1,18 +1,35 @@
-# Contratos de API Fiscuvia — propuesta v0.1
+# Contratos API — Fiscuvia
 
-**Estado:** Proposed, no implementado. El contrato de la API se define antes de codificar endpoints; las rutas futuras no implican implementación.
+[openapi-v1.yaml](openapi-v1.yaml) es la fuente del contrato **implementado en #24 para revisión**, OpenAPI 3.1 / versión 1.0.0. Sólo contiene `GET /api/v1/public/info`: nombre, eslogan y versión del contrato, sin consultar datos fiscales ni identidad. Health/Actuator conserva su superficie mínima independiente.
 
-1. [Convenciones REST, autorización, errores y concurrencia](conventions.md)
-2. [Catálogo de endpoints por módulo](endpoint-catalog.md)
-3. [Esqueleto OpenAPI de arranque](openapi-v1-draft.yaml) — intencionalmente parcial, NO especificación final de todas las rutas.
-4. [Datos y constraints](../data-model/schema-v0.1.md)
-5. [Máquinas de estados](../state-machines/README.md)
+- [Convenciones y ejemplos seguros](conventions.md).
+- [Catálogo: implementado / propuesto / futuro](endpoint-catalog.md).
+- [Borrador de negocio](openapi-v1-draft.yaml): **propuesto, no implementado**, no genera tipos del cliente.
+- [Arquitectura API](../architecture/API.md), [datos propuestos](../data-model/schema-v0.1.md), [estados propuestos](../state-machines/README.md).
 
-## Reglas
-- `/api/v1/tenants/{tenantId}/...` expresa tenant **solicitado**, nunca prueba de autorización. Backend comprueba membresía activa, capacidad, expediente/alcance y estado. RLS detrás.
-- `GET /api/v1/me` retorna identidad propia, no roles falsamente confiables desde JWT.
-- Commands explícitos para las transiciones; PATCH de metadata no permite editar estados controlados.
-- Actualizaciones mutables con `expectedVersion`, conflicto HTTP 409.
-- Errores de entrada HTTP 400/422 según contrato, autenticación 401, permisos 403/404 según política; no revelar existencia cross-tenant.
-- Jobs largos entregan 202 + estado consultable, no resultados ficticios.
-- XML/PDF original fuera de JSON; object storage privado, flujo inicialización/finalización.
+Hay validación servidor, RFC 9457, correlación y primitivas de paginación/versión/clave de idempotencia. Sus códigos 401/403/409/422/429 se prueban mediante controladores exclusivos del classpath de tests; no representan autenticación, reglas de dominio ni rate limiting operativos. `/api/v1/me` sigue en 404. ADR-014 conserva Proposed; #74 y #26–30 siguen vigentes.
+
+## Generación y verificación
+
+Desde la raíz, Node 24.13.1 / npm 11.8.0:
+
+```sh
+npm ci --prefix tools/ci --ignore-scripts
+npm run generate:api --prefix tools/ci
+npm run openapi --prefix tools/ci
+npm test --prefix tools/ci
+```
+
+`openapi` valida ambos documentos con Redocly y comprueba la generación determinista de `web/src/shared/api/schema.d.ts` y `contract-metadata.ts`. openapi-typescript 7.13.0 genera tipos; Prettier 3.9.10 aplica el estilo web. AJV 8.20.0 / ajv-formats 3.0.1 valida JSON Schema 2020-12 y formatos, con strict activo; sólo registra la anotación OpenAPI `example` como anotación. No se descargan refs externas ni se envían contratos a servicios de análisis.
+
+Después de `backend/mvnw -f backend/pom.xml -B -ntp clean verify` (Windows: `backend/mvnw.cmd`):
+
+```sh
+node tools/ci/contracts.mjs --responses backend/target/contract-responses.json
+```
+
+JUnit realiza HTTP real con Spring Boot/PostgreSQL Testcontainers y escribe respuestas sintéticas seguras. AJV exige todos los códigos, concordancia cuerpo/status/header y esquema estricto. Backend CI incorpora este comando; OpenAPI CI comprueba estructura/generación/fixtures negativos. No se publican respuestas crudas como artifacts ni se instala un endpoint Swagger/introspección.
+
+El borrador conserva la composición `Taxpayer.allOf`/`additionalProperties` pendiente de revisión del modelo; no se promueve como contrato válido de negocio. Los tipos implementados la excluyen.
+
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** El propietario mantiene presupuesto $0: checks locales completos, sin deshabilitar workflows ni reintentar runners.

@@ -7,9 +7,11 @@ Backend JUnit + Testcontainers PostgreSQL real: reglas dominio, estado fiscal, t
 - Archivos hostiles, XML con XXE, ZIP grande, MIME falso, accesos a URLs firmadas sin autorización.
 - UI teclado, mobile, idiomas consistentes, loading/empty/error, capturas reales.
 - Conector SAT futuro: reintentos, caducidad firma, fallas, límites y jobs reanudables.
-## CI implementada en #23 (para revisión)
+## CI definida en #23 e integrada; verificación remota pendiente #79
 
-Ver [CI.md](CI.md) y `.github/workflows/ci.yml`. PRs a main, incluyendo Draft, push main y manual; sin filtros de rutas. Backend conserva sus 47 pruebas JUnit/Spring Modulith/PostgreSQL real, checksum/rollback Flyway y arranque del JAR; web ejecuta typecheck/lint/formato/build, 13 Vitest y 13 Playwright/axe en todos los tamaños existentes. Los verificadores rechazan errores, omisiones, reintentos/flaky y suites ausentes; las cifras mínimas deberán revisarse explícitamente si cambia la cobertura.
+Ver [CI.md](CI.md) y `.github/workflows/ci.yml`. PRs a main, incluyendo Draft, push main y manual; sin filtros de rutas. #24 conserva la cobertura anterior y amplía a 90 pruebas backend (80 Surefire + 10 Failsafe), 21 Vitest y 13 Playwright/axe. Incluye Modulith/PostgreSQL real, checksum/rollback Flyway, JAR y 39 HTTP de contratos con validación/errores/canarios seguros. AJV valida las 51 respuestas capturadas contra OpenAPI implementado; tipos TS/metadatos se regeneran y comprueban. Los gates rechazan fallos, omisiones, reintentos/flaky y suites ausentes.
+
+Política temporal autorizada: **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79**. Presupuesto $0 y validación local completa; no reintentar ni deshabilitar workflows.
 
 OpenAPI: sintaxis, estructura 3.1 y referencias internas, más fixtures negativos. No verifica implementación de endpoints ni resuelve decisiones del borrador (#24). Seguridad: historial y archivos actuales con Gitleaks, inventario sensible, actionlint/zizmor offline, vulnerabilidades HIGH/CRITICAL de npm (incluyendo dev) y Maven (incluyendo test) con Trivy local. Las pruebas de los gates también son obligatorias.
 

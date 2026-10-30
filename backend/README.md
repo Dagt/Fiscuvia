@@ -1,6 +1,14 @@
-# Fiscuvia backend — foundation #20 / #22
+# Fiscuvia backend — foundation #20 / #22 y contratos #24
 
 Backend ejecutable local/test con PostgreSQL real y Flyway. #20/#22 están integrados. Sin tablas fiscales, persistencia de negocio ni endpoints de dominio. Gate #74 y RLS #26 siguen pendientes.
+
+## Contratos #24 (para revisión)
+
+`GET /api/v1/public/info` devuelve únicamente producto/eslogan/versión. Validación Jakarta servidor, UUID/binding estricto, RFC 9457/códigos/correlación seguros y primitivas reutilizables, sin JPA ni autenticación. [Guía y ejemplos](../docs/api/foundation-24.md), [contrato implementado](../docs/api/openapi-v1.yaml). Dependencia nueva: starter-validation 4.1.2 → Hibernate Validator 9.1.5.Final / Jakarta Validation 3.1.1 administrados por Boot.
+
+`clean verify` ejecuta **90** pruebas (80 Surefire + 10 Failsafe), conserva cobertura anterior y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts.
+
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #25–27 ni reglas fiscales de #74.
 
 ## Herramientas y compatibilidad
 
@@ -144,8 +152,8 @@ Surefire ejecuta `*Tests`; Failsafe ejecuta `*IT` después de empaquetar el JAR.
 Trazabilidad: #20/#22, ADR-003/007 como dirección (conservan Proposed), base NFR-001/021 y NFR-040/041. No se declara cumplido el aislamiento tenant NFR-001 ni ningún FR/BR de negocio: no hay datos por despacho, comandos, contratos de dominio o cambios UI. Gate #74 intacto.
 
 - #22: PostgreSQL, Docker, Flyway y JDBC integrados; sin ORM ni tablas de dominio. Gate #74 antes del dominio fiscal.
-- #23: [CI para revisión](../docs/delivery/CI.md), `Backend CI` ejecuta wrapper `clean verify` en Ubuntu 24.04 / Temurin 25.0.5+8 / Maven 3.9.16 con Docker y Ryuk activos. Exige las seis suites actuales (47 pruebas como mínimo), cero errores/omisiones; publica JUnit depurado, sin propiedades ni logs. Las pruebas y el código backend permanecen intactos en #23.
-- #24–25: contratos/errores de API y observabilidad ampliada.
+- #23 integrado: [CI definido](../docs/delivery/CI.md), wrapper `clean verify` en Ubuntu 24.04 / Temurin 25.0.5+8 / Maven 3.9.16, Docker/Ryuk obligatorios. #24 amplía los mínimos a ocho suites/90 pruebas y conformidad HTTP, cero errores/omisiones; publica JUnit depurado. Remote CI pendiente #79.
+- #24: [contratos/errores/validación para revisión](../docs/api/foundation-24.md), sin negocio ni autenticación; #25 observabilidad ampliada sigue independiente.
 - #26–30: RLS, OIDC, capacidades, auditoría/outbox y aislamiento entre despachos antes de operar sobre datos.
 - UI #21 está integrada; #52 y CFDI/SAT permanecen fuera de alcance de este cambio backend.
 

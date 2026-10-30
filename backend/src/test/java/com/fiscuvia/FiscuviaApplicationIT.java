@@ -50,6 +50,13 @@ class FiscuviaApplicationIT {
                     assertThat(response.statusCode()).isEqualTo(200);
                     assertThat(response.body()).contains("\"status\":\"UP\"");
                     assertThat(output).contains("falling back to 1 default profile: \"local\"");
+                    var info = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"
+                            + matcher.group(1) + "/api/v1/public/info")).GET().build(), HttpResponse.BodyHandlers.ofString());
+                    assertThat(info.statusCode()).isEqualTo(200);
+                    assertThat(info.body()).contains("Fiscuvia", "1.0.0").doesNotContain("jdbc:", "testcontainers");
+                    var fixture = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"
+                            + matcher.group(1) + "/__contract-test/errors/INTERNAL_ERROR")).GET().build(), HttpResponse.BodyHandlers.ofString());
+                    assertThat(fixture.statusCode()).isEqualTo(404);
                     return;
                 }
                 Thread.sleep(100);

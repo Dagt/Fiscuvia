@@ -72,7 +72,7 @@ class FiscuviaApplicationTests {
     @ValueSource(strings = {"/actuator", "/actuator/env", "/actuator/configprops",
             "/actuator/beans", "/actuator/mappings", "/actuator/metrics",
             "/actuator/heapdump", "/actuator/loggers", "/actuator/shutdown",
-            "/actuator/info", "/api/v1/me", "/missing"})
+            "/actuator/info", "/api/v1/me", "/missing", "/__contract-test/dto"})
     void doesNotExposeSensitiveEndpointsOrUnimplementedBusinessApi(String path) throws Exception {
         var response = get(path);
         assertThat(response.statusCode()).isEqualTo(404);

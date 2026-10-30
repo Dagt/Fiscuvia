@@ -10,7 +10,9 @@ const list = value => value === undefined ? [] : Array.isArray(value) ? value : 
 const baseline = {
   'com.fiscuvia.platform.internal.ScaffoldRuntimeConfigurationTests': 15,
   'com.fiscuvia.ModuleBoundariesTests': 3,
-  'com.fiscuvia.FiscuviaApplicationTests': 16,
+  'com.fiscuvia.FiscuviaApplicationTests': 17,
+  'com.fiscuvia.ApiContractsTests': 39,
+  'com.fiscuvia.ApiPrimitivesTests': 3,
   'com.fiscuvia.PostgresFoundationTests': 3,
   'com.fiscuvia.FiscuviaApplicationIT': 8,
   'com.fiscuvia.FlywayFailureIT': 2,
@@ -46,8 +48,8 @@ export function backendReports(xmls, expected = baseline) {
   return { tests, xml: new XMLBuilder({ ignoreAttributes: false, format: true }).build({ testsuites: { testsuite: suites } }) }
 }
 
-export function webReports(unit, e2e, minimum = 13) {
-  if (unit.success !== true || unit.numTotalTests < minimum || unit.numPassedTests !== unit.numTotalTests
+export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
+  if (unit.success !== true || unit.numTotalTests < minimumUnit || unit.numPassedTests !== unit.numTotalTests
     || unit.numFailedTests !== 0 || unit.numPendingTests !== 0 || (unit.numTodoTests ?? 0) !== 0) {
     throw Error('Vitest incompleto, fallido u omitido')
   }
@@ -92,6 +94,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   } else if (kind === 'web') {
     publish(kind, webReports(
       JSON.parse(readFileSync(resolve(root, '.ci-work/vitest.json'), 'utf8')),
-      JSON.parse(readFileSync(resolve(root, '.ci-work/playwright.json'), 'utf8'))))
+      JSON.parse(readFileSync(resolve(root, '.ci-work/playwright.json'), 'utf8')), 13, 21))
   } else throw Error('Indicar backend o web')
 }

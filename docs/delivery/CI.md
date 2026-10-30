@@ -1,5 +1,11 @@
 # CI reproducible — issue #23
 
+## Política temporal vigente — #79
+
+PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propietario decidió mantener presupuesto Actions **$0** y pruebas locales completas. **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** No cambiar billing, deshabilitar workflows, reintentar runners ni asumir reinicio de cuota en una fecha concreta. #79 registra la comprobación remota futura; los fallos pre-runner no son fallos de código ni CI aprobada. El diagnóstico de #23 abajo es histórico, no una instrucción vigente para aumentar el presupuesto.
+
+#24 añade conformidad de respuestas HTTP reales y tipos generados desde `docs/api/openapi-v1.yaml`, manteniendo el borrador propuesto separado. Después de Maven verify ejecutar `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json`; Backend CI incluye ese paso. `npm run openapi --prefix tools/ci` valida ambos documentos y la generación exacta. Versiones nuevas: openapi-typescript 7.13.0, AJV 8.20.0 / ajv-formats 3.0.1, Prettier 3.9.10 (formato del generado), con lockfile.
+
 Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. No endpoints #24, cambios de negocio, migraciones nuevas, RLS ni despliegues.
 
 ## Workflow y checks estables
@@ -44,6 +50,7 @@ Desde la raíz, POSIX:
 node tools/ci/identity.mjs
 npm ci --prefix tools/ci --ignore-scripts
 backend/mvnw -f backend/pom.xml -B -ntp clean verify
+node tools/ci/contracts.mjs --responses backend/target/contract-responses.json
 node tools/ci/reports.mjs backend
 backend/mvnw -f backend/pom.xml -B -ntp org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeBom -DincludeTestScope=true -DoutputFormat=json
 npm test --prefix tools/ci
@@ -73,7 +80,7 @@ Los tests Playwright regeneran capturas históricas de #21. No confirmar diferen
 
 ## Integridad y artifacts
 
-Maven usa `clean verify`; la cache sólo guarda descargas `.m2`, no target. npm usa `npm ci`; la cache guarda descargas, no node_modules/dist. No se cachean reportes ni bases con credenciales. `reports.mjs` exige seis suites backend actuales (mínimos 37 Surefire + 10 Failsafe) y al menos 13 pruebas por motor web, cero fallos/omitidos/flaky/reintentos. Reducciones intencionales de cobertura necesitan revisión de esos mínimos, sin añadir flags skip. La política busca también anotaciones Disabled/Ignore y tests skip/todo/only en fuentes. Sus pruebas negativas demuestran rechazo de omisiones, suites ausentes y resultados incompletos.
+Maven usa `clean verify`; la cache sólo guarda descargas `.m2`, no target. npm usa `npm ci`; la cache guarda descargas, no node_modules/dist. No se cachean reportes ni bases con credenciales. Desde #24, `reports.mjs` exige ocho suites backend (mínimos 80 Surefire + 10 Failsafe), 21 Vitest y 13 Playwright, cero fallos/omitidos/flaky/reintentos. Reducciones intencionales requieren revisar esos mínimos, sin flags skip. La política busca también anotaciones Disabled/Ignore y tests skip/todo/only. Sus pruebas negativas demuestran rechazo de omisiones, suites ausentes y resultados incompletos.
 
 Sólo se suben archivos permitidos: backend `summary.json` + `junit.xml` depurado, web y seguridad `summary.json`. Se escanean antes de subirlos. JUnit publicado omite propiedades JVM/env, stdout/stderr y cuerpos de excepciones. No se suben `.env`, archivos SAT, certificados, SBOM, JAR, dumps, reportes crudos, trazas, HTML ni capturas. Si falla una suite, Maven/Playwright conservan el fallo en el job; el verificador vuelve a fallar y **no publica artifacts crudos para diagnosticarlo**. Examinar logs en la ejecución privada, sin copiarlos a servicios externos. Las contraseñas de Testcontainers son UUID temporales; las pruebas existentes verifican su ausencia en logs.
 
@@ -81,7 +88,7 @@ Gitleaks analiza historial completo y snapshot actual de archivos versionados/nu
 
 ## Estado del borrador OpenAPI y discrepancias auditadas
 
-`docs/api/openapi-v1-draft.yaml` no representa endpoints implementados. Se valida lo que existe sin generar clientes ni exigir respuestas de una API futura. El borrador combina `CreateTaxpayer.additionalProperties: false` con extensión `Taxpayer.allOf`; su semántica final requiere revisión de contratos en #24. La validación estructural no implica resolver esa decisión ni aprobar el modelo fiscal.
+`docs/api/openapi-v1-draft.yaml` no representa endpoints implementados. #24 mantiene ese documento propuesto, con su composición allOf/additionalProperties pendiente de revisión del modelo, y añade `docs/api/openapi-v1.yaml` para el endpoint público real/infraestructura. Sólo el implementado genera tipos/metadatos; se verifican respuestas HTTP reales sin crear endpoints fiscales ni exigir APIs futuras.
 
 Antes de #23 no había workflows. README/AGENTS/backend/infra aún describían #22 como pendiente de merge: se actualiza al squash #77 confirmado. TEST-STRATEGY mezclaba checks futuros RLS/build Docker con entregas actuales: se distingue explícitamente. Los enlaces del issue apuntan a la rama documental histórica; se usa main actual. TrailerSaaS aporta jobs separados/gate/evidencia, pero su condición para omitir builds Draft, Flutter y contratos generados no se copian. ADR-013 y decisiones fiscales conservan su estado.
 

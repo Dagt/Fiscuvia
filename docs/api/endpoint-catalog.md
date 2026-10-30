@@ -1,4 +1,12 @@
-# Catálogo de endpoints (propuesta, no implementados)
+# Catálogo de endpoints — estado explícito
+
+## Implementado en #24 (para revisión)
+
+| Método | Ruta | Alcance |
+|---|---|---|
+| GET | /api/v1/public/info | Información pública del producto; openapi-v1.yaml, sin datos de negocio ni identidad |
+
+## Propuesto: no implementado
 
 Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas globales indicadas expresamente. Funciones posteriores identificadas Future.
 
