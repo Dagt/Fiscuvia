@@ -11,3 +11,7 @@ spring:
     password: ${DB_MIGRATION_PASSWORD}
   main:
     lazy-initialization: false
+
+logging:
+  level:
+    root: INFO

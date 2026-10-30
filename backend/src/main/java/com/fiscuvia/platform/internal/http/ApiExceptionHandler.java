@@ -4,8 +4,6 @@ import java.util.Comparator;
 import com.fiscuvia.platform.ApiErrorCode;
 import com.fiscuvia.platform.ApiFailure;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,7 +23,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(ApiExceptionHandler.class);
+    private final com.fiscuvia.platform.internal.observability.HttpTelemetry telemetry;
+    ApiExceptionHandler(com.fiscuvia.platform.internal.observability.HttpTelemetry telemetry) { this.telemetry = telemetry; }
 
     @InitBinder
     void strictUuidBinding(WebDataBinder binder) {
@@ -44,8 +43,10 @@ class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<Object> unexpected(Exception exception, HttpServletRequest request) {
-        // Do not log the throwable/message, body, URL, headers or SQL. Observability is a separate issue.
-        LOG.error("API failure code=INTERNAL_ERROR traceId={}", CorrelationFilter.id(request));
+        // Operational diagnostics project approved codes only; never pass raw throwable text to logs.
+        telemetry.failure(exception);
+        org.springframework.web.filter.ServerHttpObservationFilter.findObservationContext(request)
+                .ifPresent(context -> context.setError(exception));
         return response(SafeProblems.create(ApiErrorCode.INTERNAL_ERROR, request), new HttpHeaders());
     }
 

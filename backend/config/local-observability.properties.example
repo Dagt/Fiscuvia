@@ -1,0 +1,6 @@
+# Opt-in local-only diagnostics. Copy outside Git to .ci-work/local-observability.properties.
+fiscuvia.observability.local-metrics=true
+management.server.address=127.0.0.1
+management.server.port=18081
+management.endpoint.metrics.access=read-only
+management.endpoints.web.exposure.include=health,metrics

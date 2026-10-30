@@ -14,8 +14,15 @@ const baseline = {
   'com.fiscuvia.ApiContractsTests': 39,
   'com.fiscuvia.ApiPrimitivesTests': 3,
   'com.fiscuvia.PostgresFoundationTests': 3,
-  'com.fiscuvia.FiscuviaApplicationIT': 8,
+  'com.fiscuvia.FiscuviaApplicationIT': 10,
   'com.fiscuvia.FlywayFailureIT': 2,
+  'com.fiscuvia.ObservabilityHttpTests': 3,
+  'com.fiscuvia.HealthAvailabilityTests': 1,
+  'com.fiscuvia.platform.internal.http.CorrelationFilterTests': 1,
+  'com.fiscuvia.platform.internal.observability.StructuredLoggingTests': 4,
+  'com.fiscuvia.platform.internal.observability.ObservabilityGuardTests': 3,
+  'com.fiscuvia.platform.internal.observability.MeterPrivacyTests': 2,
+  'com.fiscuvia.platform.internal.observability.TracingConfigurationTests': 2,
 }
 
 export function backendReports(xmls, expected = baseline) {

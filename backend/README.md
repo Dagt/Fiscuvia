@@ -1,14 +1,14 @@
-# Fiscuvia backend — foundation #20 / #22 y contratos #24
+# Fiscuvia backend — foundation #20 / #22, contratos #24 y observabilidad #25
 
 Backend ejecutable local/test con PostgreSQL real y Flyway. #20/#22 están integrados. Sin tablas fiscales, persistencia de negocio ni endpoints de dominio. Gate #74 y RLS #26 siguen pendientes.
 
-## Contratos #24 (para revisión)
+## Contratos #24 (integrados)
 
 `GET /api/v1/public/info` devuelve únicamente producto/eslogan/versión. Validación Jakarta servidor, UUID/binding estricto, RFC 9457/códigos/correlación seguros y primitivas reutilizables, sin JPA ni autenticación. [Guía y ejemplos](../docs/api/foundation-24.md), [contrato implementado](../docs/api/openapi-v1.yaml). Dependencia nueva: starter-validation 4.1.2 → Hibernate Validator 9.1.5.Final / Jakarta Validation 3.1.1 administrados por Boot.
 
-`clean verify` ejecuta **90** pruebas (80 Surefire + 10 Failsafe), conserva cobertura anterior y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts.
+`clean verify` ejecuta **108** pruebas (96 Surefire + 12 Failsafe), conserva cobertura anterior y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts. #25 añade JSON seguro, correlación concurrente, spans HTTP/sampling, métricas acotadas, outage PostgreSQL y diagnóstico del JAR: [runbook](../docs/delivery/OBSERVABILITY.md).
 
-**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #25–27 ni reglas fiscales de #74.
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #26–30 ni reglas fiscales de #74.
 
 ## Herramientas y compatibilidad
 
@@ -153,7 +153,8 @@ Trazabilidad: #20/#22, ADR-003/007 como dirección (conservan Proposed), base NF
 
 - #22: PostgreSQL, Docker, Flyway y JDBC integrados; sin ORM ni tablas de dominio. Gate #74 antes del dominio fiscal.
 - #23 integrado: [CI definido](../docs/delivery/CI.md), wrapper `clean verify` en Ubuntu 24.04 / Temurin 25.0.5+8 / Maven 3.9.16, Docker/Ryuk obligatorios. #24 amplía los mínimos a ocho suites/90 pruebas y conformidad HTTP, cero errores/omisiones; publica JUnit depurado. Remote CI pendiente #79.
-- #24: [contratos/errores/validación para revisión](../docs/api/foundation-24.md), sin negocio ni autenticación; #25 observabilidad ampliada sigue independiente.
+- #24 integrado: [contratos/errores/validación](../docs/api/foundation-24.md), sin negocio ni autenticación.
+- #25 para revisión: [observabilidad, privacidad y runbook](../docs/delivery/OBSERVABILITY.md), [evidencia local](VALIDATION-25.md). JSON por allowlist; UUID de correlación conservado y trazas HTTP reales locales; métricas acotadas sin tenant. Health/readiness PostgreSQL real, sin detalles. Actuator administrativo cerrado; métricas únicamente con opt-in explícito, perfil local y puerto loopback separado. Sin exportadores, collectors ni cambios de esquema.
 - #26–30: RLS, OIDC, capacidades, auditoría/outbox y aislamiento entre despachos antes de operar sobre datos.
 - UI #21 está integrada; #52 y CFDI/SAT permanecen fuera de alcance de este cambio backend.
 
