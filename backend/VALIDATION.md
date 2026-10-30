@@ -1,5 +1,7 @@
 # Evidencia local — issue #20
 
+> Registro histórico del scaffold #20 antes de PostgreSQL. El comportamiento y pruebas actuales de #22 se documentan en [VALIDATION-22.md](VALIDATION-22.md); las afirmaciones originales de arranque sin DB no describen la versión actual.
+
 Fecha: 2026-10-29, America/Mexico_City. Entorno: Windows 11 amd64, PowerShell, Oracle JDK 25.0.3. Base: `origin/main` en `ce561482fda7889b005deaad3d822395b89a82df` (PR #1 integrado). El SHA final de esta entrega se registra en el PR Draft; estos comandos permiten verificarlo junto a los resultados del checkout.
 
 ## Comandos ejecutados y resultados

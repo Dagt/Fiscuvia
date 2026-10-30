@@ -62,4 +62,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-El [scaffold backend #20](../backend/README.md) está integrado mediante PR #75. Esta rama añade el [scaffold web #21](../web/README.md) y sus [capturas reales](ux/evidence/issue-21/README.md), pendientes de revisión/merge. No implementa negocio, persistencia ni identidad. #52/#56 siguen independientes. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar la imagen conceptual captura real.
+Backend #20 y [web #21](../web/README.md) están integrados mediante PR #75/#76. Esta rama añade la [infraestructura PostgreSQL/Flyway #22](../infra/README.md), pendiente de revisión/merge, con [evidencia real](../backend/VALIDATION-22.md). Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes en sus alcances. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar una imagen conceptual captura real.

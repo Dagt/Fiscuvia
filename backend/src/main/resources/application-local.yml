@@ -1,4 +1,13 @@
-# Local development only. No database, OIDC issuer or remote service is required.
+# Local-only, separate from test configuration. Never point this profile at a remote DB.
 spring:
+  config:
+    import: optional:file:../infra/.env[.properties]
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:${DB_PORT:55433}/fiscuvia_local?currentSchema=app&connectTimeout=3
+    username: fiscuvia_runtime
+    password: ${DB_RUNTIME_PASSWORD}
+  flyway:
+    user: fiscuvia_migrator
+    password: ${DB_MIGRATION_PASSWORD}
   main:
     lazy-initialization: false
