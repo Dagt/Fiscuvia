@@ -47,6 +47,7 @@ jobs:
           npm ci --prefix tools/ci --ignore-scripts
           node tools/ci/identity.mjs
           java -version
+          command -v unzip >/dev/null
           backend/mvnw -f backend/pom.xml --version
           docker version
           docker info --format '{{.OSType}}' | grep -Fx linux
@@ -85,7 +86,7 @@ jobs:
           cache-dependency-path: |
             web/package-lock.json
             tools/ci/package-lock.json
-      - name: Install pinned npm and dependencies
+      - name: Verify pinned tools and install dependencies
         run: |
           node tools/ci/identity.mjs
           npm ci --prefix tools/ci --ignore-scripts
@@ -172,6 +173,7 @@ jobs:
         run: |
           node tools/ci/identity.mjs
           npm ci --prefix tools/ci --ignore-scripts
+          command -v unzip >/dev/null
           backend/mvnw -f backend/pom.xml --batch-mode --no-transfer-progress org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeBom -DincludeTestScope=true -DoutputFormat=json
       - name: Secret, sensitive file, workflow and dependency checks
         run: npm run security --prefix tools/ci

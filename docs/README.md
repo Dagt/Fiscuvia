@@ -48,6 +48,7 @@
 - [Definition of Done](delivery/DEFINITION-OF-DONE.md), [tests](delivery/TEST-STRATEGY.md), [gates](delivery/RELEASE-GATES.md), [riesgos](delivery/RISKS.md)
 - [Operaciones](delivery/OPERATIONS.md), [prompt Codex](delivery/CODEX-STARTER.md)
 - [CI de GitHub Actions, comandos locales y protección de main](delivery/CI.md)
+- [Evidencia CI #23 y bloqueo remoto comprobado](delivery/VALIDATION-23.md)
 
 ## 9. Referencia comparativa
 - [Auditoría de metodología observada en TrailerSaaS y adaptación a Fiscuvia](delivery/TRAILERSAAS-REFERENCE-AUDIT.md)

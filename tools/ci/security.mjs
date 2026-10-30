@@ -29,6 +29,13 @@ export function checkWorkflow(text) {
   if (/\bsecrets\s*[.[]|\bwrite-all\b|\bcontinue-on-error\s*:\s*true/.test(text)) throw Error('Permisos o secretos no permitidos')
   if (/paths(?:-ignore)?\s*:/.test(text) || /pull_request\.draft/.test(text)) throw Error('No omitir Draft ni rutas')
   if (!workflow.concurrency || !workflow.jobs) throw Error('Falta concurrencia o jobs')
+  const names = { backend: 'Backend CI', web: 'Web CI', openapi: 'OpenAPI CI', security: 'Security CI', required: 'CI Required' }
+  for (const [id, name] of Object.entries(names)) {
+    if (workflow.jobs[id]?.name !== name) throw Error(`Check obligatorio ausente: ${name}`)
+    if (id !== 'required' && workflow.jobs[id].if !== undefined) throw Error('No condicionar jobs obligatorios')
+  }
+  if (workflow.jobs.required.if !== '${{ always() }}'
+    || [...workflow.jobs.required.needs].sort().join(',') !== 'backend,openapi,security,web') throw Error('Gate final incompleto')
   for (const job of Object.values(workflow.jobs)) {
     if (job['runs-on'] !== 'ubuntu-24.04' || !job['timeout-minutes'] || job.permissions) throw Error('Job sin límites seguros')
     for (const step of job.steps ?? []) {
