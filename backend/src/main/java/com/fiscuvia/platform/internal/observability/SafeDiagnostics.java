@@ -7,12 +7,13 @@ import java.util.HexFormat;
 
 public final class SafeDiagnostics {
     public enum Failure { CONFIGURATION_REJECTED, DATABASE_AUTHENTICATION, DATABASE_UNAVAILABLE,
-        DATABASE_PRIVILEGES, MIGRATION_FAILED, TIMEOUT, UNEXPECTED }
+        DATABASE_PRIVILEGES, MIGRATION_FAILED, TENANT_CONTEXT_REJECTED, TIMEOUT, UNEXPECTED }
     private SafeDiagnostics() {}
     public static Failure classify(Throwable error) {
         Throwable current = error;
         boolean migration = false;
         for (int i = 0; current != null && i < 16; i++, current = current.getCause()) {
+            if (current instanceof com.fiscuvia.platform.internal.tenancy.TenantContextRejected) return Failure.TENANT_CONTEXT_REJECTED;
             migration |= current instanceof org.flywaydb.core.api.FlywayException;
             if (current instanceof SQLException sql) {
                 String state = sql.getSQLState();
@@ -43,6 +44,7 @@ public final class SafeDiagnostics {
                 case "com.fiscuvia.platform.internal.http.PlatformInfoController" -> "PLATFORM_INFO";
                 case "com.fiscuvia.platform.internal.ScaffoldRuntimeConfiguration" -> "CONFIGURATION";
                 case "com.fiscuvia.platform.internal.DatabaseRuntimeConfiguration" -> "DATABASE_GUARD";
+                case "com.fiscuvia.platform.internal.tenancy.JdbcTenantTransactions" -> "TENANT_TRANSACTION";
                 default -> null;
             };
             if (mapped != null) { location = mapped + ":" + Math.max(0, frame.getLineNumber()); break; }

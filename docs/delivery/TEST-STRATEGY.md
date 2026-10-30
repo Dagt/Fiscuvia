@@ -19,6 +19,8 @@ OpenAPI: sintaxis, estructura 3.1 y referencias internas, más fixtures negativo
 
 Artifacts de siete días: JUnit backend sin propiedades/stdout/stderr, resúmenes numéricos y SHA probado/origen. No subir raw reports, `.env`, JAR, SBOM, certificados, trazas ni datos fiscales. `CI Required` exige éxito de los cuatro checks, incluso si uno falla o se omite. Si GitHub no ejecuta, reportar **REMOTE CI NOT VERIFIED**, causa comprobada y comandos locales equivalentes; no deducir billing sólo por ausencia de workflows.
 
-RLS/autorización/endpoints de negocio, build de imagen de aplicación y regresión visual aprobada son futuros: no existen implementaciones que #23 pueda acreditar. Los escenarios de producto arriba son gates de los issues correspondientes, no pruebas ya entregadas.
+#26 amplía a **135 pruebas backend (120 Surefire + 15 Failsafe)**, diecinueve suites, sin reducir mínimos anteriores: veinte casos RLS/catálogo/privilegios/pool/mutaciones deliberadas, dos de concurrencia real, dos HTTP/privacidad y tres upgrade/checksum/rollback V2. Se demuestra ausencia de predicado Java, canarios, contexto malformado/falsificado y mismo RFC DEMO en dos despachos. [Diseño y evidencia negativa](../data-model/tenant-foundation-26.md), [validación local](../../backend/VALIDATION-26.md).
+
+Autorización de negocio/API/archivos/jobs #27–30, build de imagen de aplicación y regresión visual aprobada son futuros. La base RLS de #26 no acredita esos escenarios de producto ni completa el gate piloto.
 ## Datos de prueba
 Ficticios, marcados DEMO; nunca datos personales, XML fiscales reales, certificados ni llaves de producción.

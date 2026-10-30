@@ -74,9 +74,15 @@ class PostgresFoundationTests {
                 assertThat(result.getBoolean(3)).isTrue();
             }
             try (var result = statement.executeQuery("SELECT schemaname || '.' || tablename FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')")) {
+                var tables = new java.util.ArrayList<String>();
+                while (result.next()) tables.add(result.getString(1));
+                assertThat(tables).containsExactlyInAnyOrder("infrastructure.flyway_schema_history",
+                        "infrastructure.rls_transaction_context", "app.tenants");
+            }
+            try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2')")) {
                 assertThat(result.next()).isTrue();
-                assertThat(result.getString(1)).isEqualTo("infrastructure.flyway_schema_history");
-                assertThat(result.next()).isFalse();
+                assertThat(result.getInt(1)).isEqualTo(2);
+                assertThat(result.getBoolean(2)).isTrue();
             }
             try (var result = statement.executeQuery("SELECT pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname='app'")) {
                 assertThat(result.next()).isTrue();

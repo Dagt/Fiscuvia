@@ -8,6 +8,10 @@ sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
 
 Requiere Docker Engine/Desktop con contenedores Linux y Compose con `up --wait`. Validado con Docker 29.2.0, Desktop 4.60.1 y Compose 5.0.2. El puerto por defecto es **127.0.0.1:55433**, para no interferir con otros proyectos en 5432/55432. Nunca cambiar el bind a todas las interfaces para resolver un conflicto; cambiar sólo `DB_PORT`.
 
+En #26 Compose/Testcontainers fijan logging PostgreSQL sin sentencias/parámetros y con `log_min_messages=log`/verbosity terse. Los errores SQL/DETAIL pueden contener valores privados y no se escriben al log normal; LOG de arranque y FATAL/PANIC permanecen. El canario de integración comprueba el contenedor real. Diagnosticar errores mediante códigos seguros del backend; no habilitar logging SQL amplio para resolver un fallo.
+
+Para un volumen V1 existente no borrar datos ni repetir init: `docker compose --env-file infra/.env -f infra/compose.yaml up -d --wait` recrea el contenedor al cambiar su comando, preservando el volumen; arrancar el backend aplica V2 con el migrador. Revisar health antes de continuar. [Modelo físico #26 y convenciones RLS](../docs/data-model/tenant-foundation-26.md). No hay provisioning, membresías ni tablas fiscales.
+
 ## Preparar credenciales sintéticas
 
 Desde la raíz del repositorio, Windows con PowerShell 7:
@@ -68,13 +72,13 @@ El bootstrap usa autenticación local dentro del contenedor para aprovisionar ro
 
 - `fiscuvia_bootstrap`: superusuario necesario sólo para la inicialización de la imagen. Su credencial no se configura en ningún datasource Spring.
 - `fiscuvia_migrator`: propietario de la base/esquemas, `NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS`. Flyway usa su datasource separado.
-- `fiscuvia_runtime`: mismas restricciones de flags, sin ownership ni privilegios de DDL. Sólo CONNECT a esta DB y USAGE sobre el esquema vacío `app`; sin acceso al historial Flyway. Los futuros grants se revisarán con cada migración, sin permisos automáticos sobre futuras tablas.
+- `fiscuvia_runtime`: mismas restricciones de flags, sin ownership ni privilegios de DDL. CONNECT a esta DB y USAGE sobre `app`; V2 concede sólo SELECT tenant-scoped sobre tenants y EXECUTE de las dos funciones de contexto, sin acceso al historial/registro privado. Los futuros grants se revisarán con cada migración, sin permisos automáticos sobre futuras tablas.
 
 Los roles y la revocación de acceso público se aprovisionan en `postgres/init/10-create-roles.sh` **sólo al crear un volumen vacío**. Ese script no crea tablas de negocio. Flyway gobierna el esquema a partir de ahí.
 
 El volumen nombrado `fiscuvia-local_postgres_data` se monta en `/var/lib/postgresql`, ruta de la imagen PostgreSQL 18 (no la antigua ruta `.../data`). La versión/digest del fixture Testcontainers debe coincidir con Compose; un test detecta divergencias. No cambiar de versión mayor reutilizando el volumen: revisar previamente la ruta oficial de actualización, respaldo/restauración y las issues operativas.
 
-La única migración productiva es `backend/src/main/resources/db/migration/V1__initialize_infrastructure.sql`. Crea el namespace vacío `app`, propiedad del migrador, concede sólo USAGE al runtime y protege el namespace `infrastructure`. Tiene una finalidad verificable sin fijar el modelo fiscal. Flyway crea `infrastructure.flyway_schema_history` y una entrada de creación del esquema, además de V1; esto no significa que haya dos versiones de aplicación.
+V1 `backend/src/main/resources/db/migration/V1__initialize_infrastructure.sql` permanece intacta. Crea el namespace `app`, propiedad del migrador, concede sólo USAGE al runtime y protege `infrastructure`. V2 añade la raíz mínima tenants, registro privado de contexto, funciones y RLS. Flyway crea `infrastructure.flyway_schema_history` y una entrada de creación del esquema, además de las versiones 1/2; la entrada de schema no es una migración de aplicación adicional.
 
 Consulta del historial:
 
@@ -85,7 +89,7 @@ FROM infrastructure.flyway_schema_history ORDER BY installed_rank;
 
 Convención: `V<N>__descripcion_en_snake_case.sql`, números únicos consecutivos acordados al integrar cada PR. Mantener LF, SQL transaccional y una finalidad revisable por versión. Nunca editar una migración aplicada ni usar `repair`, baseline o `clean` para esconder un checksum roto. Añadir una nueva versión cuando exista una enmienda aprobada. Los tests prueban checksum inválido, rollback SQL y reejecución sin duplicar V1.
 
-**Gate #74 intacto:** no hay tablas definitivas de usuarios, membresías, contribuyentes, obligaciones, declaraciones, pagos, CFDI u honorarios. No hay políticas RLS (#26). La única tabla no sistémica es el historial de Flyway. JDBC es suficiente; no se añade JPA/Hibernate sin entidades que lo justifiquen.
+**Gate #74 intacto:** no hay tablas definitivas de usuarios, membresías, contribuyentes, obligaciones, declaraciones, pagos, CFDI u honorarios. #26 incorpora exclusivamente infraestructura tenant/RLS, documentada arriba. JDBC es suficiente; no se añade JPA/Hibernate sin entidades que lo justifiquen.
 
 ## Parar, reiniciar y limpiar
 

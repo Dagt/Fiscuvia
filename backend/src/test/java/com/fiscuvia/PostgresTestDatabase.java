@@ -32,6 +32,9 @@ final class PostgresTestDatabase extends PostgreSQLContainer {
         withCreateContainerCmdModifier(command -> command.getHostConfig().withPortBindings(
                 new PortBinding(Ports.Binding.bindIp("127.0.0.1"), new ExposedPort(5432))));
         withReuse(false);
+        withCommand("postgres", "-c", "log_min_messages=log", "-c", "log_min_error_statement=panic",
+                "-c", "log_error_verbosity=terse", "-c", "log_statement=none",
+                "-c", "log_parameter_max_length=0", "-c", "log_parameter_max_length_on_error=0");
     }
 
     void register(DynamicPropertyRegistry registry) {

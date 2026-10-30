@@ -3,6 +3,8 @@
 **Estado:** Proposed 2026-10-29 · **Base:** FR-###, BR-###, NFR-###, domain model, state machines, ADR-0002. Inspirado en el *nivel de precisión* del schema v1.0 de TrailerSaaS; **ninguna tabla está creada** y **no se considera aprobado** para Flyway hasta revisión de OQ fiscales bloqueantes.
 
 ## 1. Convenciones globales
+
+**Enmienda de estado #26 (2026-10-30):** existe una [base física mínima de tenancy](tenant-foundation-26.md), separada de este modelo Proposed: `app.tenants(tenant_id,created_at)` y metadatos privados de contexto. No hay users/memberships ni tablas fiscales definitivas; #27 y #74 conservan sus gates. Esta enmienda no acepta las tablas propuestas abajo ni deriva sus migraciones.
 - UUID PK; RFC normalizado como clave comercial, nunca PK. El mismo RFC puede existir en tenants distintos.
 - Timestamps PostgreSQL `timestamptz` UTC; fecha fiscal de vencimiento `date`, zona IANA al calcular fecha si aplica.
 - `numeric(18,2)` para MXN mostrado, contabilidad de impuestos/CFDI puede requerir precisión mayor definida por tipo de dato; no aproximar con double.
