@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-29:** backend #20 y web #21 integrados (PR #75/#76). Esta rama incorpora PostgreSQL/Docker/Flyway #22, pendiente de revisión/merge. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-29:** backend #20, web #21 y PostgreSQL/Docker/Flyway #22 integrados (PR #75–77). Esta rama incorpora CI #23 para revisión. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
 
 ## Web local — issue #21
 
@@ -36,7 +36,11 @@ cd backend
 
 En POSIX: `./mvnw -B -ntp clean verify` y `./mvnw spring-boot:run`.
 Salud: `http://127.0.0.1:8080/actuator/health`. La aplicación escucha en loopback, admite sólo local/test y requiere PostgreSQL. Los tests crean DBs efímeras con Testcontainers, sin necesitar Compose ni `.env`. No hay fallback H2, tablas fiscales, RLS ni endpoints de negocio.
-Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDATION-22.md). CI sigue en #23; seguridad por despacho en #26–30; gate #74 antes del esquema fiscal.
+Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDATION-22.md). Seguridad por despacho en #26–30; gate #74 antes del esquema fiscal.
+
+## Integración continua — issue #23
+
+El workflow [CI](.github/workflows/ci.yml) valida PRs a main, incluso Draft, push a main y ejecución manual. Checks estables: `Backend CI`, `Web CI`, `OpenAPI CI`, `Security CI` y `CI Required`. No despliega ni requiere secrets. Ver [guía CI, comandos equivalentes, artifacts, diagnóstico y protección recomendada](docs/delivery/CI.md). El resultado debe consultarse por SHA en GitHub Actions; la existencia del YAML no acredita una ejecución exitosa.
 
 ## Para Codex y desarrolladores
 1. [AGENTS.md](AGENTS.md): reglas obligatorias, documentación fuente de verdad y PR Draft sin merge.
@@ -51,6 +55,7 @@ Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDA
 - [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — integrado en `ce561482fda7889b005deaad3d822395b89a82df`.
 - [PR #75 — scaffold backend #20](https://github.com/Dagt/Fiscuvia/pull/75) — integrado mediante squash en `1d0590a`.
 - [PR #76 — scaffold web #21](https://github.com/Dagt/Fiscuvia/pull/76) — integrado mediante squash en `6ac5dd5d3750b76e50494953c10724b25368bad3`.
+- [PR #77 — PostgreSQL/Docker/Flyway #22](https://github.com/Dagt/Fiscuvia/pull/77) — integrado mediante squash en `bf61a9697e606cfd6b709a09ed2997947c8c268f`.
 - [Issue #73 — seguimiento MVP](https://github.com/Dagt/Fiscuvia/issues/73) — épicas, dependencias y gates.
 - [Issue #74 — revisión del modelo fiscal/esquema antes de migraciones](https://github.com/Dagt/Fiscuvia/issues/74).
 

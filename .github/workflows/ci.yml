@@ -1,0 +1,202 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  REDOCLY_TELEMETRY: 'off'
+  npm_config_audit: 'false'
+  npm_config_fund: 'false'
+
+jobs:
+  backend:
+    name: Backend CI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6
+        with:
+          distribution: temurin
+          java-version: '25.0.5+8'
+          cache: maven
+          cache-dependency-path: |
+            backend/pom.xml
+            backend/.mvn/wrapper/maven-wrapper.properties
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: web/.nvmrc
+          package-manager-cache: false
+      - name: Prepare report tools
+        run: |
+          npm ci --prefix tools/ci --ignore-scripts
+          node tools/ci/identity.mjs
+          java -version
+          command -v unzip >/dev/null
+          backend/mvnw -f backend/pom.xml --version
+          docker version
+          docker info --format '{{.OSType}}' | grep -Fx linux
+          test "${TESTCONTAINERS_RYUK_DISABLED:-false}" = false
+          test "${TESTCONTAINERS_REUSE_ENABLE:-false}" = false
+      - name: Maven clean verify with real PostgreSQL
+        working-directory: backend
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
+      - name: Verify all JUnit results and redact reports
+        if: ${{ always() }}
+        run: node tools/ci/reports.mjs backend
+      - name: Scan artifact allowlist
+        run: node tools/ci/artifacts.mjs backend
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: backend-${{ github.sha }}
+          path: |
+            .ci-artifacts/backend/summary.json
+            .ci-artifacts/backend/junit.xml
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  web:
+    name: Web CI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: web/.nvmrc
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            tools/ci/package-lock.json
+      - name: Verify pinned tools and install dependencies
+        run: |
+          node tools/ci/identity.mjs
+          npm ci --prefix tools/ci --ignore-scripts
+          npm ci --prefix web
+          mkdir -p .ci-work
+      - name: Typecheck
+        working-directory: web
+        run: npm run typecheck
+      - name: ESLint
+        working-directory: web
+        run: npm run lint
+      - name: Formatting
+        working-directory: web
+        run: npm run format:check
+      - name: Vitest
+        working-directory: web
+        run: npm test -- --reporter=default --reporter=json --outputFile=../.ci-work/vitest.json
+      - name: Production build
+        working-directory: web
+        run: npm run build
+      - name: Install pinned Chromium and system dependencies
+        working-directory: web
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Playwright Chromium (all projects)
+        working-directory: web
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: ../.ci-work/playwright.json
+        run: npm run test:e2e -- --reporter=line,json
+      - name: Verify complete frontend results
+        if: ${{ always() }}
+        run: node tools/ci/reports.mjs web
+      - name: Scan artifact allowlist
+        run: node tools/ci/artifacts.mjs web
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: web-${{ github.sha }}
+          path: .ci-artifacts/web/summary.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  openapi:
+    name: OpenAPI CI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: web/.nvmrc
+          cache: npm
+          cache-dependency-path: tools/ci/package-lock.json
+      - name: Install validation tools
+        run: |
+          node tools/ci/identity.mjs
+          npm ci --prefix tools/ci --ignore-scripts
+      - name: Test CI gates (including negative contract fixtures)
+        run: npm test --prefix tools/ci
+      - name: Validate preliminary OpenAPI document
+        run: npm run openapi --prefix tools/ci
+
+  security:
+    name: Security CI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: web/.nvmrc
+          package-manager-cache: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6
+        with:
+          distribution: temurin
+          java-version: '25.0.5+8'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Prepare security tools and Maven dependency inventory
+        run: |
+          node tools/ci/identity.mjs
+          npm ci --prefix tools/ci --ignore-scripts
+          command -v unzip >/dev/null
+          backend/mvnw -f backend/pom.xml --batch-mode --no-transfer-progress org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeBom -DincludeTestScope=true -DoutputFormat=json
+      - name: Secret, sensitive file, workflow and dependency checks
+        run: npm run security --prefix tools/ci
+      - name: Scan artifact allowlist
+        run: node tools/ci/artifacts.mjs security
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: security-${{ github.sha }}
+          path: .ci-artifacts/security/summary.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  required:
+    name: CI Required
+    if: ${{ always() }}
+    needs: [backend, web, openapi, security]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require every independent check to succeed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node -e 'const r=JSON.parse(process.env.RESULTS); console.log(r); if(Object.values(r).some(j=>j.result!=="success")) process.exit(1)'
+          printf 'Todos los checks aprobaron para %s (origen %s).\n' "$GITHUB_SHA" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"

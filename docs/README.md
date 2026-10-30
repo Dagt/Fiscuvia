@@ -47,6 +47,8 @@
 - [Índice de issues](delivery/ISSUE-INDEX.md), [Épicas](delivery/EPICS.md), [roadmap](delivery/ROADMAP.md)
 - [Definition of Done](delivery/DEFINITION-OF-DONE.md), [tests](delivery/TEST-STRATEGY.md), [gates](delivery/RELEASE-GATES.md), [riesgos](delivery/RISKS.md)
 - [Operaciones](delivery/OPERATIONS.md), [prompt Codex](delivery/CODEX-STARTER.md)
+- [CI de GitHub Actions, comandos locales y protección de main](delivery/CI.md)
+- [Evidencia CI #23 y bloqueo remoto comprobado](delivery/VALIDATION-23.md)
 
 ## 9. Referencia comparativa
 - [Auditoría de metodología observada en TrailerSaaS y adaptación a Fiscuvia](delivery/TRAILERSAAS-REFERENCE-AUDIT.md)
@@ -62,4 +64,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Backend #20 y [web #21](../web/README.md) están integrados mediante PR #75/#76. Esta rama añade la [infraestructura PostgreSQL/Flyway #22](../infra/README.md), pendiente de revisión/merge, con [evidencia real](../backend/VALIDATION-22.md). Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes en sus alcances. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar una imagen conceptual captura real.
+Backend #20, [web #21](../web/README.md) e [infraestructura PostgreSQL/Flyway #22](../infra/README.md) están integrados mediante PR #75–77, con [evidencia #22](../backend/VALIDATION-22.md). Esta rama prepara [CI #23](delivery/CI.md) para revisión. Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes en sus alcances. No cerrar preguntas técnicas o fiscales sin evidencia; no considerar una imagen conceptual captura real.

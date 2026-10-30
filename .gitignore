@@ -6,6 +6,8 @@ out/
 node_modules/
 dist/
 coverage/
+.ci-work/
+.ci-artifacts/
 .vite/
 /web/test-results/
 /web/playwright-report/
