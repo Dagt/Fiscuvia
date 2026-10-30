@@ -1,6 +1,6 @@
 # Backlog de implementación Fiscuvia
 
-**Estado:** Proposed · **Tracking issue:** [#73 — Fiscuvia MVP](https://github.com/Dagt/Fiscuvia/issues/73) · **Código:** backend #20 integrado mediante PR #75; scaffold web #21 en esta rama, pendiente de revisión/merge, sin módulos de negocio. #52 y #56 conservan sus alcances independientes. El backlog incorpora metodología real de TrailerSaaS: épica (resultado) -> issue acotado (PR) -> criterios de aceptación -> pruebas -> revisión humana -> merge.
+**Estado:** Proposed · **Tracking issue:** [#73 — Fiscuvia MVP](https://github.com/Dagt/Fiscuvia/issues/73) · **Código:** backend #20 y web #21 integrados mediante PR #75/#76; infraestructura PostgreSQL/Flyway #22 en esta rama, pendiente de revisión/merge. Sin módulos/esquema fiscal, RLS ni identidad. #23, #26–30, #52/#56 y gate #74 conservan sus alcances. El backlog incorpora metodología real de TrailerSaaS: épica (resultado) -> issue acotado (PR) -> criterios de aceptación -> pruebas -> revisión humana -> merge.
 
 ## Épicas y tareas
 | Épica | Issues hijos | Resultado | Gate |

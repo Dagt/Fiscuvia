@@ -1,6 +1,6 @@
-# Fiscuvia backend — scaffold #20
+# Fiscuvia backend — foundation #20 / #22
 
-Backend ejecutable local/test, sin lógica fiscal, persistencia ni endpoints de negocio. Esta rama prepara #20 para revisión; la issue sigue abierta hasta el proceso de revisión/merge del propietario.
+Backend ejecutable local/test con PostgreSQL real y Flyway. #20 está integrado; esta rama prepara #22 para revisión. Sin tablas fiscales, persistencia de negocio ni endpoints de dominio. Gate #74 y RLS #26 siguen pendientes.
 
 ## Herramientas y compatibilidad
 
@@ -15,6 +15,9 @@ Backend ejecutable local/test, sin lógica fiscal, persistencia ni endpoints de 
 | ArchUnit | 1.4.2, transitivo de Modulith |
 | Compiler / Surefire / Failsafe | 3.15.0 / 3.5.6 / 3.5.6, gestionados por Boot |
 | Maven Enforcer | 3.6.2 |
+| PostgreSQL / imagen | 18.6 / 18.6-alpine3.24, digest fijado en Compose y tests |
+| Flyway / JDBC PostgreSQL | 12.4.0 / 42.7.14, gestionados por Boot |
+| Testcontainers | 2.0.5, gestionado por Boot |
 
 Java 25 es compatible según los [requisitos oficiales de Boot 4.1](https://docs.spring.io/spring-boot/4.1/system-requirements.html). La compatibilidad efectiva se comprueba resolviendo dependencias, compilando con `release 25`, verificando módulos y ejecutando el JAR durante `verify`. No fue necesario activar el fallback Java 21 de ADR-002. Enforcer exige JDK 25 y Maven 3.9.16 para evitar variaciones accidentales.
 
@@ -24,7 +27,7 @@ El parent de Boot y el BOM de Modulith fijan las dependencias transitivas y plug
 
 ## Instalación y ejecución
 
-Instalar un JDK 25 completo y comprobar `java -version`. Si Java no está en PATH, configurar `JAVA_HOME` para la sesión apuntando a su instalación y añadir su directorio `bin` al PATH. No es necesario instalar Maven. La primera ejecución necesita HTTPS a Maven Central; posteriores builds utilizan la caché local de Maven.
+Instalar JDK 25 y Docker con contenedores Linux. No es necesario instalar Maven. La primera ejecución necesita HTTPS a Maven Central y registros de imágenes; posteriores builds usan cachés. Para desarrollar, seguir primero la [guía PostgreSQL/Compose](../infra/README.md): generar `infra/.env` y ejecutar `docker compose --env-file infra/.env -f infra/compose.yaml up -d --wait` desde la raíz. Los tests se autoaprovisionan con Testcontainers y no requieren ese Compose ni `.env`.
 
 Desde `backend/`, en PowerShell:
 
@@ -49,7 +52,7 @@ java -jar target/fiscuvia-backend-0.0.1-SNAPSHOT.jar
 Invoke-RestMethod http://127.0.0.1:8080/actuator/health
 ```
 
-Detener con Ctrl+C. `UP` indica salud del proceso de este scaffold; no certifica conectividad a DB/OIDC/SAT ni preparación para un piloto.
+Detener con Ctrl+C. Health ahora incluye conectividad PostgreSQL; readiness incluye `readinessState,db` y liveness sigue siendo del proceso. `UP` no certifica OIDC/SAT, aislamiento por despacho ni preparación para un piloto.
 
 ## Configuración y fallos de arranque
 
@@ -61,12 +64,21 @@ Detener con Ctrl+C. `UP` indica salud del proceso de este scaffold; no certifica
 | `server.address` | 127.0.0.1 por defecto; desarrollo local en loopback |
 | `application-local.yml` | inicialización inmediata para detectar errores al arrancar |
 | `src/test/resources/application-test.yml` | puerto efímero y banner deshabilitado; no se empaqueta |
+| `DB_PORT` | 55433 por defecto, sólo loopback y base `fiscuvia_local` |
+| `DB_RUNTIME_PASSWORD` / `DB_MIGRATION_PASSWORD` | requeridas en local, sin defaults; importadas de `../infra/.env` o entorno |
+| `TEST_DB_JDBC_URL` / `TEST_DB_RUNTIME_PASSWORD` / `TEST_DB_MIGRATION_PASSWORD` | sólo pruebas, suministradas por Testcontainers |
 
-No hay secretos, `.env` requerido, URL de DB ni issuer OIDC. Los perfiles fuera de `local`/`test`, incluso combinados con `local`, fallan al crear el contexto; un puerto inválido falla por binding de Spring con código de salida no cero. Un puerto ocupado debe liberarse o cambiarse con `--server.port`. Un JDK/Maven fuera de rango falla en `validate` con diagnóstico de Enforcer.
+No hay secretos versionados ni issuer OIDC. La DB es obligatoria: configuración ausente, DB inaccesible o contraseñas inválidas fallan explícitamente, sin H2. Un guard previo a los datasources rechaza perfiles fuera de `local`/`test`, URLs remotas, otro nombre de base, credenciales dentro de URL y destinos distintos para migración/runtime. Otro guard verifica por SQL que runtime no sea superusuario, BYPASSRLS, creador de bases/roles ni propietario de la base. Puerto HTTP inválido falla por binding; un JDK/Maven fuera de rango falla en Enforcer.
 
 Esta protección de perfiles y el bind local son límites de desarrollo, no una implementación de autorización. Antes de añadir datos/APIs se requieren #26–30. Staging/prod y su configuración se incorporarán en sus issues de entrega y seguridad, revisando explícitamente esta restricción. No publicar este scaffold en una interfaz remota.
 
-Actuator habilita acceso de lectura sólo a `health`, con probes `liveness`/`readiness`; no incluye detalles ni componentes. La raíz de health puede listar los nombres de esos dos grupos. Discovery HTTP y exposición JMX están deshabilitados; `env`, `configprops`, `beans`, `heapdump`, `metrics`, `shutdown`, etc. devuelven 404. Los errores HTTP no incluyen mensajes internos, excepciones ni stack traces. No se configura CORS ni se añade seguridad ficticia.
+Actuator habilita acceso de lectura sólo a `health`, con probes `liveness`/`readiness`; no incluye detalles ni componentes. La raíz de health puede listar los nombres de esos dos grupos. Discovery HTTP y exposición JMX están deshabilitados; `env`, `configprops`, `beans`, `heapdump`, `metrics`, `shutdown`, etc. devuelven 404. Los errores HTTP no incluyen mensajes internos, excepciones ni stack traces. No se configura CORS ni se añade autorización ficticia.
+
+## Migraciones y privilegios
+
+JDBC + Flyway son suficientes: no hay JPA/Hibernate ni entidades artificiales. Flyway usa `fiscuvia_migrator`; el pool normal usa `fiscuvia_runtime`. El rol bootstrap de Compose se limita a aprovisionar roles en un volumen nuevo. V1 crea sólo el esquema vacío `app` y USAGE para runtime, sin permisos sobre futuras tablas. El historial vive en `infrastructure.flyway_schema_history`, inaccesible a runtime.
+
+Migraciones en `src/main/resources/db/migration/V<N>__descripcion.sql`, LF y versiones únicas. `validate-on-migrate`, validación de nombres y ubicaciones activas; baseline y out-of-order deshabilitados; `clean-disabled=true`. No editar migraciones aplicadas ni reparar checksums para ocultar divergencias. El init SQL genérico de Spring está deshabilitado: Flyway es la única autoridad del esquema. [Guía completa, recuperación y limpieza](../infra/README.md).
 
 ## Estructura y límites
 
@@ -80,15 +92,15 @@ backend/
     │   │   ├── FiscuviaApplication.java
     │   │   └── platform/
     │   │       ├── package-info.java
-    │   │       └── internal/ScaffoldRuntimeConfiguration.java
-    │   └── resources/application.yml, application-local.yml
+    │   │       └── internal/ (guardas de entorno y privilegios de DB)
+    │   └── resources/ (application*.yml y db/migration/V1__initialize_infrastructure.sql)
     └── test/
         ├── java/com/fiscuvia/ (HTTP, arquitectura, runtime y JAR ejecutable)
         ├── java/architecture/fixtures/ (violaciones deliberadas sólo de prueba)
         └── resources/application-test.yml
 ```
 
-Se usa un artefacto Maven con módulos lógicos Spring Modulith. Cada subpaquete directo de `com.fiscuvia` es un módulo por detección estándar; la raíz sólo contiene el bootstrap. `platform` es el único módulo implementado: verifica los perfiles admitidos, no exporta API de negocio y declara cero dependencias de otros módulos.
+Se usa un artefacto Maven con módulos lógicos Spring Modulith. Cada subpaquete directo de `com.fiscuvia` es un módulo por detección estándar; la raíz sólo contiene el bootstrap. `platform` es el único módulo implementado: verifica entorno y privilegios de conexión, no exporta API de negocio y declara cero dependencias de otros módulos.
 
 Convención para las siguientes issues:
 
@@ -119,22 +131,22 @@ Convención para las siguientes issues:
 .\mvnw.cmd -B -ntp '-Dtest=ModuleBoundariesTests' test
 # Arranque Spring real, health, superficie Actuator y errores HTTP
 .\mvnw.cmd -B -ntp '-Dtest=FiscuviaApplicationTests' test
-# Build completo + pruebas anteriores + arranque del JAR en proceso independiente
+# Build completo con PostgreSQL Testcontainers + arranque del JAR en proceso independiente
 .\mvnw.cmd -B -ntp clean verify
 # Dependencias efectivamente resueltas
 .\mvnw.cmd -B -ntp dependency:tree
 ```
 
-Surefire ejecuta `*Tests`; Failsafe ejecuta `*IT` después de empaquetar el JAR. Los tests usan HTTP real en puertos efímeros y cierran los procesos creados. Los casos negativos de Modulith importan sus fixtures de test explícitamente: la verificación productiva conserva la exclusión estándar de clases de prueba. No hay mocks de negocio, base de datos en memoria ni pruebas deshabilitadas. Los resultados y verificaciones del wrapper se registran en [VALIDATION.md](VALIDATION.md).
+Surefire ejecuta `*Tests`; Failsafe ejecuta `*IT` después de empaquetar el JAR. Los tests usan HTTP y PostgreSQL reales en puertos efímeros de loopback, cierran contextos/procesos/contenedores y no reutilizan DBs. Los tests del JAR originales se conservan, ahora con una DB real y casos adicionales de conexión/credenciales/privilegios/URL remota. Se prueban checksum alterado y rollback SQL en contenedores nuevos por método. Docker ausente provoca fallo, no omisiones ni sustitución en memoria. La evidencia histórica de #20 está en [VALIDATION.md](VALIDATION.md); la vigente para #22 en [VALIDATION-22.md](VALIDATION-22.md).
 
 ## Alcance y siguientes issues
 
-Trazabilidad: #20, NFR-040, configuración local de NFR-041, dirección ADR-001/002; límites ADR-003 y gate #74 respetados. Ningún FR/BR de negocio se declara implementado. Roles/tenant/expediente, auditoría de comandos, migraciones, OpenAPI de negocio y capturas UI no aplican a este cambio sin datos, comandos ni interfaz; siguen pendientes en sus issues.
+Trazabilidad: #20/#22, ADR-003/007 como dirección (conservan Proposed), base NFR-001/021 y NFR-040/041. No se declara cumplido el aislamiento tenant NFR-001 ni ningún FR/BR de negocio: no hay datos por despacho, comandos, contratos de dominio o cambios UI. Gate #74 intacto.
 
-- #22: PostgreSQL, Docker y Flyway; no se incluyen drivers, ORM, H2 ni migraciones aquí. Gate #74 antes del dominio fiscal.
+- #22: PostgreSQL, Docker, Flyway y JDBC en revisión; sin ORM ni tablas de dominio. Gate #74 antes del dominio fiscal.
 - #23: CI; esta entrega no crea workflows de GitHub Actions.
 - #24–25: contratos/errores de API y observabilidad ampliada.
 - #26–30: RLS, OIDC, capacidades, auditoría/outbox y aislamiento entre despachos antes de operar sobre datos.
-- UI #21/#52 y CFDI/SAT permanecen fuera de alcance.
+- UI #21 está integrada; #52 y CFDI/SAT permanecen fuera de alcance de este cambio backend.
 
 Metodología contrastada con [AGENTS](https://github.com/Dagt/TrailerSaas/blob/main/AGENTS.md), [flujo de issue/PR](https://github.com/Dagt/TrailerSaas/blob/main/docs/backlog/codex-workflow.md), POM y `ModuleBoundariesTests` de TrailerSaaS. Se adoptan la entrega acotada, la prueba arquitectónica y la evidencia por SHA. No se copian dominios, módulos logísticos ni infraestructura posterior.

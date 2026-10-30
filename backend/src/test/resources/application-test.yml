@@ -1,5 +1,12 @@
 server:
   port: 0
 spring:
+  datasource:
+    url: ${TEST_DB_JDBC_URL}
+    username: fiscuvia_runtime
+    password: ${TEST_DB_RUNTIME_PASSWORD}
+  flyway:
+    user: fiscuvia_migrator
+    password: ${TEST_DB_MIGRATION_PASSWORD}
   main:
     banner-mode: off

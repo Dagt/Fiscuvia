@@ -13,7 +13,7 @@
     <artifactId>fiscuvia-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Fiscuvia Backend</name>
-    <description>Fiscuvia modular monolith foundation — issue 20</description>
+    <description>Fiscuvia modular monolith and PostgreSQL foundation</description>
     <properties>
         <java.version>25</java.version>
         <spring-modulith.version>2.1.2</spring-modulith.version>
@@ -31,6 +31,34 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
@@ -55,6 +83,17 @@
         </dependency>
     </dependencies>
     <build>
+        <testResources>
+            <testResource><directory>src/test/resources</directory></testResource>
+            <testResource>
+                <directory>../infra</directory>
+                <targetPath>test-infra</targetPath>
+                <includes>
+                    <include>postgres/init/10-create-roles.sh</include>
+                    <include>compose.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

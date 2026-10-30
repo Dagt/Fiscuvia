@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-29:** documentación y backend #20 integrados (PR #75, squash `1d0590a`). Esta rama incorpora el scaffold web #21, pendiente de revisión/merge. No hay funcionalidades de negocio, autenticación ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-29:** backend #20 y web #21 integrados (PR #75/#76). Esta rama incorpora PostgreSQL/Docker/Flyway #22, pendiente de revisión/merge. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
 
 ## Web local — issue #21
 
@@ -17,9 +17,16 @@ npm run dev
 
 Bienvenida y estados demostrativos con identidad Fiscuvia, navegación responsive y áreas futuras deshabilitadas. No requiere backend, variables de entorno ni datos de clientes. Consulta [web/README.md](web/README.md) para arquitectura, versiones y comandos de validación; [capturas y evidencia real](docs/ux/evidence/issue-21/README.md). #52 y #56 conservan sus alcances independientes.
 
-## Backend local — issue #20
+## Backend y PostgreSQL local — issues #20/#22
 
-Requiere JDK 25. Maven se descarga mediante el wrapper; no requiere base de datos, Docker ni proveedor OIDC.
+Requiere JDK 25 y Docker con contenedores Linux. Maven se descarga mediante el wrapper. Desde la raíz, generar credenciales sintéticas locales y arrancar PostgreSQL:
+
+```powershell
+pwsh -File infra/New-LocalEnvironment.ps1
+docker compose --env-file infra/.env -f infra/compose.yaml up -d --wait
+```
+
+POSIX: `sh infra/new-local-env.sh` y el mismo comando Compose. Los generadores no sobrescriben `.env`. Ver [guía PostgreSQL, permisos, variables y limpieza](infra/README.md).
 
 ```powershell
 cd backend
@@ -28,8 +35,8 @@ cd backend
 ```
 
 En POSIX: `./mvnw -B -ntp clean verify` y `./mvnw spring-boot:run`.
-Salud: `http://127.0.0.1:8080/actuator/health`. La aplicación escucha en loopback y sólo admite perfiles local/test en este scaffold.
-Consulta [backend/README.md](backend/README.md) para versiones, límites modulares, configuración, pruebas y pendientes. La base de datos/Flyway/Docker corresponde a #22; CI a #23; seguridad a #26–30. No hay endpoints de negocio habilitados.
+Salud: `http://127.0.0.1:8080/actuator/health`. La aplicación escucha en loopback, admite sólo local/test y requiere PostgreSQL. Los tests crean DBs efímeras con Testcontainers, sin necesitar Compose ni `.env`. No hay fallback H2, tablas fiscales, RLS ni endpoints de negocio.
+Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDATION-22.md). CI sigue en #23; seguridad por despacho en #26–30; gate #74 antes del esquema fiscal.
 
 ## Para Codex y desarrolladores
 1. [AGENTS.md](AGENTS.md): reglas obligatorias, documentación fuente de verdad y PR Draft sin merge.
@@ -43,6 +50,7 @@ Consulta [backend/README.md](backend/README.md) para versiones, límites modular
 ## GitHub
 - [PR #1 — documentación fundacional](https://github.com/Dagt/Fiscuvia/pull/1) — integrado en `ce561482fda7889b005deaad3d822395b89a82df`.
 - [PR #75 — scaffold backend #20](https://github.com/Dagt/Fiscuvia/pull/75) — integrado mediante squash en `1d0590a`.
+- [PR #76 — scaffold web #21](https://github.com/Dagt/Fiscuvia/pull/76) — integrado mediante squash en `6ac5dd5d3750b76e50494953c10724b25368bad3`.
 - [Issue #73 — seguimiento MVP](https://github.com/Dagt/Fiscuvia/issues/73) — épicas, dependencias y gates.
 - [Issue #74 — revisión del modelo fiscal/esquema antes de migraciones](https://github.com/Dagt/Fiscuvia/issues/74).
 

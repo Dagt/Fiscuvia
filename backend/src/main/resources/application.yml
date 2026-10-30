@@ -3,6 +3,28 @@ spring:
     name: fiscuvia-backend
   profiles:
     default: local
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 0
+      connection-timeout: 3000
+      validation-timeout: 1000
+      initialization-fail-timeout: 1
+  sql:
+    init:
+      mode: never
+  flyway:
+    locations: classpath:db/migration
+    default-schema: infrastructure
+    create-schemas: true
+    validate-on-migrate: true
+    validate-migration-naming: true
+    fail-on-missing-locations: true
+    baseline-on-migrate: false
+    out-of-order: false
+    clean-disabled: true
+    connect-retries: 0
 
 server:
   address: 127.0.0.1
@@ -32,3 +54,6 @@ management:
       show-components: never
       probes:
         enabled: true
+      group:
+        readiness:
+          include: readinessState,db

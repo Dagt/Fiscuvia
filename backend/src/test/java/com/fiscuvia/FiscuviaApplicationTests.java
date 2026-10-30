@@ -15,12 +15,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FiscuviaApplicationTests {
+
+    @Container
+    static final PostgresTestDatabase DATABASE = new PostgresTestDatabase();
+
+    @DynamicPropertySource
+    static void databaseProperties(DynamicPropertyRegistry registry) {
+        DATABASE.register(registry);
+    }
 
     @LocalServerPort
     private int port;
@@ -32,11 +47,12 @@ class FiscuviaApplicationTests {
     private Environment environment;
 
     @Test
-    void startsWithoutExternalInfrastructure() {
+    void startsWithIsolatedPostgresAndNoOtherExternalServices() {
         assertThat(port).isPositive();
         assertThat(environment.getActiveProfiles()).containsExactly("test");
         assertThat(environment.getProperty("server.address")).isEqualTo("127.0.0.1");
-        assertThat(environment.getProperty("spring.datasource.url")).isNull();
+        assertThat(environment.getProperty("spring.datasource.url")).isEqualTo(DATABASE.runtimeUrl());
+        assertThat(environment.getProperty("spring.flyway.user")).isEqualTo(PostgresTestDatabase.MIGRATION_USER);
     }
 
     @ParameterizedTest
