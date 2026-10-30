@@ -1,11 +1,14 @@
 spring:
   application:
     name: fiscuvia-backend
+  main:
+    banner-mode: off
   profiles:
     default: local
   datasource:
     driver-class-name: org.postgresql.Driver
     hikari:
+      pool-name: fiscuvia-runtime
       maximum-pool-size: 5
       minimum-idle: 0
       connection-timeout: 3000
@@ -36,6 +39,19 @@ server:
     include-exception: false
 
 management:
+  tracing:
+    sampling:
+      probability: ${FISCUVIA_TRACING_SAMPLING_PROBABILITY:0.1}
+  metrics:
+    use-global-registry: false
+  defaults:
+    metrics:
+      export:
+        enabled: false
+  simple:
+    metrics:
+      export:
+        enabled: true
   endpoints:
     access:
       default: none
@@ -57,3 +73,14 @@ management:
       group:
         readiness:
           include: readinessState,db
+    metrics:
+      access: none
+
+logging:
+  structured:
+    format:
+      console: com.fiscuvia.platform.internal.observability.AllowlistLogFormatter
+      file: com.fiscuvia.platform.internal.observability.AllowlistLogFormatter
+  level:
+    root: WARN
+    com.fiscuvia: INFO

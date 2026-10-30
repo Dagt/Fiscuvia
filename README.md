@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-30:** base #20–23 integrada (PR #75–78). Esta rama incorpora contratos/errores API #24 para revisión. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-30:** base #20–24 integrada (PR #75–78 y #80). Esta rama incorpora observabilidad #25 para revisión: logs JSON seguros, métricas, trazas locales y health/readiness. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
 
 ## Web local — issue #21
 
@@ -37,6 +37,8 @@ cd backend
 En POSIX: `./mvnw -B -ntp clean verify` y `./mvnw spring-boot:run`.
 Salud: `http://127.0.0.1:8080/actuator/health`. La aplicación escucha en loopback, admite sólo local/test y requiere PostgreSQL. Los tests crean DBs efímeras con Testcontainers, sin necesitar Compose ni `.env`. No hay fallback H2, tablas fiscales, RLS ni endpoints de negocio.
 Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDATION-22.md). Seguridad por despacho en #26–30; gate #74 antes del esquema fiscal.
+
+Observabilidad: [atributos permitidos, tracing sin exportación, métricas y runbook](docs/delivery/OBSERVABILITY.md). Actuator conserva exposición mínima; diagnóstico de métricas sólo con opt-in local en puerto loopback separado. [Evidencia #25](backend/VALIDATION-25.md).
 
 ## Integración continua — issue #23
 

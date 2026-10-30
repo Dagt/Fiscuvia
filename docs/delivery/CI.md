@@ -6,7 +6,7 @@ PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propieta
 
 #24 añade conformidad de respuestas HTTP reales y tipos generados desde `docs/api/openapi-v1.yaml`, manteniendo el borrador propuesto separado. Después de Maven verify ejecutar `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json`; Backend CI incluye ese paso. `npm run openapi --prefix tools/ci` valida ambos documentos y la generación exacta. Versiones nuevas: openapi-typescript 7.13.0, AJV 8.20.0 / ajv-formats 3.0.1, Prettier 3.9.10 (formato del generado), con lockfile.
 
-Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. No endpoints #24, cambios de negocio, migraciones nuevas, RLS ni despliegues.
+Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada histórica: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. La base actual incorpora API #24 desde PR #80; #25 añade observabilidad sin negocio, migraciones nuevas, RLS ni despliegues.
 
 ## Workflow y checks estables
 
@@ -80,7 +80,7 @@ Los tests Playwright regeneran capturas históricas de #21. No confirmar diferen
 
 ## Integridad y artifacts
 
-Maven usa `clean verify`; la cache sólo guarda descargas `.m2`, no target. npm usa `npm ci`; la cache guarda descargas, no node_modules/dist. No se cachean reportes ni bases con credenciales. Desde #24, `reports.mjs` exige ocho suites backend (mínimos 80 Surefire + 10 Failsafe), 21 Vitest y 13 Playwright, cero fallos/omitidos/flaky/reintentos. Reducciones intencionales requieren revisar esos mínimos, sin flags skip. La política busca también anotaciones Disabled/Ignore y tests skip/todo/only. Sus pruebas negativas demuestran rechazo de omisiones, suites ausentes y resultados incompletos.
+Maven usa `clean verify`; la cache sólo guarda descargas `.m2`, no target. npm usa `npm ci`; la cache guarda descargas, no node_modules/dist. No se cachean reportes ni bases con credenciales. Desde #25, `reports.mjs` exige quince suites backend (mínimos 96 Surefire + 12 Failsafe), 21 Vitest y 13 Playwright, cero fallos/omitidos/flaky/reintentos. Reducciones intencionales requieren revisar esos mínimos, sin flags skip. La política busca también anotaciones Disabled/Ignore y tests skip/todo/only. Sus pruebas negativas demuestran rechazo de omisiones, suites ausentes y resultados incompletos.
 
 Sólo se suben archivos permitidos: backend `summary.json` + `junit.xml` depurado, web y seguridad `summary.json`. Se escanean antes de subirlos. JUnit publicado omite propiedades JVM/env, stdout/stderr y cuerpos de excepciones. No se suben `.env`, archivos SAT, certificados, SBOM, JAR, dumps, reportes crudos, trazas, HTML ni capturas. Si falla una suite, Maven/Playwright conservan el fallo en el job; el verificador vuelve a fallar y **no publica artifacts crudos para diagnosticarlo**. Examinar logs en la ejecución privada, sin copiarlos a servicios externos. Las contraseñas de Testcontainers son UUID temporales; las pruebas existentes verifican su ausencia en logs.
 

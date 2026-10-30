@@ -37,19 +37,19 @@ class FiscuviaApplicationIT {
         Process process = start(log, "--server.port=0");
         try (var client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
             long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
-            var portPattern = Pattern.compile("Tomcat started on port (\\d+)");
+            var portPattern = Pattern.compile("\"port\":(\\d+)");
             while (System.nanoTime() < deadline && process.isAlive()) {
                 String output = Files.readString(log);
                 assertNoCredentials(output);
                 var matcher = portPattern.matcher(output);
-                if (matcher.find() && output.contains("Started FiscuviaApplication")) {
+                if (matcher.find() && output.contains("APPLICATION_READY")) {
                     var request = HttpRequest.newBuilder(URI.create(
                                     "http://127.0.0.1:" + matcher.group(1) + "/actuator/health"))
                             .timeout(Duration.ofSeconds(5)).GET().build();
                     var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     assertThat(response.statusCode()).isEqualTo(200);
                     assertThat(response.body()).contains("\"status\":\"UP\"");
-                    assertThat(output).contains("falling back to 1 default profile: \"local\"");
+                    assertThat(output).contains("\"event\":\"APPLICATION_READY\"");
                     var info = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"
                             + matcher.group(1) + "/api/v1/public/info")).GET().build(), HttpResponse.BodyHandlers.ofString());
                     assertThat(info.statusCode()).isEqualTo(200);
@@ -69,42 +69,42 @@ class FiscuviaApplicationIT {
 
     @Test
     void executableJarRejectsAnUnsupportedEnvironment() throws Exception {
-        assertStartupFailure("unsupported-profile", "supports only local/test profiles",
+        assertStartupFailure("unsupported-profile", "CONFIGURATION_REJECTED",
                 "--spring.profiles.active=prod", "--server.port=0");
     }
 
     @Test
     void executableJarRejectsMalformedConfiguration() throws Exception {
-        assertStartupFailure("invalid-port", "server.port", "--server.port=invalid");
+        assertStartupFailure("invalid-port", "CONFIGURATION_REJECTED", "--server.port=invalid");
     }
 
     @Test
     void executableJarRejectsUnavailablePostgres() throws Exception {
-        assertStartupFailure("unavailable-db", "Connection", "--spring.datasource.url=jdbc:postgresql://127.0.0.1:1/fiscuvia_local?connectTimeout=1",
+        assertStartupFailure("unavailable-db", "DATABASE_UNAVAILABLE", "--spring.datasource.url=jdbc:postgresql://127.0.0.1:1/fiscuvia_local?connectTimeout=1",
                 "--server.port=0");
     }
 
     @Test
     void executableJarRejectsInvalidRuntimeCredentials() throws Exception {
-        assertStartupFailure("runtime-password", "authentication failed", "--spring.datasource.password=incorrect-test-only-value",
+        assertStartupFailure("runtime-password", "DATABASE_AUTHENTICATION", "--spring.datasource.password=incorrect-test-only-value",
                 "--server.port=0");
     }
 
     @Test
     void executableJarRejectsInvalidMigrationCredentials() throws Exception {
-        assertStartupFailure("migration-password", "authentication failed", "--spring.flyway.password=incorrect-test-only-value",
+        assertStartupFailure("migration-password", "DATABASE_AUTHENTICATION", "--spring.flyway.password=incorrect-test-only-value",
                 "--server.port=0");
     }
 
     @Test
     void executableJarRejectsAdministrativeRuntimeRole() throws Exception {
-        assertStartupFailure("runtime-admin", "must not have administrative privileges",
+        assertStartupFailure("runtime-admin", "DATABASE_PRIVILEGES",
                 "--spring.datasource.username=" + DATABASE.getUsername(), "--server.port=0");
     }
 
     @Test
     void executableJarRejectsRemoteTargetBeforeAttemptingToConnect() throws Exception {
-        assertStartupFailure("remote-url", "must target loopback/fiscuvia_local",
+        assertStartupFailure("remote-url", "CONFIGURATION_REJECTED",
                 "--spring.datasource.url=jdbc:postgresql://remote.example.test/fiscuvia_local", "--server.port=0");
     }
 
@@ -117,13 +117,18 @@ class FiscuviaApplicationIT {
             assertThat(process.exitValue()).isNotZero();
             String output = Files.readString(log);
             assertNoCredentials(output);
-            assertThat(DATABASE.redact(output)).contains(expectedDiagnostic);
+            assertThat(DATABASE.redact(output)).contains("APPLICATION_FAILED", expectedDiagnostic)
+                    .doesNotContain("Exception:", "jdbc:postgresql", "incorrect-test-only-value");
         } finally {
             stop(process);
         }
     }
 
     private Process start(Path log, String... arguments) throws Exception {
+        return start(log, java.util.Map.of(), arguments);
+    }
+
+    private Process start(Path log, java.util.Map<String, String> environment, String... arguments) throws Exception {
         var command = new ArrayList<>(List.of(
                 Path.of(System.getProperty("java.home"), "bin", "java").toString(),
                 "-jar", System.getProperty("application.jar")));
@@ -137,7 +142,63 @@ class FiscuviaApplicationIT {
                 .anyMatch(argument -> argument.startsWith("--spring.datasource.username="))
                 ? DATABASE.getPassword() : DATABASE.runtimePassword);
         builder.environment().put("DB_MIGRATION_PASSWORD", DATABASE.migrationPassword);
+        builder.environment().putAll(environment);
         return builder.start();
+    }
+
+    @Test
+    void executableJarDoesNotExportEvenWhenOtelEnvironmentPointsAtAnEndpoint() throws Exception {
+        try (var trap = new java.net.ServerSocket(0, 1, java.net.InetAddress.getLoopbackAddress())) {
+            trap.setSoTimeout(6000);
+            Path log = temporaryDirectory.resolve("no-export.log");
+            var process = start(log, java.util.Map.of("OTEL_EXPORTER_OTLP_ENDPOINT", "http://127.0.0.1:" + trap.getLocalPort(),
+                    "OTEL_TRACES_EXPORTER", "otlp", "OTEL_EXPORTER_OTLP_HEADERS", "authorization=private-export-canary"),
+                    "--server.port=0", "--management.tracing.sampling.probability=1");
+            try (var client = HttpClient.newHttpClient()) {
+                int port = awaitPort(process, log);
+                var response = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + port + "/api/v1/public/info")).GET().build(), HttpResponse.BodyHandlers.ofString());
+                assertThat(response.statusCode()).isEqualTo(200);
+                org.assertj.core.api.Assertions.assertThatThrownBy(trap::accept).isInstanceOf(java.net.SocketTimeoutException.class);
+                assertThat(Files.readString(log)).doesNotContain("private-export-canary", "OTEL_EXPORTER", "authorization=");
+                assertNoCredentials(Files.readString(log));
+            } finally { stop(process); }
+        }
+    }
+
+    @Test
+    void executableJarOffersMetricsOnlyOnExplicitSeparateLoopbackPort() throws Exception {
+        int managementPort;
+        try (var reservation = new java.net.ServerSocket(0, 1, java.net.InetAddress.getLoopbackAddress())) { managementPort = reservation.getLocalPort(); }
+        Path log = temporaryDirectory.resolve("local-metrics.log");
+        var process = start(log, "--server.port=0", "--management.server.port=" + managementPort,
+                "--management.server.address=127.0.0.1", "--fiscuvia.observability.local-metrics=true",
+                "--management.endpoint.metrics.access=read-only", "--management.endpoints.web.exposure.include=health,metrics");
+        try (var client = HttpClient.newHttpClient()) {
+            int port = awaitPort(process, log);
+            var main = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + port + "/actuator/metrics")).GET().build(), HttpResponse.BodyHandlers.ofString());
+            assertThat(main.statusCode()).isEqualTo(404);
+            var metrics = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + managementPort + "/actuator/metrics")).GET().build(), HttpResponse.BodyHandlers.ofString());
+            assertThat(metrics.statusCode()).isEqualTo(200);
+            assertThat(metrics.body()).contains("jvm.memory.used", "fiscuvia.migrations.ready", "jdbc.connections.active");
+            for (String endpoint : List.of("env", "beans", "heapdump", "configprops", "loggers")) {
+                assertThat(client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + managementPort + "/actuator/" + endpoint)).GET().build(), HttpResponse.BodyHandlers.ofString()).statusCode()).isEqualTo(404);
+            }
+            assertNoCredentials(Files.readString(log));
+        } finally { stop(process); }
+    }
+
+    private int awaitPort(Process process, Path log) throws Exception {
+        long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
+        var pattern = Pattern.compile("\\\"port\\\":(\\d+)");
+        while (process.isAlive() && System.nanoTime() < deadline) {
+            String output = Files.readString(log);
+            if (output.contains("APPLICATION_READY")) {
+                var matcher = pattern.matcher(output);
+                if (matcher.find()) return Integer.parseInt(matcher.group(1));
+            }
+            Thread.sleep(100);
+        }
+        throw new AssertionError("JAR did not become ready: " + DATABASE.redact(Files.readString(log)));
     }
 
     private void assertNoCredentials(String output) {
