@@ -1,0 +1,192 @@
+openapi: 3.1.0
+info:
+  title: Fiscuvia API — contratos implementados
+  version: 1.0.0
+  description: >
+    Infraestructura #24. Sólo /public/info está implementado. Identidad OIDC,
+    despachos y módulos de negocio son futuros; el borrador separado no los habilita.
+servers:
+  - url: /api/v1
+security: []
+x-error-statuses:
+  BAD_REQUEST: 400
+  INVALID_PAGINATION: 400
+  AUTHENTICATION_REQUIRED: 401
+  ACCESS_DENIED: 403
+  NOT_FOUND: 404
+  METHOD_NOT_ALLOWED: 405
+  NOT_ACCEPTABLE: 406
+  CONFLICT: 409
+  STALE_VERSION: 409
+  IDEMPOTENCY_KEY_REUSED: 409
+  PAYLOAD_TOO_LARGE: 413
+  UNSUPPORTED_MEDIA_TYPE: 415
+  VALIDATION_FAILED: 422
+  RATE_LIMITED: 429
+  INTERNAL_ERROR: 500
+paths:
+  /public/info:
+    get:
+      operationId: getPlatformInfo
+      summary: Consultar información pública de Fiscuvia
+      security: []
+      x-implementation-status: implemented
+      responses:
+        '200':
+          description: Identidad pública del producto; sin datos de usuarios ni infraestructura
+          headers:
+            X-Correlation-Id:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformInfo'
+              example:
+                productName: Fiscuvia
+                tagline: Todo tu despacho, una sola vía.
+                apiVersion: 1.0.0
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  headers:
+    CorrelationId:
+      description: UUID generado por el servidor; no refleja encabezados arbitrarios del solicitante
+      schema:
+        type: string
+        format: uuid
+  parameters:
+    Page:
+      in: query
+      name: page
+      schema: {type: integer, minimum: 0, maximum: 10000, default: 0}
+    Size:
+      in: query
+      name: size
+      schema: {type: integer, minimum: 1, maximum: 100, default: 20}
+    Sort:
+      in: query
+      name: sort
+      description: El endpoint debe restringir campos; orden secundario único por id en el repositorio
+      schema: {type: string, pattern: '^[a-zA-Z][a-zA-Z0-9]{0,63},(asc|desc)$', default: 'id,asc'}
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      description: >
+        Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado,
+        huella canónica, persistencia/replay y retención antes de prometer idempotencia.
+        No se requiere ni se utiliza en GET /public/info.
+      schema: {type: string, format: uuid}
+  schemas:
+    PlatformInfo:
+      type: object
+      additionalProperties: false
+      required: [productName, tagline, apiVersion]
+      properties:
+        productName: {type: string, const: Fiscuvia}
+        tagline: {type: string, const: 'Todo tu despacho, una sola vía.'}
+        apiVersion: {type: string, const: 1.0.0}
+    ExpectedVersion:
+      type: integer
+      minimum: 0
+      maximum: 9007199254740991
+      description: Versión exacta para Java long y JavaScript; una versión obsoleta produce 409 STALE_VERSION
+    PageMetadata:
+      type: object
+      additionalProperties: false
+      required: [page, size, hasNext]
+      properties:
+        page: {type: integer, minimum: 0, maximum: 10000}
+        size: {type: integer, minimum: 1, maximum: 100}
+        hasNext: {type: boolean}
+    FieldError:
+      type: object
+      additionalProperties: false
+      required: [field, code, message]
+      properties:
+        field: {type: string, pattern: '^[a-zA-Z][a-zA-Z0-9]{0,63}$'}
+        code: {type: string, enum: [REQUIRED, SIZE, FORMAT, RANGE, INVALID]}
+        message: {type: string, minLength: 1, maxLength: 120}
+    ProblemDetails:
+      type: object
+      additionalProperties: false
+      required: [type, title, status, detail, instance, code, traceId, fieldErrors]
+      description: >
+        RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas,
+        consultas SQL ni datos de infraestructura. El catálogo de códigos es infraestructura,
+        no implementación de autenticación, reglas de negocio o rate limiting.
+      properties:
+        type: {type: string, format: uri, pattern: '^urn:fiscuvia:problem:[a-z-]+$'}
+        title: {type: string, minLength: 1, maxLength: 120}
+        status: {type: integer, enum: [400, 401, 403, 404, 405, 406, 409, 413, 415, 422, 429, 500]}
+        detail: {type: string, minLength: 1, maxLength: 240}
+        instance: {type: string, format: uri, pattern: '^urn:uuid:[0-9a-f-]{36}$'}
+        code:
+          type: string
+          enum: [BAD_REQUEST, INVALID_PAGINATION, AUTHENTICATION_REQUIRED, ACCESS_DENIED, NOT_FOUND, METHOD_NOT_ALLOWED, NOT_ACCEPTABLE, CONFLICT, STALE_VERSION, IDEMPOTENCY_KEY_REUSED, PAYLOAD_TOO_LARGE, UNSUPPORTED_MEDIA_TYPE, VALIDATION_FAILED, RATE_LIMITED, INTERNAL_ERROR]
+        traceId: {type: string, format: uuid}
+        fieldErrors:
+          type: array
+          maxItems: 20
+          uniqueItems: true
+          items: {$ref: '#/components/schemas/FieldError'}
+      example:
+        type: urn:fiscuvia:problem:validation-failed
+        title: Datos inválidos
+        status: 422
+        detail: Revisa los campos indicados antes de continuar.
+        instance: urn:uuid:00000000-0000-4000-8000-000000000001
+        code: VALIDATION_FAILED
+        traceId: 00000000-0000-4000-8000-000000000001
+        fieldErrors: [{field: displayName, code: REQUIRED, message: Este campo es obligatorio.}]
+  responses:
+    BadRequest:
+      description: Sintaxis, tipo o parámetro inválido (400)
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    Unauthorized:
+      description: Autenticación requerida (401); integración OIDC futura #27
+      headers:
+        WWW-Authenticate:
+          schema: {type: string, const: Bearer}
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    Forbidden:
+      description: Operación no permitida (403); autorización futura
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    NotFound:
+      description: Recurso no disponible (404); no confirma existencia entre despachos
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    Conflict:
+      description: Conflicto, versión obsoleta o clave reutilizada (409)
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    Validation:
+      description: DTO bien formado pero inválido, o regla de dominio futura (422)
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    RateLimited:
+      description: Límite de solicitudes (429); enforcement futuro
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    NotAcceptable:
+      description: Formato de respuesta no admitido (406)
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
+    InternalError:
+      description: Error interno con mensaje seguro (500)
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetails'}
