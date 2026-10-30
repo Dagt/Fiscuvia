@@ -25,3 +25,16 @@ Actualización por cada nuevo módulo y revisión antes del piloto. No reemplaza
 | Metadatos de contexto retenidos / contención | Schema privado, vínculo invalidado al fin de tx, limpieza acotada SKIP LOCKED, tests concurrentes | Medir carga/bloat/autovacuum antes del piloto; no es un historial/auditoría |
 
 Modelo efectivo y límites en [tenant-foundation-26.md](../data-model/tenant-foundation-26.md). No hay datos reales, proveedor OIDC, membresías definitivas, capacidades, break-glass ni autorización fiscal implementados en #26.
+
+## Análisis propuesto #27 — controles todavía no implementados
+
+| Amenaza | Diseño sometido a aprobación | Verificación pendiente |
+|---|---|---|
+| Token/issuer/nonce/state falsificado | OIDC Code+PKCE mediante Spring Security, issuer/audience/azp/firma/tiempos y redirects exactos | Intercambio HTTP real con IdP local; negativas observables sin sesión |
+| CSRF, login CSRF y fijación de sesión | BFF mismo origen, cookie HttpOnly/Secure/Lax, CSRF y rotación de ID | Navegador real, cookies, mutaciones, expiración y logout |
+| Bootstrap de identidad permite leer otros despachos | Actor verificado+xid privado, SELECT propio bootstrap y autorización de membresía antes de TenantTransactions | Forja de actor/GUC, ausencia de contexto, SQL sin filtros, catálogo/grants y pool |
+| Roles/MFA falsos o sesión con permisos obsoletos | Roles internos, política MFA explícita del issuer, deny privilegiado sin evidencia; releer usuario/membresía | Revocación concurrente, claims sin semántica válida, MFA vencido y múltiples sesiones |
+| Robo/reuso de invitación y vinculación por correo | Hash de token, consumo atómico, expiración y receptor verificado; no autolink por email | Dos aceptaciones simultáneas, destinatario distinto, caducidad/revocación y rollback |
+| Robo de sesiones desde una inyección SQL de negocio | Schema/datasource/rol mínimo de sesiones separado y principal sin tokens | Catálogo de privilegios, ausencia de tokens en DB/logs/artifacts y JAR sin fixture |
+
+La [propuesta #27](../decisions/issue-27-oidc-session-proposal.md) registra decisiones pendientes y límites. Esta tabla no acredita mitigaciones nuevas ni sustituye las pruebas de seguridad o la selección/contrato del proveedor. No se han cambiado RLS, perfiles ni permisos reales en esta fase.

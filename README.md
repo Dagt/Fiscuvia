@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-30:** base #20–25 integrada (PR #75–78, #80 y #81). Esta rama incorpora tenancy/RLS #26 para revisión. Sin tablas fiscales, autorización ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-30:** base #20–26 integrada (PR #75–78 y #80–82). Esta rama presenta una [propuesta de identidad/sesiones #27](docs/decisions/issue-27-oidc-session-proposal.md) pendiente de aprobación; todavía no implementa autenticación. Sin tablas fiscales, autorización funcional ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
 
 ## Web local — issue #21
 

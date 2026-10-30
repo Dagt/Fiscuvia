@@ -1,6 +1,8 @@
 # Fiscuvia backend — plataforma #20–25 y tenancy/RLS #26
 
-Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–25 integrada; #26 incorpora raíz mínima de despachos y RLS para revisión. Sin tablas fiscales ni endpoints de negocio. Gate #74, OIDC/membresías #27 y permisos #28 siguen pendientes.
+Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–26 integrada con raíz mínima de despachos y RLS. Sin tablas fiscales ni endpoints de negocio. Gate #74, OIDC/membresías #27 y permisos #28 siguen pendientes.
+
+PR #82/#26 está integrado en main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. Esta rama de #27 contiene **sólo una propuesta documental pendiente de aprobación**: [proveedores, BFF/sesiones y modelo de identidad/RLS](../docs/decisions/issue-27-oidc-session-proposal.md). No hay Spring Security/OIDC, login, sesiones o membresías nuevos; los comandos y las 135 pruebas siguientes corresponden a la base existente. [Validación de esta fase](VALIDATION-27-PROPOSAL.md).
 
 ## Contratos #24 (integrados)
 
