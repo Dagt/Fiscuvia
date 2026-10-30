@@ -23,6 +23,10 @@ const baseline = {
   'com.fiscuvia.platform.internal.observability.ObservabilityGuardTests': 3,
   'com.fiscuvia.platform.internal.observability.MeterPrivacyTests': 2,
   'com.fiscuvia.platform.internal.observability.TracingConfigurationTests': 2,
+  'com.fiscuvia.TenantRlsTests': 20,
+  'com.fiscuvia.TenantConcurrencyTests': 2,
+  'com.fiscuvia.TenantHttpPrivacyTests': 2,
+  'com.fiscuvia.TenantMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {

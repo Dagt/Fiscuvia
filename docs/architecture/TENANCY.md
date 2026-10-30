@@ -1,5 +1,7 @@
 # Aislamiento multi-tenant: especificación obligatoria
 **Tenant = despacho. Taxpayer = contribuyente gestionado por ese despacho.**
+
+Estado #26: [infraestructura física implementada para revisión](../data-model/tenant-foundation-26.md): raíz mínima tenants, RLS forzada, cerca restrictiva, contexto JDBC transaccional e inmutable y pruebas PostgreSQL. Identidad/membresías #27, capacidades/expediente #28 y regresión transversal #30 siguen pendientes; los puntos siguientes describen el objetivo completo y no acreditan esas funciones.
 1. Derivar despacho autorizado del usuario autenticado y membresías consultadas por servidor; no confiar en tenant_id proporcionado por UI.
 2. Aislar tablas PostgreSQL con tenant_id y políticas RLS restrictivas; usuario de aplicación sin BYPASSRLS. Configurar tenant context de forma local a transacción y probar pooling/concurrencia.
 3. Verificar rol, asignación a expediente y permiso para cada operación y exportación; pertenencia a despacho no equivale a acceso irrestricto.

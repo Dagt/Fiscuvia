@@ -65,4 +65,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Base #20–24 integrada mediante PR #75–78 y #80. Esta rama prepara [observabilidad #25](delivery/OBSERVABILITY.md) para revisión. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales, negocio ni identidad; #74, #26–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
+Base #20–25 integrada mediante PR #75–78, #80 y #81. Esta rama prepara [tenancy/RLS #26](data-model/tenant-foundation-26.md) para revisión. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales, negocio ni identidad; #74, #27–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
