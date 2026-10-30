@@ -1,6 +1,6 @@
 # Fiscuvia backend — foundation #20 / #22
 
-Backend ejecutable local/test con PostgreSQL real y Flyway. #20 está integrado; esta rama prepara #22 para revisión. Sin tablas fiscales, persistencia de negocio ni endpoints de dominio. Gate #74 y RLS #26 siguen pendientes.
+Backend ejecutable local/test con PostgreSQL real y Flyway. #20/#22 están integrados. Sin tablas fiscales, persistencia de negocio ni endpoints de dominio. Gate #74 y RLS #26 siguen pendientes.
 
 ## Herramientas y compatibilidad
 
@@ -143,8 +143,8 @@ Surefire ejecuta `*Tests`; Failsafe ejecuta `*IT` después de empaquetar el JAR.
 
 Trazabilidad: #20/#22, ADR-003/007 como dirección (conservan Proposed), base NFR-001/021 y NFR-040/041. No se declara cumplido el aislamiento tenant NFR-001 ni ningún FR/BR de negocio: no hay datos por despacho, comandos, contratos de dominio o cambios UI. Gate #74 intacto.
 
-- #22: PostgreSQL, Docker, Flyway y JDBC en revisión; sin ORM ni tablas de dominio. Gate #74 antes del dominio fiscal.
-- #23: CI; esta entrega no crea workflows de GitHub Actions.
+- #22: PostgreSQL, Docker, Flyway y JDBC integrados; sin ORM ni tablas de dominio. Gate #74 antes del dominio fiscal.
+- #23: [CI para revisión](../docs/delivery/CI.md), `Backend CI` ejecuta wrapper `clean verify` en Ubuntu 24.04 / Temurin 25.0.5+8 / Maven 3.9.16 con Docker y Ryuk activos. Exige las seis suites actuales (47 pruebas como mínimo), cero errores/omisiones; publica JUnit depurado, sin propiedades ni logs. Las pruebas y el código backend permanecen intactos en #23.
 - #24–25: contratos/errores de API y observabilidad ampliada.
 - #26–30: RLS, OIDC, capacidades, auditoría/outbox y aislamiento entre despachos antes de operar sobre datos.
 - UI #21 está integrada; #52 y CFDI/SAT permanecen fuera de alcance de este cambio backend.

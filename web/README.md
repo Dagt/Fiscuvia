@@ -108,4 +108,10 @@ Resultados, capturas y revisión visual: [evidencia #21](../docs/ux/evidence/iss
 
 ## Pendientes independientes
 
-#19: referencia original y revisión de marca. #52: kit completo, tokens definitivos, tablas/formularios/controles y consistencia en rutas de negocio. #56: baselines aprobados, regresión visual y auditoría ampliada de accesibilidad/navegadores. #23: CI del proyecto. Esta entrega aporta fundamentos y evidencia, sin declarar resueltas esas issues. DB, API de negocio, OIDC, permisos y datos fiscales quedan fuera.
+#19: referencia original y revisión de marca. #52: kit completo, tokens definitivos, tablas/formularios/controles y consistencia en rutas de negocio. #56: baselines aprobados, regresión visual y auditoría ampliada de accesibilidad/navegadores. Esta entrega aporta fundamentos y evidencia, sin declarar resueltas esas issues. API de negocio, OIDC, permisos y datos fiscales quedan fuera.
+
+## CI #23
+
+`Web CI` ejecuta todos los comandos anteriores en Ubuntu 24.04 con Node de `.nvmrc` y npm 11.8.0. Instala Chromium con `npx --no-install playwright install --with-deps chromium`, respetando Playwright 1.64.1 del lockfile; ejecuta los cinco proyectos, sin reintentos ni exclusiones Draft. Exige al menos 13 Vitest y 13 Playwright, cero omitidos/fallidos/flaky. Se cachean descargas npm, sin reutilizar node_modules/build.
+
+Los JSON temporales se escriben en `../.ci-work/`; sólo se publica un resumen depurado. Capturas regeneradas, HTML, trazas y logs quedan locales al runner y no se suben automáticamente. Las capturas de #21 conservan su condición de evidencia histórica; #56 no se implementa aquí. Ver [guía CI](../docs/delivery/CI.md).

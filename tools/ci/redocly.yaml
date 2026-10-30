@@ -1,0 +1,7 @@
+rules:
+  struct: error
+  no-unresolved-refs: error
+  no-identical-paths: error
+  no-ambiguous-paths: error
+  operation-operationId-unique: error
+  path-parameters-defined: error
