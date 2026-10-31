@@ -25,3 +25,22 @@ Actualización por cada nuevo módulo y revisión antes del piloto. No reemplaza
 | Metadatos de contexto retenidos / contención | Schema privado, vínculo invalidado al fin de tx, limpieza acotada SKIP LOCKED, tests concurrentes | Medir carga/bloat/autovacuum antes del piloto; no es un historial/auditoría |
 
 Modelo efectivo y límites en [tenant-foundation-26.md](../data-model/tenant-foundation-26.md). No hay datos reales, proveedor OIDC, membresías definitivas, capacidades, break-glass ni autorización fiscal implementados en #26.
+
+## Antecedente de diseño #27 — previo a autorización e implementación
+
+| Amenaza | Diseño sometido a aprobación | Verificación pendiente |
+|---|---|---|
+| Token/issuer/nonce/state falsificado | OIDC Code+PKCE mediante Spring Security, issuer/audience/azp/firma/tiempos y redirects exactos | Intercambio HTTP real con IdP local; negativas observables sin sesión |
+| CSRF, login CSRF y fijación de sesión | BFF mismo origen, cookie HttpOnly/Secure/Lax, CSRF y rotación de ID | Navegador real, cookies, mutaciones, expiración y logout |
+| Bootstrap de identidad permite leer otros despachos | Actor verificado+xid privado, SELECT propio bootstrap y autorización de membresía antes de TenantTransactions | Forja de actor/GUC, ausencia de contexto, SQL sin filtros, catálogo/grants y pool |
+| Roles/MFA falsos o sesión con permisos obsoletos | Roles internos, política MFA explícita del issuer, deny privilegiado sin evidencia; releer usuario/membresía | Revocación concurrente, claims sin semántica válida, MFA vencido y múltiples sesiones |
+| Robo/reuso de invitación y vinculación por correo | Hash de token, consumo atómico, expiración y receptor verificado; no autolink por email | Dos aceptaciones simultáneas, destinatario distinto, caducidad/revocación y rollback |
+| Robo de sesiones desde una inyección SQL de negocio | Schema/datasource/rol mínimo de sesiones separado y principal sin tokens | Catálogo de privilegios, ausencia de tokens en DB/logs/artifacts y JAR sin fixture |
+
+La [propuesta #27](../decisions/issue-27-oidc-session-proposal.md) registra decisiones pendientes y límites. Esta tabla no acredita mitigaciones nuevas ni sustituye las pruebas de seguridad o la selección/contrato del proveedor. No se han cambiado RLS, perfiles ni permisos reales en esta fase.
+
+## Implementación #27 posterior a la autorización técnica del propietario
+
+La tabla anterior es el antecedente del diseño, no el estado actual. [Guía efectiva](AUTHENTICATION.md) y [evidencia](../../backend/VALIDATION-27.md) documentan los controles implementados: firma/issuer/audience/expiración y nonce/state/PKCE reales con Keycloak; sesión mínima privada y sin tokens; CSRF/rotación/expiraciones/logout; actor HMAC+xid inmutable; RLS de lectura propia; membresía ACTIVE antes del contexto y función SQL runtime protegida; MFA reciente y rol interno para privilegios; invitación exacta atómica/hasheada con revocación.
+
+Ataques negativos incluyen UUID/headers/SQL de otro actor, ausencia de contexto, otro tenant, pool reutilizado, concurrencia, aceptación doble, usuario deshabilitado, MFA ausente/futuro/vencido y canarios en logs/respuestas. Las credenciales de sesión no tienen USAGE de datos de negocio; runtime no accede a sesiones/clave HMAC. El BFF/migrador y la cuenta de sesiones son fronteras de confianza: su compromiso no queda resuelto por RLS. Rotación/custodia productiva, carga/bloat/DoS, proveedor/MFA/recuperación/revocación federada, capacidades y expedientes permanecen pendientes. No hay proveedor de producción ni aceptación tácita de claims MFA arbitrarios.

@@ -114,3 +114,11 @@ El workflow **401305416** está `active`; Actions está habilitado (`enabled: tr
 Acción humana: el titular de Dagt debe abrir Settings → Billing & licensing (el aviso de GitHub dice Billing & plans), revisar pagos y el presupuesto/límite específico de **Actions**, y corregir la condición que muestre su cuenta; no se autoriza ni realiza un gasto automáticamente. Ver [guía oficial de presupuestos](https://docs.github.com/en/billing/how-tos/set-up-budgets). Si pagos y límite aparecen correctos, contactar GitHub Support con el run y la anotación. Después usar **Re-run all jobs** en la ejecución del SHA final y verificar los cinco checks y artifacts. No hace falta sacar el PR de Draft, publicarlo, cambiar protecciones ni crear secrets. La restricción del plan para protección de ramas es un asunto distinto del bloqueo de ejecución.
 
 La [evidencia local y el primer bloqueo remoto](VALIDATION-23.md) está registrada; SHA final y última ejecución se adjuntan al PR de #23. Nunca interpretar este documento o la existencia de checks como prueba de éxito remoto.
+
+## Extensión acotada #27
+
+Se conservan los cinco nombres de checks. Web CI añade JDK 25/Docker y ejecuta `node tools/ci/auth-browser.mjs` después de los 13 Playwright existentes; no sustituye el build Java ni los tests originales. La compilación test-compile del harness no usa skipTests; el gate backend ejecuta clean verify completo. Maven dependency plugin 3.11.0 fija la construcción del classpath de prueba. El verificador exige 37 Vitest, 13 Playwright de fundación y 5 OIDC, además de suites nuevas backend; jamás se reduce un mínimo.
+
+Requiere daemon Docker Linux/Ryuk activo, puertos loopback efímeros y 4174 libre, pulls fijados de PG/Keycloak, espacio/memoria para JVM/IdP/Chromium. El handoff privado del harness, keystores, sesiones, logs crudos y reportes completos del navegador no se suben. Artifacts mantienen allowlist de summary/JUnit depurado. El SHA del resumen identifica el commit probado, no sólo el nombre de rama.
+
+El propietario decidió presupuesto Actions $0: no modificar facturación ni intentar evadirla. REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79. La compatibilidad Ubuntu/Temurin remota requiere una futura ejecución autorizada; no atribuir verde a la mera existencia del YAML.

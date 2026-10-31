@@ -37,3 +37,7 @@ Autenticación -> membresía activa en despacho -> capacidad explícita -> asign
 - El contribuyente no inicia sesión en la plataforma interna y sus usuarios portal no heredan permisos del despacho.
 - Roles deshabilitados no borran historial de acciones; revocación surte efecto servidor.
 - Cambios de permiso se auditan y las consultas de acceso se prueban con dos tenants y cartera parcial.
+
+## Roles iniciales efectivos de #27 (local/test)
+
+FIRM_OWNER_ADMIN, FIRM_SUPERVISOR, ACCOUNTANT y ASSISTANT se asignan a membresías servidor, nunca a roles arbitrarios del IdP/UI. Todos requieren membresía ACTIVE para abrir contexto. Sólo owner con MFA local reciente puede invitar/revocar/suspender en esta base; no hay promoción pública a owner. Supervisor/contador/auxiliar no reciben una matriz funcional implícita. Capacidad, asignación de expediente y administración completa siguen en #28/#33. [Controles y límites de producción](../security/AUTHENTICATION.md).

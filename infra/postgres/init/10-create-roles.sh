@@ -6,10 +6,13 @@ SET log_statement = 'none';
 SET log_min_error_statement = 'panic';
 \getenv migration_password DB_MIGRATION_PASSWORD
 \getenv runtime_password DB_RUNTIME_PASSWORD
+\getenv session_password DB_SESSION_PASSWORD
 CREATE ROLE fiscuvia_migrator LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS PASSWORD :'migration_password';
 CREATE ROLE fiscuvia_runtime LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS PASSWORD :'runtime_password';
+CREATE ROLE fiscuvia_sessions LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS PASSWORD :'session_password';
 ALTER DATABASE fiscuvia_local OWNER TO fiscuvia_migrator;
 REVOKE ALL ON DATABASE fiscuvia_local FROM PUBLIC;
 GRANT CONNECT ON DATABASE fiscuvia_local TO fiscuvia_runtime;
+GRANT CONNECT ON DATABASE fiscuvia_local TO fiscuvia_sessions;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 SQL

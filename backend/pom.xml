@@ -33,6 +33,19 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-session-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-micrometer-tracing</artifactId>
         </dependency>
         <dependency>
@@ -107,6 +120,7 @@
                 <targetPath>test-infra</targetPath>
                 <includes>
                     <include>postgres/init/10-create-roles.sh</include>
+                    <include>postgres/upgrade-session-role.sh</include>
                     <include>compose.yaml</include>
                 </includes>
             </testResource>

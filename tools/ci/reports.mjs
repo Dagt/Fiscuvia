@@ -14,7 +14,7 @@ const baseline = {
   'com.fiscuvia.ApiContractsTests': 39,
   'com.fiscuvia.ApiPrimitivesTests': 3,
   'com.fiscuvia.PostgresFoundationTests': 3,
-  'com.fiscuvia.FiscuviaApplicationIT': 10,
+  'com.fiscuvia.FiscuviaApplicationIT': 11,
   'com.fiscuvia.FlywayFailureIT': 2,
   'com.fiscuvia.ObservabilityHttpTests': 3,
   'com.fiscuvia.HealthAvailabilityTests': 1,
@@ -27,6 +27,8 @@ const baseline = {
   'com.fiscuvia.TenantConcurrencyTests': 2,
   'com.fiscuvia.TenantHttpPrivacyTests': 2,
   'com.fiscuvia.TenantMigrationIT': 3,
+  'com.fiscuvia.OidcAuthenticationTests': 22,
+  'com.fiscuvia.IdentityMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {
@@ -81,6 +83,12 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
   return { vitest: unit.numTotalTests, playwright: count, skipped: 0, failed: 0 }
 }
 
+export function completeWebReports(unit, foundation, identity) {
+  const base = webReports(unit, foundation, 13, 37)
+  const auth = webReports(unit, identity, 5, 37)
+  return { ...base, oidcPlaywright: auth.playwright }
+}
+
 function publish(kind, details, xml) {
   const sha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
   const report = { testedSha: sha, sourceSha: process.env.SOURCE_SHA ?? sha, node: process.version, ...details }
@@ -103,8 +111,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const { tests, xml } = backendReports(xmls)
     publish(kind, { tests, skipped: 0, failed: 0 }, xml)
   } else if (kind === 'web') {
-    publish(kind, webReports(
+    publish(kind, completeWebReports(
       JSON.parse(readFileSync(resolve(root, '.ci-work/vitest.json'), 'utf8')),
-      JSON.parse(readFileSync(resolve(root, '.ci-work/playwright.json'), 'utf8')), 13, 21))
+      JSON.parse(readFileSync(resolve(root, '.ci-work/playwright.json'), 'utf8')),
+      JSON.parse(readFileSync(resolve(root, '.ci-work/playwright-auth.json'), 'utf8'))))
   } else throw Error('Indicar backend o web')
 }

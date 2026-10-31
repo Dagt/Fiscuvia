@@ -11,3 +11,9 @@ Estado #26: [infraestructura física implementada para revisión](../data-model/
 7. Operador SaaS sin acceso fiscal por defecto; break-glass con autorización, expiración y auditoría.
 ## Tests bloqueantes
 Usuarios de A no pueden listar/ver/editar/exportar/descargar objetos de B, ni adivinar UUID, aunque ambos tengan el mismo RFC ficticio. Probar API, DB RLS con rol real, workers concurrentes, conexión reutilizada y links de archivos. Cualquier fuga bloquea piloto.
+
+## Identidad integrada en #27 — sólo local/test
+
+[Modelo efectivo](../security/AUTHENTICATION.md): el actor se verifica con OIDC y una atestación HMAC ligada al xid; la consulta bootstrap RLS sólo ve sus membresías. `identity.AuthorizedTenantOperations` autoriza ACTIVE/rol/MFA antes de TenantTransactions. V3 también protege `app.establish_tenant_context`: runtime necesita el tenant ya autorizado en el vínculo privado del actor; la función V2 original queda privada en infrastructure sin EXECUTE runtime. UUID/GUC solos no pueden abrir contexto, ni siquiera mediante SQL directo. Migrador conserva bootstrap administrativo explícito.
+
+Las pruebas históricas #26 ahora usan un adaptador interno de fixtures con pruebas HMAC y membresías sintéticas reales antes del puerto inferior. No es un filtro HTTP ni un bypass productivo; autenticación/cookies/firma/nonce/PKCE se prueban aparte contra Keycloak real. Se conservan los 20 escenarios RLS y 2 de concurrencia/pool. Capacidades y autorización de expediente #28 siguen pendientes.

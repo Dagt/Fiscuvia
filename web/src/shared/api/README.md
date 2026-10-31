@@ -9,3 +9,5 @@ Errores `ApiClientError`: code/status/traceId seguros, mensajes locales; no alma
 URL pública `VITE_API_BASE_URL` opcional, default `/api/v1`; `.env.example` sin secretos. Vite dev proxy `/api` a `http://127.0.0.1:8080`. Preview/producción necesitan mismo origen/gateway o CORS futuro expresamente autorizado; backend no habilita CORS global ni perfiles remotos. Se rechazan URLs con credenciales/query/fragment o protocolo no HTTP(S).
 
 No configurar tokens, secretos ni claves SAT en variables VITE_: todo valor VITE_ se publica al navegador. No instalar RHF/Zod hasta que exista un formulario o contrato que los necesite. Los providers no equivalen a una integración API ni a autorización real.
+
+#27 añade session-client.ts para llamadas same-origin con cookie HttpOnly, CSRF y el mismo decoder seguro de Problem Details. Nunca acepta una URL externa con credenciales ni almacena tokens. Los DTOs de identidad/membresía proceden del OpenAPI implementado; no usar el cliente público credentials:omit para sesiones. Login sigue redirects de navegador por POST; fetch no sigue redirects OAuth.

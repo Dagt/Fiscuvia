@@ -10,3 +10,6 @@ spring:
     password: ${TEST_DB_MIGRATION_PASSWORD}
   main:
     banner-mode: off
+fiscuvia:
+  identity:
+    session-password: ${TEST_DB_SESSION_PASSWORD}

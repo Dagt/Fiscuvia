@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(ApiContractsTests.FixtureController.class)
+@Import({ApiContractsTests.FixtureController.class,ContractFixtureSecurity.class})
 @Testcontainers
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ExtendWith(OutputCaptureExtension.class)
@@ -77,7 +77,7 @@ class ApiContractsTests {
     void allStableErrorCodesHaveSafeHttpProblems(ApiErrorCode code) throws Exception {
         var response = call("GET", "/__contract-test/errors/" + code.name(), null, "application/json");
         assertProblem(response, code.status(), code.name());
-        if (code.status() == 401) assertThat(response.headers().firstValue("WWW-Authenticate")).contains("Bearer");
+        if (code.status() == 401) assertThat(response.headers().firstValue("WWW-Authenticate")).isEmpty();
     }
 
     @ParameterizedTest
@@ -132,11 +132,12 @@ class ApiContractsTests {
     }
 
     @Test void unknownRoutesMethodsAndNegotiationUseSafeProblems() throws Exception {
-        assertProblem(call("GET", "/api/v1/me?token=" + CANARY, null, "application/json"), 404, "NOT_FOUND");
+        assertProblem(call("GET", "/api/v1/me?token=" + CANARY, null, "application/json"), 401, "AUTHENTICATION_REQUIRED");
         assertProblem(call("GET", "/missing/" + CANARY, null, "application/json"), 404, "NOT_FOUND");
         var wrongMethod = call("POST", "/api/v1/public/info", "{}", "application/json");
-        assertProblem(wrongMethod, 405, "METHOD_NOT_ALLOWED");
-        assertThat(wrongMethod.headers().firstValue("Allow").orElse("")).contains("GET");
+        // The new CSRF gate rejects an unprotected mutation before MVC method negotiation.
+        assertProblem(wrongMethod, 403, "ACCESS_DENIED");
+        assertThat(wrongMethod.headers().firstValue("Allow")).isEmpty();
         assertProblem(call("GET", "/api/v1/public/info", null, "text/html"), 406, "NOT_ACCEPTABLE");
         assertProblem(call("POST", "/__contract-test/dto", VALID, "text/plain"), 415, "UNSUPPORTED_MEDIA_TYPE");
     }

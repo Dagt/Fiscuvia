@@ -98,7 +98,6 @@ class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         if (!original.getAllow().isEmpty()) headers.setAllow(original.getAllow());
         headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
         headers.setCacheControl("no-store");
-        if (problem.getStatus() == 401) headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer");
         return new ResponseEntity<>(problem, headers, HttpStatusCode.valueOf(problem.getStatus()));
     }
 }

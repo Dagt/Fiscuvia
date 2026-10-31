@@ -2,11 +2,26 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { contract, validator, checkHttpResponses, generatedTypes } from './contracts.mjs'
 
-test('contrato implementado sólo publica información pública y tipos reproducibles', async () => {
-  assert.deepEqual(Object.keys(contract.paths), ['/public/info'])
+test('contrato implementado publica sólo infraestructura e identidad reales y tipos reproducibles', async () => {
+  assert.deepEqual(Object.keys(contract.paths), ['/public/info','/me','/auth/status','/auth/csrf','/auth/login','/auth/logout',
+    '/auth/tenant','/auth/invitations','/auth/invitations/accept','/auth/invitations/revoke','/auth/memberships/status',
+    '/auth/authorize/local','/auth/callback/local'])
   assert.deepEqual(contract.security, [])
   assert.equal(contract.paths['/public/info'].get['x-implementation-status'], 'implemented')
   await generatedTypes()
+})
+
+test('identidad y membresías no admiten tokens, roles arbitrarios ni UUID inválidos', () => {
+  const identity = validator('CurrentIdentity')
+  const id = '00000000-0000-4000-8000-000000000001'
+  const data = { userId: id, memberships: [{ tenantId: id, membershipId: id, role: 'ACCOUNTANT' }], privilegedMfaVerified: false }
+  assert.equal(identity(data), true)
+  assert.equal(identity({ ...data, accessToken: 'synthetic-private-token' }), false)
+  assert.equal(identity({ ...data, memberships: [{ ...data.memberships[0], role: 'SUPERUSER' }] }), false)
+  assert.equal(identity({ ...data, userId: 'invalid' }), false)
+  assert.deepEqual(contract.paths['/me'].get.security, [{ SessionCookie: [] }])
+  assert.equal(contract.components.securitySchemes.SessionCookie.name, '__Host-FiscuviaSession')
+  assert.equal(contract.components.responses.Unauthorized.headers, undefined)
 })
 
 test('schemas estrictos rechazan datos extra, tipos inválidos y UUID incorrecto', () => {

@@ -1,13 +1,13 @@
 # Contratos API — Fiscuvia
 
-[openapi-v1.yaml](openapi-v1.yaml) es la fuente del contrato **implementado en #24 para revisión**, OpenAPI 3.1 / versión 1.0.0. Sólo contiene `GET /api/v1/public/info`: nombre, eslogan y versión del contrato, sin consultar datos fiscales ni identidad. Health/Actuator conserva su superficie mínima independiente.
+[openapi-v1.yaml](openapi-v1.yaml) es la fuente implementada OpenAPI 3.1 / versión 1.0.0 para infraestructura #24 e identidad local/test #27. Incluye info pública, /me, CSRF, login/logout, validación de membresía e invitaciones mínimas. [Autenticación y límites](../security/AUTHENTICATION.md). No habilita módulos fiscales ni proveedor de producción.
 
 - [Convenciones y ejemplos seguros](conventions.md).
 - [Catálogo: implementado / propuesto / futuro](endpoint-catalog.md).
 - [Borrador de negocio](openapi-v1-draft.yaml): **propuesto, no implementado**, no genera tipos del cliente.
 - [Arquitectura API](../architecture/API.md), [datos propuestos](../data-model/schema-v0.1.md), [estados propuestos](../state-machines/README.md).
 
-Hay validación servidor, RFC 9457, correlación y primitivas de paginación/versión/clave de idempotencia. Sus códigos 401/403/409/422/429 se prueban mediante controladores exclusivos del classpath de tests; no representan autenticación, reglas de dominio ni rate limiting operativos. `/api/v1/me` sigue en 404. ADR-014 conserva Proposed; #74 y #26–30 siguen vigentes.
+Hay validación servidor, RFC 9457, correlación y primitivas de paginación/versión/clave de idempotencia. Sus códigos 401/403/409/422/429 se prueban mediante controladores exclusivos del classpath de tests; no acreditan reglas de dominio ni rate limiting operativos. #27 añade pruebas OIDC reales aparte; `/api/v1/me` ahora requiere sesión y devuelve 401 sin ella. ADR-014 conserva Proposed; #74 y #28–30 siguen vigentes.
 
 ## Generación y verificación
 

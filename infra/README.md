@@ -134,3 +134,9 @@ Para #23: runner efímero Linux o Windows con JDK 25 y daemon Docker accesible (
 #22 no creó workflows. #23 incorpora `Backend CI` sobre Ubuntu 24.04 con Docker Linux/Testcontainers, sin servicio PostgreSQL adicional ni Compose en CI. Estado remoto y diagnóstico deben verificarse por SHA: [guía CI](../docs/delivery/CI.md). Evidencia histórica local y límites Linux de #22: [backend/VALIDATION-22.md](../backend/VALIDATION-22.md).
 
 Fuentes técnicas: [imagen oficial PostgreSQL](https://hub.docker.com/_/postgres), [inicialización Spring Boot](https://docs.spring.io/spring-boot/how-to/data-initialization.html), [módulo PostgreSQL de Testcontainers](https://java.testcontainers.org/modules/databases/postgres/). Se reutilizan de TrailerSaaS las credenciales runtime/migración separadas, Flyway como única autoridad y Testcontainers obligatorio; no se copia su modelo logístico ni sus migraciones de dominio.
+
+## Identidad #27
+
+Los generadores nuevos incluyen DB_SESSION_PASSWORD y FISCUVIA_ACTOR_PROOF_KEY privados. Para un volumen V2 usar Upgrade-IdentityEnvironment.ps1 o upgrade-identity-env.sh, recrear el servicio conservando volumen y ejecutar `sh /opt/fiscuvia/upgrade-session-role.sh` mediante Compose exec. No cambia contraseñas existentes ni se borra DB. [Guía completa, variables y bootstrap explícito](../docs/security/AUTHENTICATION.md).
+
+Keycloak real exclusivamente local/test se inicia por `node tools/ci/auth-browser.mjs` (o `--serve` para desarrollo); imagen 26.8.1 fijada por digest, realm versionado sin cuentas/contraseñas/llaves, fixtures aleatorios sólo del classpath test. Se separa localhost del BFF 127.0.0.1 para cookies. No hay proveedor productivo ni despliegues externos. El runner cierra el JVM real y sus contenedores, sin tocar contenedores ajenos.

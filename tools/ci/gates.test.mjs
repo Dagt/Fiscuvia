@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { backendReports, webReports } from './reports.mjs'
+import { backendReports, webReports, completeWebReports } from './reports.mjs'
 import { checkLocalRefs, validate } from './openapi.mjs'
 import { checkPath, checkWorkflow } from './security.mjs'
 
@@ -30,6 +30,12 @@ test('Web: rechaza omitidos, flaky, reintentos y resultados faltantes', () => {
   const retry = structuredClone(e2e)
   retry.suites[0].specs[0].tests[0].results.push({ status: 'passed' })
   assert.throws(() => webReports(unit, retry, 1))
+  const completeUnit = { ...unit, numTotalTests: 37, numPassedTests: 37 }
+  const suite = n => ({ ...e2e, suites: [{ specs: [{ tests: Array.from({length:n}, () => structuredClone(e2e.suites[0].specs[0].tests[0])) }] }], stats: {...e2e.stats, expected:n} })
+  assert.equal(completeWebReports(completeUnit, suite(13), suite(5)).oidcPlaywright, 5)
+  assert.throws(() => completeWebReports(completeUnit, suite(13), suite(4)))
+  assert.throws(() => completeWebReports(completeUnit, suite(12), suite(5)))
+  assert.throws(() => completeWebReports({...completeUnit,numTotalTests:36,numPassedTests:36}, suite(13), suite(5)))
 })
 
 test('OpenAPI: documento actual válido; fixtures inválidos deben fallar', () => {

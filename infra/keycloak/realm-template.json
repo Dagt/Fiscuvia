@@ -1,0 +1,48 @@
+{
+  "realm": "fiscuvia-local",
+  "enabled": true,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["es"],
+  "defaultLocale": "es",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": false,
+  "bruteForceProtected": true,
+  "eventsEnabled": false,
+  "adminEventsEnabled": false,
+  "browserFlow": "fiscuvia-password-otp",
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA1",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "otpPolicyLookAheadWindow": 1,
+  "authenticatorConfig": [
+    {"alias":"password-reference","config":{"default.reference.value":"pwd","default.reference.maxAge":"600"}},
+    {"alias":"otp-reference","config":{"default.reference.value":"otp","default.reference.maxAge":"600"}},
+    {"alias":"loa-two","config":{"loa-condition-level":"2","loa-max-age":"0"}}
+  ],
+  "authenticationFlows": [
+    {"alias":"fiscuvia-password-otp","providerId":"basic-flow","topLevel":true,"builtIn":false,
+      "authenticationExecutions":[
+        {"authenticator":"auth-username-password-form","authenticatorConfig":"password-reference","requirement":"REQUIRED","priority":10,"authenticatorFlow":false},
+        {"flowAlias":"fiscuvia-second-factor","requirement":"CONDITIONAL","priority":20,"authenticatorFlow":true}
+      ]},
+    {"alias":"fiscuvia-second-factor","providerId":"basic-flow","topLevel":false,"builtIn":false,
+      "authenticationExecutions":[
+        {"authenticator":"conditional-level-of-authentication","authenticatorConfig":"loa-two","requirement":"REQUIRED","priority":10,"authenticatorFlow":false},
+        {"authenticator":"auth-otp-form","authenticatorConfig":"otp-reference","requirement":"REQUIRED","priority":20,"authenticatorFlow":false}
+      ]}
+  ],
+  "clients": [{
+    "clientId":"fiscuvia-local","name":"Fiscuvia — desarrollo local",
+    "enabled":true,"protocol":"openid-connect","publicClient":false,
+    "secret":"${FISCUVIA_LOCAL_CLIENT_SECRET}",
+    "standardFlowEnabled":true,"implicitFlowEnabled":false,"directAccessGrantsEnabled":false,"serviceAccountsEnabled":false,
+    "redirectUris":["${FISCUVIA_ORIGIN}/api/v1/auth/callback/local"],
+    "webOrigins":[],
+    "attributes":{"pkce.code.challenge.method":"S256","acr.loa.map":"{\"2\":2}","minimum.acr.value":"2","post.logout.redirect.uris":"${FISCUVIA_ORIGIN}/login"},
+    "protocolMappers":[{"name":"verified-authentication-methods","protocol":"openid-connect","protocolMapper":"oidc-amr-mapper","config":{"id.token.claim":"true","access.token.claim":"false"}}]
+  }]
+}

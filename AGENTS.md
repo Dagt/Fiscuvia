@@ -1,6 +1,6 @@
 # AGENTS.md — Fiscuvia
 
-**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–25 integrada; tenancy/RLS #26 para revisión, sin esquema fiscal ni funcionalidad de negocio. CI remoto bloqueado con presupuesto $0; pruebas locales completas y seguimiento #79.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–26 integrada; implementación local/test de OIDC/BFF/sesiones y membresías #27 en revisión humana, sin proveedor de producción aprobado, esquema fiscal ni funcionalidad de negocio. CI remoto bloqueado con presupuesto $0; pruebas locales y seguimiento #79.
 
 ## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
 Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.

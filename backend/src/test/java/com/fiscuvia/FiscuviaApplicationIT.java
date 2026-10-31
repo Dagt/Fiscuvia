@@ -57,6 +57,9 @@ class FiscuviaApplicationIT {
                     var fixture = client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"
                             + matcher.group(1) + "/__contract-test/errors/INTERNAL_ERROR")).GET().build(), HttpResponse.BodyHandlers.ofString());
                     assertThat(fixture.statusCode()).isEqualTo(404);
+                    var me=client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+matcher.group(1)+"/api/v1/me")).GET().build(),HttpResponse.BodyHandlers.ofString());
+                    assertThat(me.statusCode()).isEqualTo(401);
+                    assertThat(me.body()).contains("AUTHENTICATION_REQUIRED").doesNotContain("token","issuer","subject");
                     return;
                 }
                 Thread.sleep(100);
@@ -64,6 +67,17 @@ class FiscuviaApplicationIT {
             throw new AssertionError("Executable JAR did not become healthy:\n" + DATABASE.redact(Files.readString(log)));
         } finally {
             stop(process);
+        }
+    }
+
+    @Test void executableJarContainsNoLocalIssuerFixtureUsersOrPrivateKeyMaterial() throws Exception {
+        try(var archive=new java.util.zip.ZipFile(System.getProperty("application.jar"))) {
+            var files=archive.stream().map(java.util.zip.ZipEntry::getName).filter(name->name.startsWith("BOOT-INF/classes/")).toList();
+            assertThat(files).noneMatch(name->name.contains("KeycloakTestProvider") || name.contains("LocalOidcHarness")
+                    || name.contains("OidcBrowser") || name.contains("ContractFixtureSecurity") || name.contains("FixtureController")
+                    || name.contains("test-infra") || name.contains("realm-template") || name.endsWith(".p12") || name.endsWith(".pem") || name.endsWith(".key"));
+            String config=new String(archive.getInputStream(archive.getEntry("BOOT-INF/classes/application.yml")).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
+            assertThat(config).contains("${FISCUVIA_OIDC_ENABLED:false}").doesNotContain(DATABASE.actorKey,DATABASE.sessionPassword);
         }
     }
 
@@ -142,6 +156,8 @@ class FiscuviaApplicationIT {
                 .anyMatch(argument -> argument.startsWith("--spring.datasource.username="))
                 ? DATABASE.getPassword() : DATABASE.runtimePassword);
         builder.environment().put("DB_MIGRATION_PASSWORD", DATABASE.migrationPassword);
+        builder.environment().put("DB_SESSION_PASSWORD", DATABASE.sessionPassword);
+        builder.environment().put("FISCUVIA_ACTOR_PROOF_KEY", DATABASE.actorKey);
         builder.environment().putAll(environment);
         return builder.start();
     }
@@ -203,7 +219,8 @@ class FiscuviaApplicationIT {
 
     private void assertNoCredentials(String output) {
         if (output.contains(DATABASE.runtimePassword) || output.contains(DATABASE.migrationPassword)
-                || output.contains(DATABASE.getPassword())) {
+                || output.contains(DATABASE.getPassword()) || output.contains(DATABASE.sessionPassword)
+                || output.contains(DATABASE.actorKey)) {
             throw new AssertionError("A credential appeared in the startup log.");
         }
     }

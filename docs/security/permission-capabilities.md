@@ -38,3 +38,7 @@ Se evalúa membership + tenant + capability + resource ownership/assignment + es
 
 ## Tests
 Denegar cross-tenant, same-tenant fuera de cartera, resource ID adivinado, role revocado, empleado suspendido, portal restringido. Repetir en export, archivos, job y búsqueda. Los mapas de asignación concretos a roles se detallarán antes del issue correspondiente y deberán ser aprobados; no conceder ALL a roles operativos por comodidad.
+
+## Alcance efectivo #27
+
+Los cuatro códigos de rol iniciales pertenecen a cada membresía persistida, no a tokens/UI. Esta entrega sólo autoriza membresía ACTIVE y operaciones mínimas owner+MFA de invitación/revocación; no implementa esta matriz completa de capacidades. #28 debe consumir AuthorizedTenantOperations y añadir capacidad/recurso antes del trabajo fiscal. [Guía efectiva](AUTHENTICATION.md).

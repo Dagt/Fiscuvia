@@ -75,7 +75,7 @@ class FiscuviaApplicationTests {
             "/actuator/info", "/api/v1/me", "/missing", "/__contract-test/dto"})
     void doesNotExposeSensitiveEndpointsOrUnimplementedBusinessApi(String path) throws Exception {
         var response = get(path);
-        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.statusCode()).isEqualTo(path.equals("/api/v1/me") ? 401 : 404);
         var error = objectMapper.readTree(response.body());
         assertThat(error.has("trace")).isFalse();
         assertThat(error.has("exception")).isFalse();

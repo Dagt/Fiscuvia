@@ -4,7 +4,7 @@ Base main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`, PR #78 integrado. Trazabil
 
 ## Superficie y arquitectura
 
-Única operación nueva: **GET /api/v1/public/info**. DTO inmutable con productName, tagline y apiVersion. El handler no usa repositorios/DB; el proceso sigue requiriendo PostgreSQL por las guardas de #22. No hay identidad/tenant de demostración. /api/v1/me sigue en 404; /actuator conserva su superficie mínima.
+Única operación nueva: **GET /api/v1/public/info**. DTO inmutable con productName, tagline y apiVersion. El handler no usa repositorios/DB; el proceso sigue requiriendo PostgreSQL por las guardas de #22. No hay identidad/tenant de demostración. En la fase #24 /api/v1/me estaba en 404; #27 lo implementa ahora con sesión OIDC real local y 401 sin autenticación; /actuator conserva su superficie mínima.
 
 `platform` mantiene allowedDependencies vacío. API pública reutilizable: ApiErrorCode/ApiFailure, ApiIdentifiers, ExpectedVersion, PageQuery/PageResponse. Controladores, binding, correlación y handlers están en `platform.internal.http`. Futuros módulos declaran dependencia explícita de platform y adaptan sus errores de dominio en su propia frontera HTTP; no exponen entidades ni acceden a internals ajenos.
 

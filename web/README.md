@@ -2,7 +2,7 @@
 
 ## Cliente API #24 (para revisión)
 
-Transporte headless tipado/validado para GET /api/v1/public/info; la UI no hace solicitudes nuevas ni cambia estilos. [Cliente y configuración](src/shared/api/README.md), [contrato implementado](../docs/api/openapi-v1.yaml). `VITE_API_BASE_URL` opcional, default /api/v1, ejemplo sin secretos; Vite dev proxy al backend local. No tokens/cookies/localStorage, reintentos automáticos ni autenticación ficticia. Preview necesita mismo origen/gateway o configuración CORS futura autorizada.
+Transporte headless tipado/validado para GET /api/v1/public/info; la UI no hace solicitudes nuevas ni cambia estilos. [Cliente y configuración](src/shared/api/README.md), [contrato implementado](../docs/api/openapi-v1.yaml). `VITE_API_BASE_URL` opcional, default /api/v1, ejemplo sin secretos; Vite dev proxy al backend local. El cliente público no usa cookies. El cliente de sesión #27 usa cookies same-origin y CSRF, sin tokens en localStorage ni autenticación ficticia. Preview necesita mismo origen/gateway o configuración CORS futura autorizada.
 
 Tipos/metadatos se regeneran desde la raíz con `npm run generate:api --prefix tools/ci`; `npm run openapi --prefix tools/ci` exige coincidencia exacta. Web conserva sus 13 tests UI y añade 8 de cliente (**21 Vitest**), además de 13 Playwright. Sin cambios visuales: no se añaden capturas ni baselines #56.
 
@@ -21,7 +21,7 @@ npm ci
 npm run dev
 ```
 
-Abrir la URL local que imprime Vite. El servidor escucha en `127.0.0.1`. No se necesita arrancar Java, DB, Docker ni OIDC. No hay variables de configuración obligatorias ni `.env` requerido. Nunca poner secretos/tokens en variables `VITE_`: se publican al navegador.
+Abrir la URL local que imprime Vite. El servidor escucha en `127.0.0.1`. Para `/desarrollo` no se necesita Java, DB, Docker ni OIDC. `/login` y `/app` necesitan el BFF/IdP real de #27; sin ellos hay un estado de error/configuración, no acceso simulado. No hay variables de configuración obligatorias ni `.env` requerido. Nunca poner secretos/tokens en variables `VITE_`: se publican al navegador.
 
 ```powershell
 npm run typecheck
@@ -96,7 +96,7 @@ El QueryClient se crea por instancia del provider, sin cache global singleton. N
 - `/` redirige a `/desarrollo`.
 - `/desarrollo`: bienvenida, alcance real y acceso a la galería.
 - `/desarrollo/estados?estado=vacio|carga|error|permisos`: demostraciones reutilizables, selección en URL y reintento local con notificación accesible. Un parámetro desconocido vuelve al ejemplo vacío.
-- Cualquier ruta desconocida conserva el shell y ofrece volver al inicio. `/app/taxpayers` y `/login` no están implementadas.
+- Cualquier ruta desconocida conserva el shell y ofrece volver al inicio. `/app/taxpayers` no está implementada; `/login` y `/app` son acceso y selección real de despacho en #27.
 
 Contribuyentes, obligaciones, tareas, documentos, honorarios, reportes y CFDI aparecen deshabilitados bajo “Próximamente”. No son controles de autorización. El ejemplo “Sin permisos” es únicamente presentación; no implementa OIDC ni políticas backend.
 
@@ -123,3 +123,11 @@ Resultados, capturas y revisión visual: [evidencia #21](../docs/ux/evidence/iss
 `Web CI` define todos los comandos anteriores en Ubuntu 24.04 con Node de `.nvmrc` y npm 11.8.0. Instala Chromium con `npx --no-install playwright install --with-deps chromium`, respetando Playwright 1.64.1 del lockfile; conserva cinco proyectos sin reintentos ni exclusiones Draft. Desde #24 exige 21 Vitest y 13 Playwright, cero omitidos/fallidos/flaky. Cache de descargas npm, sin reutilizar node_modules/build. Ejecución remota pendiente #79.
 
 Los JSON temporales se escriben en `../.ci-work/`; sólo se publica un resumen depurado. Capturas regeneradas, HTML, trazas y logs quedan locales al runner y no se suben automáticamente. Las capturas de #21 conservan su condición de evidencia histórica; #56 no se implementa aquí. Ver [guía CI](../docs/delivery/CI.md).
+
+## Identidad y sesiones #27
+
+[Guía completa](../docs/security/AUTHENTICATION.md). Desde la raíz, `node tools/ci/auth-browser.mjs` inicia PostgreSQL/Keycloak/BFF y Vite HTTPS efímeros, prueba Chromium real y limpia al terminar. `node tools/ci/auth-browser.mjs --serve` conserva el entorno para desarrollo hasta Ctrl+C. Sólo usuarios sintéticos de fixtures; credenciales privadas en `.ci-work/27-browser.json`, nunca artifacts ni VITE_. El BFF usa 127.0.0.1; Keycloak localhost, sin compartir dominio de cookies.
+
+`session-client.ts` restringe base a `/api/v1` same-origin, `credentials: same-origin`, no-store y CSRF obtenido antes de cada mutación. Login es un formulario POST que redirige al IdP; no se usa fetch para seguir OAuth. La sesión, identidad y roles vienen del backend. Seleccionar un despacho exige respuesta autorizada, no se guarda tenant en localStorage. Logout invalida sesión real; 401 conduce a sesión expirada. Los nombres de despacho aún no existen en el modelo mínimo: la UI muestra un ordinal de las membresías reales, sin inventar nombres fiscales.
+
+37 Vitest (21 anteriores + 16 nuevos) y 13 Playwright de fundación más 5 OIDC reales son los mínimos. [Capturas #27](../docs/ux/evidence/issue-27/README.md) y [resultados](../backend/VALIDATION-27.md). No hay proveedor de producción aprobado ni funcionalidades fiscales operativas.

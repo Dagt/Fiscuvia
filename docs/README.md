@@ -42,6 +42,7 @@
 - [NFR-###](architecture/non-functional-requirements.md)
 - [Seguridad](security/SECURITY-BASELINE.md), [amenazas](security/THREAT-MODEL.md), [capacidades](security/permission-capabilities.md)
 - [ADR index](decisions/README.md), [plantilla ADR](decisions/ADR-000-template.md), y los ADR existentes en `architecture/adr/`.
+- [Propuesta #27: evaluación OIDC, BFF/sesiones y bootstrap de membresías](decisions/issue-27-oidc-session-proposal.md), pendiente de aprobación; no es autenticación implementada.
 
 ## 8. Desarrollo y entregas
 - [Backlog](backlog/README.md), [oleadas/dependencias](backlog/implementation-order.md), [protocolo Codex](backlog/codex-workflow.md)
@@ -65,4 +66,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Base #20–25 integrada mediante PR #75–78, #80 y #81. Esta rama prepara [tenancy/RLS #26](data-model/tenant-foundation-26.md) para revisión. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales, negocio ni identidad; #74, #27–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
+Base #20–26 integrada mediante PR #75–78 y #80–82. Esta rama implementa identidad/sesiones #27 sólo local/test, en revisión de seguridad; [guía efectiva](security/AUTHENTICATION.md). CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales ni negocio; proveedor productivo, #74, #28–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.

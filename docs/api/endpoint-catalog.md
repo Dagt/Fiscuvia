@@ -6,6 +6,10 @@
 |---|---|---|
 | GET | /api/v1/public/info | Información pública del producto; openapi-v1.yaml, sin datos de negocio ni identidad |
 
+## Implementado en #27, sólo local/test
+
+GET `/api/v1/me`, `/api/v1/auth/status`, `/api/v1/auth/csrf`; POST `/api/v1/auth/login`, `/logout`, `/tenant`, `/invitations`, `/invitations/accept`, `/invitations/revoke`, `/memberships/status` bajo el prefijo `/api/v1/auth` cuando corresponda. [OpenAPI implementado](openapi-v1.yaml) y [políticas/privilegios](../security/AUTHENTICATION.md) son la referencia exacta. Los redirects OAuth `/auth/authorize/local` y `/auth/callback/local` los gestiona Spring Security. No se publican CRUD de tenants/usuarios ni capacidades completas.
+
 ## Propuesto: no implementado
 
 Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas globales indicadas expresamente. Funciones posteriores identificadas Future.
@@ -13,7 +17,7 @@ Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas
 ## Identity / tenants
 | Método | Ruta | Capacidad / notas |
 |---|---|---|
-| GET | /api/v1/me | identidad/tenants del usuario autenticado |
+
 | GET | T/settings | TENANT_READ |
 | PATCH | T/settings | TENANT_SETTINGS_MANAGE y expectedVersion |
 | GET | T/memberships | MEMBERSHIP_VIEW |
