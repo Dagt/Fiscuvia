@@ -72,3 +72,7 @@ Correcciones encontradas durante desarrollo: contenido UTF-8 en errores de filtr
 **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0, sin cambios de pagos/permisos/protecciones ni bypasses. No considerar un fallo pre-runner un fallo de código ni un éxito remoto.
 
 Proveedor de producción, semántica MFA/recuperación/revocación federada, rotación/custodia operativa y correo de invitaciones siguen pendientes. #28/#33 y el gate fiscal #74 no se implementan. No se marca Ready, no se hace merge, no se cierra #27 ni se despliega. Se requiere revisión humana de seguridad del PR y de las decisiones productivas abiertas.
+
+### Aviso no bloqueante del tooling (consulta 2026-10-31)
+
+`npm audit` identifica **12 alertas moderadas transitivas** en la cadena ESLint/typescript-eslint, originadas en [GHSA-g3hv-75wg-m249 / CVE-2026-118764](https://github.com/advisories/GHSA-g3hv-75wg-m249), minimatch <11.0.1 (amplificación de patrones glob). No hay HIGH/CRITICAL en ese reporte. Es tooling de desarrollo heredado; los manifests/lockfiles web no se cambian en #27 y no se usa minimatch desde la aplicación ni se aceptan patrones de usuarios. Resolverlo exige revisar compatibilidad de herramientas/majors; no se ejecuta audit fix --force ni se excluye el hallazgo. Se registra para revisión/mantenimiento, sin afirmar cero vulnerabilidades de toda severidad. El gate Trivy existente conserva HIGH/CRITICAL y debe volver a verificarse sobre el SHA final.

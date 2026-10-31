@@ -91,6 +91,12 @@ class IdentitySecurityConfiguration {
                     if (request.getSession(false)!=null) request.getSession(false).invalidate();
                     response.setHeader("Cache-Control","no-store"); response.sendRedirect(settings.origin()+"/login?error=autenticacion");
                 })
+                .withObjectPostProcessor(new ObjectPostProcessor<org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter>() {
+                    @Override public <O extends org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter> O postProcess(O filter) {
+                        filter.setAuthenticationFailureHandler((request,response,error)->problems.write(ApiErrorCode.AUTHENTICATION_REQUIRED,request,response));
+                        return filter;
+                    }
+                })
                 .withObjectPostProcessor(new ObjectPostProcessor<OAuth2LoginAuthenticationFilter>() {
                     @Override public <O extends OAuth2LoginAuthenticationFilter> O postProcess(O filter) {
                         filter.setAuthenticationDetailsSource(request->null);
