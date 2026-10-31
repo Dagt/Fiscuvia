@@ -324,6 +324,20 @@ class ResourceAuthorizationTests {
             } finally { ResourceFixtureController.release.countDown(); }
         }
     }
+    @Test void newlyGrantedResourceCannotExpandAlreadyAuthorizedCollection() throws Exception {
+        try(var f=new Fixture("ACCOUNTANT");var executor=Executors.newVirtualThreadPerTaskExecutor()) {
+            ResourceFixtureController.entered=new CountDownLatch(1); ResourceFixtureController.release=new CountDownLatch(1);
+            var operation=executor.submit(()->f.get("hold"));
+            try {
+                assertThat(ResourceFixtureController.entered.await(10,TimeUnit.SECONDS)).isTrue();
+                grant(f.tenant,f.member,f.other,"TAXPAYER_VIEW","TAXPAYER");
+                ResourceFixtureController.release.countDown(); var result=operation.get(10,TimeUnit.SECONDS);
+                assertThat(result.statusCode()).isEqualTo(200);
+                assertThat(result.body()).contains(f.own.toString()).doesNotContain(f.other.toString());
+                assertThat(f.get("list").body()).contains(f.own.toString(),f.other.toString());
+            } finally { ResourceFixtureController.release.countDown(); }
+        }
+    }
     static final class Fixture implements AutoCloseable {
         final OidcBrowser browser=new OidcBrowser(TLS,OIDC); final UUID user,tenant,member,own,other;
         Fixture(String role) throws Exception { this(role,"alice"); }

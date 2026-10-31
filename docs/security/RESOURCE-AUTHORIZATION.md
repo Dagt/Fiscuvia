@@ -26,7 +26,7 @@ V1/V2/V3 no cambian. `V4__resource_authorization_foundation.sql` crea:
 |---|---|
 | access_control_private.role_capabilities | Política global revisada rol/capacidad/categoría, MFA y referencia de aprobación; sin acceso runtime/sesiones |
 | access_control.resource_grants | tenant_id obligatorio, FK (tenant_id,membership_id), PK tenant-first/membresía/categoría/capacidad/recurso, índice tenant/categoría/recurso/membresía; active y referencia de aprobación UUID |
-| access_control_private.operation_context | Vínculo privado actor/tenant/membresía/operación/recurso/xid, inválido tras commit/rollback; limpieza acotada SKIP LOCKED, no auditoría |
+| access_control_private.operation_context | Vínculo privado actor/tenant/membresía/operación/recurso/xid y conjunto UUID autorizado congelado, inválido tras commit/rollback; limpieza acotada SKIP LOCKED, no auditoría |
 | access_control.authorize_operation | Función estrecha, SQL fijo/parametrizado, sin argumento actor ni SQL arbitrario; devuelve código interno cerrado |
 | access_control.resource_allowed | Predicado para cerca RLS de recurso; exige vínculo de operación, actor y tenant vigentes y asignación exacta |
 
@@ -59,3 +59,5 @@ Diagnóstico: comprobar primero correlación y reason_code cerrado; revisar esta
 Riesgos: BFF/migrador comprometidos superan esta frontera; el runtime SQL no puede fabricar la prueba de identidad, ni escribir grants/políticas. Asignaciones genéricas requieren integración/FKs de cada módulo futuro; políticas mal diseñadas por un DBA no se vuelven seguras por estas guardas. Bloquear/leer asignaciones completas por colección tiene costo: medir cardinalidad, tiempos de bloqueo y bloat antes del piloto. Proveedor/MFA productivos, OQ-015/#74, auditoría #29 y regresión transversal #30 siguen pendientes.
 
 Referencias primarias: [RLS y políticas restrictivas PostgreSQL 18](https://www.postgresql.org/docs/18/ddl-rowsecurity.html), [bloqueos de filas](https://www.postgresql.org/docs/18/explicit-locking.html), [arquitectura de autorización Spring Security](https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html). Referencia TrailerSaaS: DatabaseTenantAuthorization y AuthorizationPostgresTests (scopes frescos y pruebas de revocación); se adapta al bootstrap de identidad de Fiscuvia y se añaden bloqueos/cerca por recurso, sin copiar jerarquía logística.
+
+El conjunto de recursos de una colección se fija al autorizarla, además de bloquear los grants existentes: asignaciones nuevas concurrentes sólo aparecen en la siguiente unidad. El predicado RLS exige pertenencia a ese conjunto privado y grant activo. Se prueba una concesión confirmada durante un callback detenido sin ampliar sus filas. Medir memoria/almacenamiento del conjunto UUID antes de permitir carteras grandes; no trasladarlo a una cookie, log o token del cliente.

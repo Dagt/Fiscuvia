@@ -56,6 +56,7 @@ CREATE TABLE access_control_private.operation_context (
     capability varchar(32) NOT NULL,
     resource_kind varchar(10) NOT NULL,
     resource_id uuid,
+    authorized_resources uuid[] NOT NULL,
     FOREIGN KEY(tenant_id,membership_id) REFERENCES identity.memberships(tenant_id,id)
 );
 REVOKE ALL ON ALL TABLES IN SCHEMA access_control,access_control_private FROM PUBLIC,fiscuvia_runtime,fiscuvia_sessions;
@@ -65,7 +66,7 @@ REVOKE ALL ON ALL TABLES IN SCHEMA access_control,access_control_private FROM PU
 -- completion. No authorize-then-commit-then-use window; no claims/headers/actor parameters.
 CREATE FUNCTION access_control.authorize_operation(p_tenant uuid,p_capability text,p_kind text,p_resource uuid)
 RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,pg_temp AS $$
-DECLARE actor uuid:=identity.current_actor_id(); member uuid; mfa bigint; needs_mfa boolean; tx xid8:=pg_current_xact_id();
+DECLARE actor uuid:=identity.current_actor_id(); member uuid; mfa bigint; needs_mfa boolean; tx xid8:=pg_current_xact_id(); resources uuid[];
 BEGIN
     IF actor IS NULL OR p_tenant IS NULL OR p_capability IS NULL OR p_kind IS NULL THEN RETURN 'CONTEXT_REJECTED'; END IF;
     SELECT id INTO member FROM identity.memberships WHERE tenant_id=p_tenant AND user_id=actor AND status='ACTIVE' FOR SHARE;
@@ -81,17 +82,20 @@ BEGIN
       THEN RETURN 'MFA_REQUIRED'; END IF;
     IF p_kind='TENANT' AND p_resource IS NOT NULL THEN RETURN 'CONTEXT_REJECTED'; END IF;
     IF p_kind<>'TENANT' THEN
-      PERFORM 1 FROM access_control.resource_grants g WHERE g.tenant_id=p_tenant AND g.membership_id=member
-        AND g.resource_kind=p_kind AND g.capability=p_capability AND g.active
-        AND (p_resource IS NULL OR g.resource_id=p_resource) ORDER BY g.resource_id FOR SHARE;
-      IF NOT FOUND AND p_resource IS NOT NULL THEN RETURN 'RESOURCE_UNASSIGNED'; END IF;
+      SELECT array_agg(locked.resource_id ORDER BY locked.resource_id) INTO resources FROM (
+        SELECT g.resource_id FROM access_control.resource_grants g WHERE g.tenant_id=p_tenant AND g.membership_id=member
+          AND g.resource_kind=p_kind AND g.capability=p_capability AND g.active
+          AND (p_resource IS NULL OR g.resource_id=p_resource) ORDER BY g.resource_id FOR SHARE) locked;
+      IF resources IS NULL AND p_resource IS NOT NULL THEN RETURN 'RESOURCE_UNASSIGNED'; END IF;
     END IF;
     DELETE FROM access_control_private.operation_context WHERE transaction_id IN (
       SELECT transaction_id FROM access_control_private.operation_context WHERE transaction_id<>tx LIMIT 100 FOR UPDATE SKIP LOCKED);
-    INSERT INTO access_control_private.operation_context VALUES(tx,actor,p_tenant,member,p_capability,p_kind,p_resource)
+    -- Freeze the row set too: grants inserted after this check cannot expand this operation.
+    INSERT INTO access_control_private.operation_context VALUES(tx,actor,p_tenant,member,p_capability,p_kind,p_resource,COALESCE(resources,'{}'::uuid[]))
       ON CONFLICT DO NOTHING;
     IF NOT EXISTS(SELECT 1 FROM access_control_private.operation_context c WHERE c.transaction_id=tx AND c.actor_id=actor
-      AND c.tenant_id=p_tenant AND c.capability=p_capability AND c.resource_kind=p_kind AND c.resource_id IS NOT DISTINCT FROM p_resource)
+      AND c.tenant_id=p_tenant AND c.capability=p_capability AND c.resource_kind=p_kind AND c.resource_id IS NOT DISTINCT FROM p_resource
+      AND c.authorized_resources=COALESCE(resources,'{}'::uuid[]))
       THEN RETURN 'CONTEXT_REJECTED'; END IF;
     RETURN 'AUTHORIZED';
 END;
@@ -105,7 +109,8 @@ RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=pg_catalog,
       ON g.tenant_id=c.tenant_id AND g.membership_id=c.membership_id AND g.resource_kind=c.resource_kind AND g.capability=c.capability
       WHERE c.transaction_id=pg_current_xact_id_if_assigned() AND c.actor_id=identity.current_actor_id()
         AND c.tenant_id=app.current_tenant_id() AND c.tenant_id=p_tenant AND c.resource_kind=p_kind AND c.capability=p_capability
-        AND (c.resource_id IS NULL OR c.resource_id=p_resource) AND g.resource_id=p_resource AND g.active)
+        AND (c.resource_id IS NULL OR c.resource_id=p_resource) AND p_resource=ANY(c.authorized_resources)
+        AND g.resource_id=p_resource AND g.active)
 $$;
 REVOKE ALL ON ALL FUNCTIONS IN SCHEMA access_control FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION access_control.authorize_operation(uuid,text,text,uuid),
