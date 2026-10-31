@@ -289,6 +289,9 @@ test('CSRF inválido y UUID de otro despacho no otorgan acceso', async ({
           .length,
     )
     .toBe(1)
+  // The explicitly approved internal fixture changes membership after the initial /me query.
+  // Refresh the real UI after observing that commit; never rely on a stale query-cache race.
+  await page.reload()
   const other = await browser.newContext({
     baseURL: 'https://127.0.0.1:4174',
     ignoreHTTPSErrors: true,
