@@ -17,6 +17,12 @@ spring:
   sql:
     init:
       mode: never
+  session:
+    timeout: 15m
+    jdbc:
+      initialize-schema: never
+      table-name: auth_sessions.SPRING_SESSION
+      cleanup-cron: '0 * * * * *'
   flyway:
     locations: classpath:db/migration
     default-schema: infrastructure
@@ -37,6 +43,23 @@ server:
     include-binding-errors: never
     include-stacktrace: never
     include-exception: false
+  servlet:
+    session:
+      cookie:
+        name: __Host-FiscuviaSession
+        path: /
+        http-only: true
+        secure: true
+        same-site: lax
+fiscuvia:
+  identity:
+    proof-key: ${FISCUVIA_ACTOR_PROOF_KEY}
+    enabled: ${FISCUVIA_OIDC_ENABLED:false}
+    issuer: ${FISCUVIA_OIDC_ISSUER:}
+    client-id: ${FISCUVIA_OIDC_CLIENT_ID:fiscuvia-local}
+    client-secret: ${FISCUVIA_OIDC_CLIENT_SECRET:}
+    origin: ${FISCUVIA_ORIGIN:https://127.0.0.1:8443}
+    mfa-policy: ${FISCUVIA_OIDC_MFA_POLICY:unverified}
 
 management:
   tracing:

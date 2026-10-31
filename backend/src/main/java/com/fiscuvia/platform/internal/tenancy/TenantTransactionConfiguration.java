@@ -7,7 +7,8 @@ import org.springframework.jdbc.support.JdbcTransactionManager;
 
 @Configuration(proxyBeanMethods = false)
 class TenantTransactionConfiguration {
-    @Bean JdbcTransactionManager transactionManager(DataSource source) {
+    @Bean @org.springframework.context.annotation.Primary
+    JdbcTransactionManager transactionManager(DataSource source) {
         var manager = new JdbcTransactionManager(source);
         // Rolling back a savepoint can erase a first binding. Require full transaction boundaries.
         manager.setNestedTransactionAllowed(false);

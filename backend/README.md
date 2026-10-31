@@ -1,22 +1,22 @@
-# Fiscuvia backend — plataforma #20–25 y tenancy/RLS #26
+# Fiscuvia backend — plataforma, tenancy e identidad local #20–27
 
-Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–26 integrada con raíz mínima de despachos y RLS. Sin tablas fiscales ni endpoints de negocio. Gate #74, OIDC/membresías #27 y permisos #28 siguen pendientes.
+Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–26 integrada con raíz mínima de despachos y RLS. Sin tablas fiscales ni endpoints de negocio. Gate #74 y permisos #28 siguen pendientes; #27 incorpora OIDC/membresías sólo local/test, en revisión.
 
-PR #82/#26 está integrado en main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. Esta rama de #27 contiene **sólo una propuesta documental pendiente de aprobación**: [proveedores, BFF/sesiones y modelo de identidad/RLS](../docs/decisions/issue-27-oidc-session-proposal.md). No hay Spring Security/OIDC, login, sesiones o membresías nuevos; los comandos y las 135 pruebas siguientes corresponden a la base existente. [Validación de esta fase](VALIDATION-27-PROPOSAL.md).
+PR #82/#26 está integrado en main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. #27 añade Spring Security 7.1.2, Spring Session JDBC 4.1.1, V3 y Keycloak 26.8.1 exclusivamente local/test. [Guía efectiva de autenticación, configuración, SQL y límites](../docs/security/AUTHENTICATION.md); [validación local](VALIDATION-27.md). La propuesta inicial se conserva como antecedente; no se aprueba proveedor de producción.
 
 ## Contratos #24 (integrados)
 
 `GET /api/v1/public/info` devuelve únicamente producto/eslogan/versión. Validación Jakarta servidor, UUID/binding estricto, RFC 9457/códigos/correlación seguros y primitivas reutilizables, sin JPA ni autenticación. [Guía y ejemplos](../docs/api/foundation-24.md), [contrato implementado](../docs/api/openapi-v1.yaml). Dependencia nueva: starter-validation 4.1.2 → Hibernate Validator 9.1.5.Final / Jakarta Validation 3.1.1 administrados por Boot.
 
-`clean verify` ejecuta **135** pruebas (120 Surefire + 15 Failsafe), conserva las 108 anteriores y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts. [Observabilidad #25](../docs/delivery/OBSERVABILITY.md); [tenancy física, convenciones transaccionales y riesgos #26](../docs/data-model/tenant-foundation-26.md); [evidencia #26](VALIDATION-26.md).
+`clean verify` exige **161** pruebas (142 Surefire + 19 Failsafe), conserva las 135 anteriores y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts. [Observabilidad #25](../docs/delivery/OBSERVABILITY.md); [tenancy física, convenciones transaccionales y riesgos #26](../docs/data-model/tenant-foundation-26.md); [evidencia #26](VALIDATION-26.md).
 
-**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #27–30 ni reglas fiscales de #74.
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #28–30 ni reglas fiscales de #74; #27 se limita a identidad local/test.
 
 ## Tenancy transaccional #26
 
 V2 añade `app.tenants(tenant_id,created_at)`, un registro privado tenant/xid y dos funciones con permisos explícitos. ENABLE/FORCE RLS y una cerca restrictiva USING/WITH CHECK; runtime sólo lee la raíz, no aprovisiona despachos. Guardas rechazan ownership, membresías/privilegios DB y protecciones/grants inseguros. V1 permanece intacta; Flyway aplica V2 sobre DB nueva o V1 existente.
 
-El puerto `platform.TenantTransactions.execute(authorizedTenantId, work)` establece contexto local a una transacción JDBC real y participa en una exterior REQUIRED. Mismo tenant puede anidar; cambiarlo provoca rechazo/rollback. NESTED/savepoints y transacciones exteriores read-only se rechazan. No aceptar UUID de HTTP como autorización, crear conexiones independientes ni emitir SET de sesión/control transaccional manual. #27/#28 deben autorizar identidad/membresía/capacidad/recurso antes del puerto. No hay endpoint para elegir tenant ni tablas de identidad provisionales.
+El puerto `platform.TenantTransactions.execute(authorizedTenantId, work)` establece contexto local a una transacción JDBC real y participa en una exterior REQUIRED. Mismo tenant puede anidar; cambiarlo provoca rechazo/rollback. NESTED/savepoints y transacciones exteriores read-only se rechazan. No aceptar UUID de HTTP como autorización, crear conexiones independientes ni emitir SET de sesión/control transaccional manual. `identity.AuthorizedTenantOperations` autoriza identidad/membresía antes del puerto; #28 añadirá capacidad/recurso. `/auth/tenant` sólo valida acceso; no publica un setter genérico de contexto.
 
 Las pruebas RLS usan runtime y fixtures desechables fuera de migraciones productivas: dos despachos con mismo RFC DEMO, CRUD/FK/constraints, pool tamaño 1 con PID idéntico, cuatro conexiones simultáneas y resistencia frente a políticas eliminadas/relajadas. Los fixtures se siembran con migrador y contexto respetando FORCE; no se usan bypasses para los datos. Comando focalizado: `.\mvnw.cmd -B -ntp '-Dtest=TenantRlsTests,TenantConcurrencyTests,TenantHttpPrivacyTests' test` (POSIX `./mvnw`). Las tres pruebas `TenantMigrationIT` se ejecutan en verify.
 
@@ -118,7 +118,7 @@ backend/
         └── resources/application-test.yml
 ```
 
-Se usa un artefacto Maven con módulos lógicos Spring Modulith. Cada subpaquete directo de `com.fiscuvia` es un módulo por detección estándar; la raíz sólo contiene el bootstrap. `platform` es el único módulo implementado: verifica entorno y privilegios de conexión, no exporta API de negocio y declara cero dependencias de otros módulos.
+Se usa un artefacto Maven con módulos lógicos Spring Modulith. Cada subpaquete directo de `com.fiscuvia` es un módulo por detección estándar; la raíz sólo contiene el bootstrap. `platform` verifica entorno, contratos y privilegios, sin dependencias. `identity` depende únicamente del API público de platform; expone el puerto de operaciones autorizadas y mantiene seguridad/JDBC/HTTP internos.
 
 Convención para las siguientes issues:
 
@@ -165,8 +165,12 @@ Trazabilidad: #20/#22/#26, ADR-003/007 como dirección (conservan Proposed), bas
 - #23 integrado: [CI definido](../docs/delivery/CI.md), wrapper `clean verify` en Ubuntu 24.04 / Temurin 25.0.5+8 / Maven 3.9.16, Docker/Ryuk obligatorios. #24 amplía los mínimos a ocho suites/90 pruebas y conformidad HTTP, cero errores/omisiones; publica JUnit depurado. Remote CI pendiente #79.
 - #24 integrado: [contratos/errores/validación](../docs/api/foundation-24.md), sin negocio ni autenticación.
 - #25 integrado: [observabilidad, privacidad y runbook](../docs/delivery/OBSERVABILITY.md), [evidencia local](VALIDATION-25.md). JSON por allowlist; UUID de correlación conservado y trazas HTTP reales locales; métricas acotadas sin tenant. Health/readiness PostgreSQL real, sin detalles. Actuator administrativo cerrado; métricas únicamente con opt-in explícito, perfil local y puerto loopback separado. Sin exportadores, collectors ni cambios de esquema.
-- #26 para revisión: [tenancy/RLS](../docs/data-model/tenant-foundation-26.md), [evidencia](VALIDATION-26.md). No completa identidad, autorización por recurso ni seguridad transversal de #27–30.
-- #27–30: OIDC/membresías, capacidades, auditoría/outbox y aislamiento transversal antes de operar sobre datos.
+- #26 integrado: [tenancy/RLS](../docs/data-model/tenant-foundation-26.md), [evidencia](VALIDATION-26.md). No completa identidad, autorización por recurso ni seguridad transversal de #27–30.
+- #27 en revisión: OIDC/membresías/sesiones con IdP real local; producción pendiente. #28–30: capacidades, auditoría/outbox y aislamiento transversal antes de operar sobre datos.
 - UI #21 está integrada; #52 y CFDI/SAT permanecen fuera de alcance de este cambio backend.
 
 Metodología contrastada con [AGENTS](https://github.com/Dagt/TrailerSaas/blob/main/AGENTS.md), [flujo de issue/PR](https://github.com/Dagt/TrailerSaas/blob/main/docs/backlog/codex-workflow.md), POM y `ModuleBoundariesTests` de TrailerSaaS. Se adoptan la entrega acotada, la prueba arquitectónica y la evidencia por SHA. No se copian dominios, módulos logísticos ni infraestructura posterior.
+
+## Sesiones e identidad #27
+
+`DB_SESSION_PASSWORD` y `FISCUVIA_ACTOR_PROOF_KEY` son obligatorios incluso con login deshabilitado. Un volumen V2 requiere el [upgrade controlado y procedimiento de bootstrap](../docs/security/AUTHENTICATION.md#actualizar-un-volumen-v2-y-primer-administrador); no borrar datos ni editar V1/V2. Los generadores de entorno nuevos incluyen ambos valores privados. Health/info siguen públicos; `/me` requiere sesión y devuelve 401 sin ella. Todas las mutaciones requieren CSRF. [Modelo físico y límites](../docs/security/AUTHENTICATION.md).

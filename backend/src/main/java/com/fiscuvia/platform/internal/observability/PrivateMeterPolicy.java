@@ -33,7 +33,7 @@ final class PrivateMeterPolicy implements MeterFilter {
                 case "exception" -> "none".equals(tag.getValue()) ? "none" : "ERROR";
                 case "area" -> Set.of("heap", "nonheap").contains(tag.getValue()) ? tag.getValue() : "OTHER";
                 case "id" -> IDS.contains(tag.getValue()) ? tag.getValue() : "OTHER";
-                case "pool" -> "fiscuvia-runtime";
+                case "pool" -> "fiscuvia-sessions".equals(tag.getValue()) ? "fiscuvia-sessions" : "fiscuvia-runtime";
                 case "name" -> "dataSource";
                 case "state" -> Set.of("new", "runnable", "blocked", "waiting", "timed-waiting", "terminated").contains(tag.getValue()) ? tag.getValue() : "OTHER";
                 default -> null;

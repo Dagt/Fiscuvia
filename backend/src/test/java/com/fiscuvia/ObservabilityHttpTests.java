@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "management.tracing.sampling.probability=1")
-@Import({ObservabilityHttpTests.Fixtures.class, ObservabilityHttpTests.Capture.class})
+@Import({ObservabilityHttpTests.Fixtures.class, ObservabilityHttpTests.Capture.class, ContractFixtureSecurity.class})
 @Testcontainers
 @DirtiesContext
 class ObservabilityHttpTests {

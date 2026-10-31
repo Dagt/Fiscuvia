@@ -70,6 +70,8 @@ class StructuredLoggingTests {
     }
 
     @Test void diagnosticFingerprintNeverUsesPrivateThrowableTextOrFilenames() {
+        for(var kind:com.fiscuvia.platform.StartupGuardFailure.Kind.values())
+            assertThat(SafeDiagnostics.classify(new com.fiscuvia.platform.StartupGuardFailure(kind)).name()).isEqualTo(kind.name());
         var one = new IllegalStateException(PRIVATE);
         one.setStackTrace(new StackTraceElement[] {new StackTraceElement("com.fiscuvia." + PRIVATE, PRIVATE, PRIVATE, 5)});
         var two = new IllegalStateException("other-private-input"); two.setStackTrace(new StackTraceElement[0]);

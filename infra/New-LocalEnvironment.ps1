@@ -3,7 +3,7 @@ $envFile = Join-Path $PSScriptRoot '.env'
 function New-LocalPassword {
     [Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32)).ToLowerInvariant()
 }
-$content = "DB_PORT=55433`nDB_BOOTSTRAP_PASSWORD=$(New-LocalPassword)`nDB_MIGRATION_PASSWORD=$(New-LocalPassword)`nDB_RUNTIME_PASSWORD=$(New-LocalPassword)`n"
+$content = "DB_PORT=55433`nDB_BOOTSTRAP_PASSWORD=$(New-LocalPassword)`nDB_MIGRATION_PASSWORD=$(New-LocalPassword)`nDB_RUNTIME_PASSWORD=$(New-LocalPassword)`nDB_SESSION_PASSWORD=$(New-LocalPassword)`nFISCUVIA_ACTOR_PROOF_KEY=$(New-LocalPassword)`n"
 # CreateNew prevents accidental replacement of credentials for an existing volume.
 $stream = [IO.File]::Open($envFile, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write)
 try {

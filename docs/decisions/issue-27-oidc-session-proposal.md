@@ -1,8 +1,8 @@
 # #27 — propuesta de identidad, BFF y sesiones para aprobación
 
-**Estado: Proposed / implementación detenida antes de fijar el modelo de sesiones y bootstrap de identidad.** Fecha: 2026-10-30. Base auditada: main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`, PR #82 integrado. Referencias: FR-002/003/005, BR-003/004/005, NFR-002/003/007/008, ADR-005, ADR-007, OQ-014/022, issues #27/#28/#33 y gate #74.
+**Antecedente histórico: propuesta presentada antes de la autorización técnica del propietario el 2026-10-30.** Fecha: 2026-10-30. Base auditada: main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`, PR #82 integrado. Referencias: FR-002/003/005, BR-003/004/005, NFR-002/003/007/008, ADR-005, ADR-007, OQ-014/022, issues #27/#28/#33 y gate #74.
 
-Este documento es una propuesta revisable, no autenticación implementada. No añade dependencias, migraciones, endpoints, IdP, credenciales, usuarios, sesiones ni interfaz de login. El Draft de #27 no cumple todavía sus criterios finales. ADR-005 sigue Proposed y OQ-014 sigue Open.
+Este documento conserva la evaluación inicial y sus supuestos, no el inventario efectivo actual. El propietario autorizó después BFF/OIDC/PKCE, JDBC privado, Keycloak local, identidad global, membresías/roles, MFA verificable, bootstrap controlado e invitaciones exactas. La [guía implementada](../security/AUTHENTICATION.md) y evidencia #27 describen código/pruebas actuales y diferencias. Proveedor/MFA/operación de producción siguen pendientes; ADR-005 sigue Proposed y OQ-014 Open.
 
 ## 1. Resultado de la auditoría
 

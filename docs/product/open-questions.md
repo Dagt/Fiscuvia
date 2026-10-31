@@ -16,7 +16,7 @@
 - **OQ-011 [MVP]** ¿Cómo se define cobro recurrente, impuestos del honorario y moneda/redondeo?
 - **OQ-012 [MVP]** ¿Cómo prevenir confusión entre honorarios del despacho e impuestos del contribuyente en dashboards?
 - **OQ-013 [MVP]** ¿Soportaremos relación de un contribuyente con múltiples responsables, sucursales y contactos?
-- **OQ-014 [MVP security]** Proveedor OIDC, tipo de sesión, MFA y recuperación: decisión concreta.
+- **OQ-014 [MVP security] — Open, autorización técnica parcial 2026-10-30:** BFF same-origin, OIDC Code+PKCE, sesiones JDBC privadas, Keycloak local/test, identidad global/membresías, cuatro roles, bootstrap interno e invitaciones exactas autorizados por el propietario en PR #83. Pendientes: proveedor de producción, semántica/factores MFA, recuperación/revocación federada, costos/operación e invitaciones por correo. [Guía efectiva](../security/AUTHENTICATION.md). No Resolved.
 - **OQ-015 [MVP]** ¿Qué permisos se aplican a auxiliares sobre datos fiscales/financieros y archivos?
 - **OQ-016 [MVP]** ¿Cómo proceden baja, portabilidad y suspensión de tenant sin destrucción prematura?
 - **OQ-017 [future]** Qué versiones CFDI/complementos y fuente de validación deben soportarse.
@@ -32,7 +32,7 @@
 
 ## Política de decisión
 
-**OQ-014 — propuesta pendiente de #27 (2026-10-30):** [comparación y decisiones concretas para aprobación](../decisions/issue-27-oidc-session-proposal.md). Se propone BFF OIDC estándar con emisor real sólo local de pruebas, sesiones JDBC y bootstrap de membresías limitado al actor. Requieren revisión el almacenamiento/tiempos de sesión, frontera SQL, MFA privilegiado, destinatario de invitación y primer owner. No se ha elegido proveedor de producción ni se considera esta pregunta Resolved.
+**OQ-014 — antecedente histórico de propuesta, anterior a la aprobación parcial (2026-10-30):** [comparación y decisiones concretas para aprobación](../decisions/issue-27-oidc-session-proposal.md). Se propone BFF OIDC estándar con emisor real sólo local de pruebas, sesiones JDBC y bootstrap de membresías limitado al actor. Requieren revisión el almacenamiento/tiempos de sesión, frontera SQL, MFA privilegiado, destinatario de invitación y primer owner. No se ha elegido proveedor de producción ni se considera esta pregunta Resolved.
 No bloquear desarrollo de scaffold por preguntas comerciales no críticas, pero no implementar reglas fiscales/estados irreversibles si OQ de dominio es blocking. Marcar cambio de estatus **Resolved** sólo tras validación explícita con fecha, dueño y referencias.
 
 ## Evidencia técnica parcial de OQ-022 — issue #20, 2026-10-29

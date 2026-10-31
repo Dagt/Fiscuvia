@@ -2,9 +2,8 @@ openapi: 3.1.0
 info:
   title: Fiscuvia API — contratos implementados
   version: 1.0.0
-  description: >
-    Infraestructura #24. Sólo /public/info está implementado. Identidad OIDC,
-    despachos y módulos de negocio son futuros; el borrador separado no los habilita.
+  description: "Contratos implementados #24/#27. BFF OIDC local, sesiones JDBC e identidad/membresías. Sin
+    proveedor de producción aprobado ni módulos fiscales."
 servers:
   - url: /api/v1
 security: []
@@ -32,23 +31,403 @@ paths:
       security: []
       x-implementation-status: implemented
       responses:
-        '200':
+        "200":
           description: Identidad pública del producto; sin datos de usuarios ni infraestructura
           headers:
             X-Correlation-Id:
-              $ref: '#/components/headers/CorrelationId'
+              $ref: "#/components/headers/CorrelationId"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PlatformInfo'
+                $ref: "#/components/schemas/PlatformInfo"
               example:
                 productName: Fiscuvia
                 tagline: Todo tu despacho, una sola vía.
                 apiVersion: 1.0.0
-        '406':
-          $ref: '#/components/responses/NotAcceptable'
-        '500':
-          $ref: '#/components/responses/InternalError'
+        "406":
+          $ref: "#/components/responses/NotAcceptable"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /me:
+    get:
+      operationId: getCurrentIdentity
+      summary: Consultar identidad y membresías activas autorizadas
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Consultar identidad y membresías activas autorizadas
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentIdentity"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/status:
+    get:
+      operationId: getAuthStatus
+      summary: Consultar disponibilidad del emisor local
+      security: []
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Consultar disponibilidad del emisor local
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthStatus"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/csrf:
+    get:
+      operationId: getCsrfToken
+      summary: Obtener token CSRF de sesión
+      security: []
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Obtener token CSRF de sesión
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsrfToken"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/login:
+    post:
+      operationId: beginLogin
+      summary: Iniciar login OIDC real con PKCE
+      security: []
+      x-implementation-status: implemented
+      responses:
+        "303":
+          description: Iniciar login OIDC real con PKCE
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+            Location:
+              description: Destino fijo del inicio OIDC
+              schema:
+                type: string
+                const: /api/v1/auth/authorize/local
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: false
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      description: "Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF
+        válido de la misma sesión. No acepta un returnUrl arbitrario."
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - _csrf
+              properties:
+                _csrf:
+                  type: string
+                  minLength: 32
+  /auth/logout:
+    post:
+      operationId: logout
+      summary: Invalidar sesión local
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "204":
+          description: Invalidar sesión local
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+  /auth/tenant:
+    post:
+      operationId: authorizeTenant
+      summary: Validar membresía activa del despacho
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Validar membresía activa del despacho
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Membership"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TenantRequest"
+  /auth/invitations:
+    post:
+      operationId: createInvitation
+      summary: Crear invitación local para issuer/subject exacto; owner con MFA reciente
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "201":
+          description: Crear invitación local para issuer/subject exacto; owner con MFA reciente
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invitation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteRequest"
+  /auth/invitations/accept:
+    post:
+      operationId: acceptInvitation
+      summary: Consumir invitación atómica de un solo uso
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Consumir invitación atómica de un solo uso
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcceptedInvitation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcceptInvitation"
+  /auth/invitations/revoke:
+    post:
+      operationId: revokeInvitation
+      summary: Revocar invitación no consumida
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "204":
+          description: Revocar invitación no consumida
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RevokeInvitation"
+  /auth/memberships/status:
+    post:
+      operationId: changeMembershipStatus
+      summary: Suspender o revocar membresía no propietaria; owner con MFA reciente
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      responses:
+        "204":
+          description: Suspender o revocar membresía no propietaria; owner con MFA reciente
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - name: X-CSRF-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            minLength: 32
+          description: Token CSRF de la sesión same-origin; no es un token de identidad.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipStatusRequest"
+  /auth/authorize/local:
+    get:
+      operationId: redirectToLocalOidc
+      summary: Redirect OIDC gestionado por Spring Security; requiere aprobación de login POST+CSRF de un uso.
+      security: []
+      x-implementation-status: implemented
+      responses:
+        "302":
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
+            devuelve tokens.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Destino de protocolo validado en configuración local.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/callback/local:
+    get:
+      operationId: completeLocalOidc
+      summary: Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de
+        identidad genérico.
+      security: []
+      x-implementation-status: implemented
+      responses:
+        "302":
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
+            devuelve tokens.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Destino de protocolo validado en configuración local.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
 components:
   headers:
     CorrelationId:
@@ -60,34 +439,56 @@ components:
     Page:
       in: query
       name: page
-      schema: {type: integer, minimum: 0, maximum: 10000, default: 0}
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 10000
+        default: 0
     Size:
       in: query
       name: size
-      schema: {type: integer, minimum: 1, maximum: 100, default: 20}
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
     Sort:
       in: query
       name: sort
       description: El endpoint debe restringir campos; orden secundario único por id en el repositorio
-      schema: {type: string, pattern: '^[a-zA-Z][a-zA-Z0-9]{0,63},(asc|desc)$', default: 'id,asc'}
+      schema:
+        type: string
+        pattern: ^[a-zA-Z][a-zA-Z0-9]{0,63},(asc|desc)$
+        default: id,asc
     IdempotencyKey:
       in: header
       name: Idempotency-Key
       required: true
       description: >
-        Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado,
-        huella canónica, persistencia/replay y retención antes de prometer idempotencia.
-        No se requiere ni se utiliza en GET /public/info.
-      schema: {type: string, format: uuid}
+        Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica,
+        persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET
+        /public/info.
+      schema:
+        type: string
+        format: uuid
   schemas:
     PlatformInfo:
       type: object
       additionalProperties: false
-      required: [productName, tagline, apiVersion]
+      required:
+        - productName
+        - tagline
+        - apiVersion
       properties:
-        productName: {type: string, const: Fiscuvia}
-        tagline: {type: string, const: 'Todo tu despacho, una sola vía.'}
-        apiVersion: {type: string, const: 1.0.0}
+        productName:
+          type: string
+          const: Fiscuvia
+        tagline:
+          type: string
+          const: Todo tu despacho, una sola vía.
+        apiVersion:
+          type: string
+          const: 1.0.0
     ExpectedVersion:
       type: integer
       minimum: 0
@@ -96,42 +497,119 @@ components:
     PageMetadata:
       type: object
       additionalProperties: false
-      required: [page, size, hasNext]
+      required:
+        - page
+        - size
+        - hasNext
       properties:
-        page: {type: integer, minimum: 0, maximum: 10000}
-        size: {type: integer, minimum: 1, maximum: 100}
-        hasNext: {type: boolean}
+        page:
+          type: integer
+          minimum: 0
+          maximum: 10000
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        hasNext:
+          type: boolean
     FieldError:
       type: object
       additionalProperties: false
-      required: [field, code, message]
+      required:
+        - field
+        - code
+        - message
       properties:
-        field: {type: string, pattern: '^[a-zA-Z][a-zA-Z0-9]{0,63}$'}
-        code: {type: string, enum: [REQUIRED, SIZE, FORMAT, RANGE, INVALID]}
-        message: {type: string, minLength: 1, maxLength: 120}
+        field:
+          type: string
+          pattern: ^[a-zA-Z][a-zA-Z0-9]{0,63}$
+        code:
+          type: string
+          enum:
+            - REQUIRED
+            - SIZE
+            - FORMAT
+            - RANGE
+            - INVALID
+        message:
+          type: string
+          minLength: 1
+          maxLength: 120
     ProblemDetails:
       type: object
       additionalProperties: false
-      required: [type, title, status, detail, instance, code, traceId, fieldErrors]
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - traceId
+        - fieldErrors
       description: >
-        RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas,
-        consultas SQL ni datos de infraestructura. El catálogo de códigos es infraestructura,
-        no implementación de autenticación, reglas de negocio o rate limiting.
+        RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas, consultas SQL ni datos de
+        infraestructura. El catálogo de códigos es infraestructura, no implementación de autenticación, reglas
+        de negocio o rate limiting.
       properties:
-        type: {type: string, format: uri, pattern: '^urn:fiscuvia:problem:[a-z-]+$'}
-        title: {type: string, minLength: 1, maxLength: 120}
-        status: {type: integer, enum: [400, 401, 403, 404, 405, 406, 409, 413, 415, 422, 429, 500]}
-        detail: {type: string, minLength: 1, maxLength: 240}
-        instance: {type: string, format: uri, pattern: '^urn:uuid:[0-9a-f-]{36}$'}
+        type:
+          type: string
+          format: uri
+          pattern: ^urn:fiscuvia:problem:[a-z-]+$
+        title:
+          type: string
+          minLength: 1
+          maxLength: 120
+        status:
+          type: integer
+          enum:
+            - 400
+            - 401
+            - 403
+            - 404
+            - 405
+            - 406
+            - 409
+            - 413
+            - 415
+            - 422
+            - 429
+            - 500
+        detail:
+          type: string
+          minLength: 1
+          maxLength: 240
+        instance:
+          type: string
+          format: uri
+          pattern: ^urn:uuid:[0-9a-f-]{36}$
         code:
           type: string
-          enum: [BAD_REQUEST, INVALID_PAGINATION, AUTHENTICATION_REQUIRED, ACCESS_DENIED, NOT_FOUND, METHOD_NOT_ALLOWED, NOT_ACCEPTABLE, CONFLICT, STALE_VERSION, IDEMPOTENCY_KEY_REUSED, PAYLOAD_TOO_LARGE, UNSUPPORTED_MEDIA_TYPE, VALIDATION_FAILED, RATE_LIMITED, INTERNAL_ERROR]
-        traceId: {type: string, format: uuid}
+          enum:
+            - BAD_REQUEST
+            - INVALID_PAGINATION
+            - AUTHENTICATION_REQUIRED
+            - ACCESS_DENIED
+            - NOT_FOUND
+            - METHOD_NOT_ALLOWED
+            - NOT_ACCEPTABLE
+            - CONFLICT
+            - STALE_VERSION
+            - IDEMPOTENCY_KEY_REUSED
+            - PAYLOAD_TOO_LARGE
+            - UNSUPPORTED_MEDIA_TYPE
+            - VALIDATION_FAILED
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        traceId:
+          type: string
+          format: uuid
         fieldErrors:
           type: array
           maxItems: 20
           uniqueItems: true
-          items: {$ref: '#/components/schemas/FieldError'}
+          items:
+            $ref: "#/components/schemas/FieldError"
       example:
         type: urn:fiscuvia:problem:validation-failed
         title: Datos inválidos
@@ -140,53 +618,207 @@ components:
         instance: urn:uuid:00000000-0000-4000-8000-000000000001
         code: VALIDATION_FAILED
         traceId: 00000000-0000-4000-8000-000000000001
-        fieldErrors: [{field: displayName, code: REQUIRED, message: Este campo es obligatorio.}]
+        fieldErrors:
+          - field: displayName
+            code: REQUIRED
+            message: Este campo es obligatorio.
+    MembershipRole:
+      type: string
+      enum:
+        - FIRM_OWNER_ADMIN
+        - FIRM_SUPERVISOR
+        - ACCOUNTANT
+        - ASSISTANT
+    Membership:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+        - membershipId
+        - role
+      properties:
+        tenantId: &a1
+          type: string
+          format: uuid
+        membershipId: *a1
+        role:
+          $ref: "#/components/schemas/MembershipRole"
+    CurrentIdentity:
+      type: object
+      additionalProperties: false
+      required:
+        - userId
+        - memberships
+        - privilegedMfaVerified
+      properties:
+        userId: *a1
+        memberships:
+          type: array
+          items:
+            $ref: "#/components/schemas/Membership"
+        privilegedMfaVerified:
+          type: boolean
+    AuthStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - loginAvailable
+      properties:
+        loginAvailable:
+          type: boolean
+    CsrfToken:
+      type: object
+      additionalProperties: false
+      required:
+        - headerName
+        - token
+      properties:
+        headerName:
+          type: string
+          const: X-CSRF-TOKEN
+        token:
+          type: string
+          minLength: 32
+    TenantRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+      properties:
+        tenantId: *a1
+    InviteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+        - subject
+        - role
+      properties:
+        tenantId: *a1
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 255
+        role:
+          type: string
+          enum:
+            - FIRM_SUPERVISOR
+            - ACCOUNTANT
+            - ASSISTANT
+    Invitation:
+      type: object
+      additionalProperties: false
+      required:
+        - invitationId
+        - token
+        - expiresAt
+      properties:
+        invitationId: *a1
+        token:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{43}$
+        expiresAt:
+          type: string
+          format: date-time
+    AcceptInvitation:
+      type: object
+      additionalProperties: false
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{43}$
+    AcceptedInvitation:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+      properties:
+        tenantId: *a1
+    RevokeInvitation:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+        - invitationId
+      properties:
+        tenantId: *a1
+        invitationId: *a1
+    MembershipStatusRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+        - membershipId
+        - status
+      properties:
+        tenantId: *a1
+        membershipId: *a1
+        status:
+          type: string
+          enum:
+            - SUSPENDED
+            - REVOKED
   responses:
     BadRequest:
       description: Sintaxis, tipo o parámetro inválido (400)
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     Unauthorized:
-      description: Autenticación requerida (401); integración OIDC futura #27
-      headers:
-        WWW-Authenticate:
-          schema: {type: string, const: Bearer}
+      description: Sesión ausente, inválida o expirada (401). El BFF no acepta Bearer tokens.
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     Forbidden:
-      description: Operación no permitida (403); autorización futura
+      description: CSRF inválido, membresía/rol/MFA insuficiente o invitación rechazada (403); no confirma existencia.
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     NotFound:
       description: Recurso no disponible (404); no confirma existencia entre despachos
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     Conflict:
       description: Conflicto, versión obsoleta o clave reutilizada (409)
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     Validation:
       description: DTO bien formado pero inválido, o regla de dominio futura (422)
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     RateLimited:
       description: Límite de solicitudes (429); enforcement futuro
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     NotAcceptable:
       description: Formato de respuesta no admitido (406)
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
     InternalError:
       description: Error interno con mensaje seguro (500)
       content:
         application/problem+json:
-          schema: {$ref: '#/components/schemas/ProblemDetails'}
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-FiscuviaSession
+      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones requieren
+        X-CSRF-TOKEN obtenido en /auth/csrf.

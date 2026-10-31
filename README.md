@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-30:** base #20–26 integrada (PR #75–78 y #80–82). Esta rama presenta una [propuesta de identidad/sesiones #27](docs/decisions/issue-27-oidc-session-proposal.md) pendiente de aprobación; todavía no implementa autenticación. Sin tablas fiscales, autorización funcional ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-30:** base #20–26 integrada (PR #75–78 y #80–82). Esta rama implementa [OIDC/BFF, sesiones y membresías #27](docs/security/AUTHENTICATION.md) con Keycloak real exclusivamente local/test, pendiente de revisión de seguridad. No hay proveedor de producción aprobado. Sin tablas fiscales, autorización funcional ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
 
 ## Web local — issue #21
 
@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Bienvenida y estados demostrativos con identidad Fiscuvia, navegación responsive y áreas futuras deshabilitadas. No requiere backend, variables de entorno ni datos de clientes. Consulta [web/README.md](web/README.md) para arquitectura, versiones y comandos de validación; [capturas y evidencia real](docs/ux/evidence/issue-21/README.md). #52 y #56 conservan sus alcances independientes.
+Bienvenida y estados demostrativos con identidad Fiscuvia, navegación responsive y áreas futuras deshabilitadas. La base visual está en `/desarrollo` y no requiere backend. El acceso real en `/login` sí requiere BFF/OIDC local; no hay autenticación simulada. Consulta [web/README.md](web/README.md) para arquitectura, versiones y comandos de validación; [capturas y evidencia real](docs/ux/evidence/issue-21/README.md). #52 y #56 conservan sus alcances independientes.
 
 ## Backend y PostgreSQL local — issues #20/#22
 
@@ -40,7 +40,7 @@ Consulta [backend/README.md](backend/README.md) y [evidencia #22](backend/VALIDA
 
 Observabilidad: [atributos permitidos, tracing sin exportación, métricas y runbook](docs/delivery/OBSERVABILITY.md). Actuator conserva exposición mínima; diagnóstico de métricas sólo con opt-in local en puerto loopback separado. [Evidencia #25](backend/VALIDATION-25.md).
 
-Tenancy/RLS #26: [modelo físico, contexto transaccional, permisos y límites](docs/data-model/tenant-foundation-26.md); [evidencia local](backend/VALIDATION-26.md). No hay selección pública de tenant ni modelo de identidad provisional; OIDC/membresías y capacidades siguen en #27/#28.
+Tenancy/RLS #26: [modelo físico, contexto transaccional, permisos y límites](docs/data-model/tenant-foundation-26.md); [evidencia local](backend/VALIDATION-26.md). La selección de despacho en #27 valida membresía real antes del contexto; capacidades/expedientes siguen en #28. [Autenticación local y configuración](docs/security/AUTHENTICATION.md).
 
 ## Integración continua — issue #23
 

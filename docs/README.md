@@ -66,4 +66,4 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Base #20–26 integrada mediante PR #75–78 y #80–82. Esta rama prepara la propuesta documental de identidad/sesiones #27 para aprobación previa. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales, negocio ni identidad implementada; #74, #27–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
+Base #20–26 integrada mediante PR #75–78 y #80–82. Esta rama implementa identidad/sesiones #27 sólo local/test, en revisión de seguridad; [guía efectiva](security/AUTHENTICATION.md). CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales ni negocio; proveedor productivo, #74, #28–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.

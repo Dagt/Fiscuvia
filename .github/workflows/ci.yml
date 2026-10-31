@@ -76,7 +76,7 @@ jobs:
   web:
     name: Web CI
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -88,6 +88,12 @@ jobs:
           cache-dependency-path: |
             web/package-lock.json
             tools/ci/package-lock.json
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6
+        with:
+          distribution: temurin
+          java-version: '25.0.5+8'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
       - name: Verify pinned tools and install dependencies
         run: |
           node tools/ci/identity.mjs
@@ -117,6 +123,8 @@ jobs:
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: ../.ci-work/playwright.json
         run: npm run test:e2e -- --reporter=line,json
+      - name: Real OIDC browser tests with PostgreSQL and Keycloak
+        run: node tools/ci/auth-browser.mjs
       - name: Verify complete frontend results
         if: ${{ always() }}
         run: node tools/ci/reports.mjs web

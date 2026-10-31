@@ -25,7 +25,8 @@ import static org.assertj.core.api.Assertions.*;
 class TenantRlsTests {
     @Container static final PostgresTestDatabase DATABASE = new PostgresTestDatabase();
     @DynamicPropertySource static void database(DynamicPropertyRegistry registry) { DATABASE.register(registry); }
-    @Autowired TenantTransactions tenants;
+    @Autowired TenantTransactions infrastructureTenants;
+    TenantTransactions tenants;
     @Autowired JdbcTemplate sql;
     @Autowired DataSource source;
     @Autowired PlatformTransactionManager manager;
@@ -36,6 +37,7 @@ class TenantRlsTests {
         fixture = new TenantRlsFixtures(DATABASE);
         if (!installed) { fixture.install(); installed = true; }
         fixture.seed();
+        tenants=fixture.authorizedTransactions(infrastructureTenants,sql,manager);
     }
 
     @Test void queriesWithoutTenantPredicatesAreIsolatedAndSameRfcIsAllowed() {
@@ -143,7 +145,7 @@ class TenantRlsTests {
         }));
     }
     @Test void autocommitContextAndSessionSettingsDoNotConferAccessInNextTransaction() {
-        sql.queryForObject("SELECT app.establish_tenant_context(?)", Object.class, fixture.a);
+        denied("42501", () -> sql.queryForObject("SELECT app.establish_tenant_context(?)", Object.class, fixture.a));
         assertEmpty();
         sql.queryForObject("SELECT set_config('app.current_tenant_id', ?, false)", String.class, fixture.a.toString());
         sql.queryForObject("SELECT set_config('app.current_tenant_transaction', pg_current_xact_id()::text, false)", String.class);

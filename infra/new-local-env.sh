@@ -21,5 +21,7 @@ set -C
   printf 'DB_BOOTSTRAP_PASSWORD=%s\n' "$bootstrap_password"
   printf 'DB_MIGRATION_PASSWORD=%s\n' "$migration_password"
   printf 'DB_RUNTIME_PASSWORD=%s\n' "$runtime_password"
+  printf 'DB_SESSION_PASSWORD=%s\n' "$(new_password)"
+  printf 'FISCUVIA_ACTOR_PROOF_KEY=%s\n' "$(new_password)"
 } > .env || exit 1
 printf '%s\n' 'Created infra/.env with synthetic local credentials. Keep this ignored file private.'

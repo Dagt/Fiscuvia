@@ -18,6 +18,8 @@ final class PostgresTestDatabase extends PostgreSQLContainer {
     static final String MIGRATION_USER = "fiscuvia_migrator";
     final String runtimePassword = UUID.randomUUID().toString();
     final String migrationPassword = UUID.randomUUID().toString();
+    final String sessionPassword = UUID.randomUUID().toString();
+    final String actorKey = java.util.HexFormat.of().formatHex(java.security.SecureRandom.getSeed(32));
 
     PostgresTestDatabase() {
         // Testcontainers needs explicit family metadata for a tag + digest reference.
@@ -27,8 +29,11 @@ final class PostgresTestDatabase extends PostgreSQLContainer {
         withPassword(UUID.randomUUID().toString());
         withEnv("DB_RUNTIME_PASSWORD", runtimePassword);
         withEnv("DB_MIGRATION_PASSWORD", migrationPassword);
+        withEnv("DB_SESSION_PASSWORD", sessionPassword);
         withCopyFileToContainer(MountableFile.forClasspathResource("test-infra/postgres/init/10-create-roles.sh"),
                 "/docker-entrypoint-initdb.d/10-create-roles.sh");
+        withCopyFileToContainer(MountableFile.forClasspathResource("test-infra/postgres/upgrade-session-role.sh"),
+                "/tmp/fiscuvia-upgrade-session-role.sh");
         withCreateContainerCmdModifier(command -> command.getHostConfig().withPortBindings(
                 new PortBinding(Ports.Binding.bindIp("127.0.0.1"), new ExposedPort(5432))));
         withReuse(false);
@@ -42,6 +47,8 @@ final class PostgresTestDatabase extends PostgreSQLContainer {
         registry.add("TEST_DB_JDBC_URL", this::runtimeUrl);
         registry.add("TEST_DB_RUNTIME_PASSWORD", () -> runtimePassword);
         registry.add("TEST_DB_MIGRATION_PASSWORD", () -> migrationPassword);
+        registry.add("TEST_DB_SESSION_PASSWORD", () -> sessionPassword);
+        registry.add("FISCUVIA_ACTOR_PROOF_KEY", () -> actorKey);
     }
 
     String runtimeUrl() {
@@ -50,6 +57,7 @@ final class PostgresTestDatabase extends PostgreSQLContainer {
 
     String redact(String text) {
         return text.replace(runtimePassword, "[redacted]").replace(migrationPassword, "[redacted]")
+                .replace(sessionPassword, "[redacted]").replace(actorKey, "[redacted]")
                 .replace(getPassword(), "[redacted]");
     }
 }

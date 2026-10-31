@@ -13,6 +13,10 @@ public final class SafeDiagnostics {
         Throwable current = error;
         boolean migration = false;
         for (int i = 0; current != null && i < 16; i++, current = current.getCause()) {
+            if (current instanceof com.fiscuvia.platform.StartupGuardFailure guard) return switch(guard.kind()) {
+                case CONFIGURATION_REJECTED -> Failure.CONFIGURATION_REJECTED;
+                case DATABASE_PRIVILEGES -> Failure.DATABASE_PRIVILEGES;
+            };
             if (current instanceof com.fiscuvia.platform.internal.tenancy.TenantContextRejected) return Failure.TENANT_CONTEXT_REJECTED;
             migration |= current instanceof org.flywaydb.core.api.FlywayException;
             if (current instanceof SQLException sql) {

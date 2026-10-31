@@ -1,4 +1,4 @@
-# #27 — validación de la fase de propuesta
+# Evidencia histórica — #27 — validación de la fase de propuesta
 
 Base main: `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. Rama: `issue-27-oidc-secure-sessions-memberships`. Fecha: 2026-10-30. El PR y los resúmenes locales identifican el SHA final de esta fase; no hay un SHA autorreferente en este archivo.
 
@@ -50,3 +50,5 @@ Crear `.ci-work` si no existe. Docker debe estar disponible; no deshabilitar Ryu
 No hay capturas de login porque no se ha construido. Playwright sólo ejecuta la UI existente; sus capturas históricas no son evidencia de autenticación. No hay migraciones de identidad/sesión, proveedor contratado/configurado, emisor de prueba agregado, credenciales, MFA válido, invitación ni bootstrap implementados. La [propuesta concreta](../docs/decisions/issue-27-oidc-session-proposal.md) y su sección de aprobaciones son la entrega revisable de esta fase. No mergear como cumplimiento del issue ni marcar Ready.
 
 **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0 intacto, sin reintentos/bypasses. No se hace merge, despliegue, cierre del issue ni trabajo en otro módulo.
+
+Esta evidencia acredita únicamente la fase documental original. La implementación posterior autorizada y sus suites nuevas se registran en [VALIDATION-27.md](VALIDATION-27.md); no se presenta esta regresión de la base como prueba de autenticación.

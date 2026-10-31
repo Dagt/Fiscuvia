@@ -21,7 +21,7 @@ import tools.jackson.databind.ObjectMapper;
 import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("test") @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(TenantHttpPrivacyTests.Probe.class) @ExtendWith(OutputCaptureExtension.class)
+@Import({TenantHttpPrivacyTests.Probe.class,ContractFixtureSecurity.class}) @ExtendWith(OutputCaptureExtension.class)
 @Testcontainers @DirtiesContext
 class TenantHttpPrivacyTests {
     @Container static final PostgresTestDatabase DATABASE = new PostgresTestDatabase();

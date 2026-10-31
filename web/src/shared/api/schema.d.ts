@@ -1,4 +1,211 @@
 export interface paths {
+  '/auth/authorize/local': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Redirect OIDC gestionado por Spring Security; requiere aprobación de login POST+CSRF de un uso. */
+    get: operations['redirectToLocalOidc']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/callback/local': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de identidad genérico. */
+    get: operations['completeLocalOidc']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/csrf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Obtener token CSRF de sesión */
+    get: operations['getCsrfToken']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Crear invitación local para issuer/subject exacto; owner con MFA reciente */
+    post: operations['createInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/invitations/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Consumir invitación atómica de un solo uso */
+    post: operations['acceptInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/invitations/revoke': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Revocar invitación no consumida */
+    post: operations['revokeInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/login': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Iniciar login OIDC real con PKCE
+     * @description Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF válido de la misma sesión. No acepta un returnUrl arbitrario.
+     */
+    post: operations['beginLogin']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/logout': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Invalidar sesión local */
+    post: operations['logout']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/memberships/status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Suspender o revocar membresía no propietaria; owner con MFA reciente */
+    post: operations['changeMembershipStatus']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Consultar disponibilidad del emisor local */
+    get: operations['getAuthStatus']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/tenant': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Validar membresía activa del despacho */
+    post: operations['authorizeTenant']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Consultar identidad y membresías activas autorizadas */
+    get: operations['getCurrentIdentity']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/info': {
     parameters: {
       query?: never
@@ -20,6 +227,27 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    AcceptedInvitation: {
+      /** Format: uuid */
+      tenantId: string
+    }
+    AcceptInvitation: {
+      token: string
+    }
+    AuthStatus: {
+      loginAvailable: boolean
+    }
+    CsrfToken: {
+      /** @constant */
+      headerName: 'X-CSRF-TOKEN'
+      token: string
+    }
+    CurrentIdentity: {
+      memberships: components['schemas']['Membership'][]
+      privilegedMfaVerified: boolean
+      /** Format: uuid */
+      userId: string
+    }
     /** @description Versión exacta para Java long y JavaScript; una versión obsoleta produce 409 STALE_VERSION */
     ExpectedVersion: number
     FieldError: {
@@ -27,6 +255,38 @@ export interface components {
       code: 'REQUIRED' | 'SIZE' | 'FORMAT' | 'RANGE' | 'INVALID'
       field: string
       message: string
+    }
+    Invitation: {
+      /** Format: date-time */
+      expiresAt: string
+      /** Format: uuid */
+      invitationId: string
+      token: string
+    }
+    InviteRequest: {
+      /** @enum {string} */
+      role: 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+      subject: string
+      /** Format: uuid */
+      tenantId: string
+    }
+    Membership: {
+      /** Format: uuid */
+      membershipId: string
+      role: components['schemas']['MembershipRole']
+      /** Format: uuid */
+      tenantId: string
+    }
+    /** @enum {string} */
+    MembershipRole:
+      'FIRM_OWNER_ADMIN' | 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+    MembershipStatusRequest: {
+      /** Format: uuid */
+      membershipId: string
+      /** @enum {string} */
+      status: 'SUSPENDED' | 'REVOKED'
+      /** Format: uuid */
+      tenantId: string
     }
     PageMetadata: {
       hasNext: boolean
@@ -91,6 +351,16 @@ export interface components {
       /** Format: uri */
       type: string
     }
+    RevokeInvitation: {
+      /** Format: uuid */
+      invitationId: string
+      /** Format: uuid */
+      tenantId: string
+    }
+    TenantRequest: {
+      /** Format: uuid */
+      tenantId: string
+    }
   }
   responses: {
     /** @description Sintaxis, tipo o parámetro inválido (400) */
@@ -111,7 +381,7 @@ export interface components {
         'application/problem+json': components['schemas']['ProblemDetails']
       }
     }
-    /** @description Operación no permitida (403); autorización futura */
+    /** @description CSRF inválido, membresía/rol/MFA insuficiente o invitación rechazada (403); no confirma existencia. */
     Forbidden: {
       headers: {
         [name: string]: unknown
@@ -156,10 +426,9 @@ export interface components {
         'application/problem+json': components['schemas']['ProblemDetails']
       }
     }
-    /** @description Autenticación requerida (401); integración OIDC futura */
+    /** @description Sesión ausente, inválida o expirada (401). El BFF no acepta Bearer tokens. */
     Unauthorized: {
       headers: {
-        'WWW-Authenticate'?: 'Bearer'
         [name: string]: unknown
       }
       content: {
@@ -193,6 +462,343 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  redirectToLocalOidc: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve tokens. */
+      302: {
+        headers: {
+          /** @description Destino de protocolo validado en configuración local. */
+          Location?: string
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      401: components['responses']['Unauthorized']
+      500: components['responses']['InternalError']
+    }
+  }
+  completeLocalOidc: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve tokens. */
+      302: {
+        headers: {
+          /** @description Destino de protocolo validado en configuración local. */
+          Location?: string
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      401: components['responses']['Unauthorized']
+      500: components['responses']['InternalError']
+    }
+  }
+  getCsrfToken: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Obtener token CSRF de sesión */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CsrfToken']
+        }
+      }
+      400: components['responses']['BadRequest']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  createInvitation: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InviteRequest']
+      }
+    }
+    responses: {
+      /** @description Crear invitación local para issuer/subject exacto; owner con MFA reciente */
+      201: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Invitation']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  acceptInvitation: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AcceptInvitation']
+      }
+    }
+    responses: {
+      /** @description Consumir invitación atómica de un solo uso */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AcceptedInvitation']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  revokeInvitation: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RevokeInvitation']
+      }
+    }
+    responses: {
+      /** @description Revocar invitación no consumida */
+      204: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  beginLogin: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN'?: string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/x-www-form-urlencoded': {
+          _csrf: string
+        }
+      }
+    }
+    responses: {
+      /** @description Iniciar login OIDC real con PKCE */
+      303: {
+        headers: {
+          /** @description Destino fijo del inicio OIDC */
+          Location?: '/api/v1/auth/authorize/local'
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: components['responses']['BadRequest']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  logout: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Invalidar sesión local */
+      204: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  changeMembershipStatus: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MembershipStatusRequest']
+      }
+    }
+    responses: {
+      /** @description Suspender o revocar membresía no propietaria; owner con MFA reciente */
+      204: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  getAuthStatus: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Consultar disponibilidad del emisor local */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AuthStatus']
+        }
+      }
+      400: components['responses']['BadRequest']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  authorizeTenant: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Token CSRF de la sesión same-origin; no es un token de identidad. */
+        'X-CSRF-TOKEN': string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TenantRequest']
+      }
+    }
+    responses: {
+      /** @description Validar membresía activa del despacho */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Membership']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  getCurrentIdentity: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Consultar identidad y membresías activas autorizadas */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CurrentIdentity']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
   getPlatformInfo: {
     parameters: {
       query?: never

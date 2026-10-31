@@ -15,3 +15,6 @@ spring:
 logging:
   level:
     root: INFO
+fiscuvia:
+  identity:
+    session-password: ${DB_SESSION_PASSWORD}

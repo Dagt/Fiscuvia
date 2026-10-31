@@ -28,3 +28,7 @@
 - Viewports: 390×844, 768×1024, 1280×800, 1440×900; revisar 1920 para tablas y 320 px edge case.
 - E2E/screenshot: mostrar datos sintéticos, no cliente real. Cada ruta enlaza con FR, estado y issue de implementación en PR correspondiente.
 - No permitir que un menú tenga enlaces a módulos no existentes como si ya operaran; usar feature flags o sección 'próximamente' expresamente no interactiva si aprobada.
+
+## Entrega local #27
+
+`/login`: acceso OIDC real, carga/configuración/error/expiración; `/app`: identidad real, sin membresías, selección autorizada y logout. Los ordinales de despacho corresponden a membresías reales; aún no existe edición de nombres/CRUD. No hay dashboard fiscal ni login simulado. [Capturas reales y revisión responsive](evidence/issue-27/README.md). #52/#56 y las demás pantallas conservan su alcance independiente.

@@ -70,7 +70,10 @@ export function resolveApiBaseUrl(
   }
 }
 
-function safeProblem(value: unknown, response: Response): ApiClientError {
+export function decodeApiProblem(
+  value: unknown,
+  response: Response,
+): ApiClientError {
   const header = response.headers.get('X-Correlation-Id')
   const trace = header && uuid.test(header) ? header : undefined
   if (
@@ -131,7 +134,7 @@ export function createApiClient(
           }
         }
         signal?.throwIfAborted()
-        throw safeProblem(body, response)
+        throw decodeApiProblem(body, response)
       }
       if (response.status !== 200 || media !== 'application/json')
         throw new ApiClientError('INVALID_RESPONSE', response.status)

@@ -17,7 +17,9 @@ import static org.assertj.core.api.Assertions.*;
 class TenantConcurrencyTests {
     @Container static final PostgresTestDatabase DATABASE = new PostgresTestDatabase();
     @DynamicPropertySource static void database(DynamicPropertyRegistry registry) { DATABASE.register(registry); }
-    @Autowired TenantTransactions tenants;
+    @Autowired TenantTransactions infrastructureTenants;
+    @Autowired org.springframework.transaction.PlatformTransactionManager manager;
+    TenantTransactions tenants;
     @Autowired JdbcTemplate sql;
     TenantRlsFixtures fixture;
     static boolean installed;
@@ -25,6 +27,7 @@ class TenantConcurrencyTests {
         fixture = new TenantRlsFixtures(DATABASE);
         if (!installed) { fixture.install(); installed = true; }
         fixture.seed();
+        tenants=fixture.authorizedTransactions(infrastructureTenants,sql,manager);
     }
 
     @Test @Timeout(30)

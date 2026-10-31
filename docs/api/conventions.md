@@ -25,7 +25,7 @@ Errores RFC 9457 con type/title/status/detail/instance/code/traceId/fieldErrors 
 | 413 / 415 | PAYLOAD_TOO_LARGE / UNSUPPORTED_MEDIA_TYPE |
 | 422 / 429 / 500 | VALIDATION_FAILED / RATE_LIMITED / INTERNAL_ERROR |
 
-401 incluye WWW-Authenticate: Bearer; 405 preserva Allow. No se exponen otros encabezados arbitrarios de excepciones. Estos códigos no implementan autenticación, autorización ni rate limiting. Futuros filtros OIDC deberán usar esta misma estrategia, sin asumir que ControllerAdvice procesa sus errores.
+#27 usa sesión BFF: 401 no anuncia Bearer (no se aceptan tokens Bearer). 405 preserva Allow cuando la solicitud alcanza MVC; una mutación sin CSRF es rechazada antes con 403. No se exponen encabezados arbitrarios de excepciones. Los filtros OIDC usan el puerto HttpProblemResponder y SafeErrorController conserva el fallback seguro; los redirects del protocolo conducen a rutas de UI fijas, sin errores privados. Rate limiting y reglas de dominio no se declaran operativos por disponer de sus códigos.
 
 ## Propuestas de negocio y siguientes slices
 

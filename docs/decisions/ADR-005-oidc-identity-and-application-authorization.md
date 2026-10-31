@@ -2,7 +2,8 @@
 
 **Status:** Proposed  
 **Date:** 2026-10-29  
-**Decision owner:** Product owner (pending explicit approval)  
+**Decision owner:** Product owner (base técnica autorizada 2026-10-30; proveedor/operación productivos pendientes)
+
 **References:** FR-001..009, NFR-007  
 **Tracking:** E02 issue #27
 
@@ -28,6 +29,12 @@ Seleccionar proveedor, cookies vs bearer y pricing; OQ-014.
 No aceptar producción sin pruebas de contratos, RLS, seguridad y flujos según `docs/delivery/DEFINITION-OF-DONE.md`. Confirmar compatibilidad técnica y preguntas abiertas relevantes antes de fijar comportamiento irreversible.
 
 ## Seguimiento
+
+### Autorización técnica parcial del propietario — 2026-10-30, revisión de PR #83
+
+Se autorizaron explícitamente: BFF del mismo origen; Spring Security Code+PKCE/state/nonce; Spring Session JDBC PostgreSQL privado; cookies Secure/HttpOnly/SameSite, CSRF/rotación/expiración/logout; Keycloak real sólo local/test; identidad global separada de membresías; roles FIRM_OWNER_ADMIN/FIRM_SUPERVISOR/ACCOUNTANT/ASSISTANT; privilegios denegados sin MFA verificable; bootstrap administrativo controlado e invitaciones de un uso para identidad exacta verificada.
+
+Esta aprobación permite dependencias, migración V3 e implementación de #27. Sustituye la petición de aprobación previa del apartado histórico siguiente. [Diseño físico y comportamiento implementados](../security/AUTHENTICATION.md). No autoriza proveedor de producción, contratación, despliegues, claims MFA genéricos, invitaciones productivas por email ni recuperación/revocación federada sin contrato verificado. Esas decisiones siguen Proposed/Open; **no se marca Accepted el ADR completo**.
 
 ### Propuesta revisable de #27 — 2026-10-30
 

@@ -16,18 +16,21 @@ function renderRoute(path = '/desarrollo') {
 }
 
 describe('rutas y shell', () => {
-  it.each(['/', '/desarrollo'])('muestra la bienvenida en %s', async (path) => {
-    renderRoute(path)
-    expect(
-      await screen.findByRole('heading', { name: 'Bienvenido a Fiscuvia' }),
-    ).toBeInTheDocument()
-    expect(screen.getByText('Sin despacho conectado')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Bienvenida' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    )
-    expect(document.title).toBe('Bienvenida | Fiscuvia')
-  })
+  it.each(['/desarrollo?inicio=1', '/desarrollo'])(
+    'muestra la bienvenida en %s',
+    async (path) => {
+      renderRoute(path)
+      expect(
+        await screen.findByRole('heading', { name: 'Bienvenido a Fiscuvia' }),
+      ).toBeInTheDocument()
+      expect(screen.getByText('Sin despacho conectado')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'Bienvenida' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      )
+      expect(document.title).toBe('Bienvenida | Fiscuvia')
+    },
+  )
 
   it('navega a los estados y devuelve el foco al contenido', async () => {
     const user = userEvent.setup()
@@ -63,7 +66,7 @@ describe('rutas y shell', () => {
     expect(screen.queryByRole('form')).not.toBeInTheDocument()
   })
 
-  it.each(['/inexistente', '/app/taxpayers', '/login'])(
+  it.each(['/inexistente', '/app/taxpayers', '/registro-no-disponible'])(
     'no simula un módulo en %s y permite volver',
     async (path) => {
       const user = userEvent.setup()

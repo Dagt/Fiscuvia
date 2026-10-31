@@ -24,3 +24,11 @@ Artifacts de siete días: JUnit backend sin propiedades/stdout/stderr, resúmene
 Autorización de negocio/API/archivos/jobs #27–30, build de imagen de aplicación y regresión visual aprobada son futuros. La base RLS de #26 no acredita esos escenarios de producto ni completa el gate piloto.
 ## Datos de prueba
 Ficticios, marcados DEMO; nunca datos personales, XML fiscales reales, certificados ni llaves de producción.
+
+## Identidad y sesiones #27
+
+Mínimos backend: 161 (142 Surefire, 19 Failsafe), conservando 135 anteriores. `OidcAuthenticationTests`: 22 casos con PostgreSQL 18.6 runtime real y Keycloak 26.8.1 real; Code/PKCE/OTP, firma/JWKS, issuer/audience/expiración, state/nonce, CSRF/cookies/fixation/logout, sesiones mínimas sin tokens, membresías/RLS/MFA, bootstrap, invitaciones concurrentes/caducadas/revocadas y canarios. `IdentityMigrationIT`: upgrade V2→V3, checksum y rollback/reintento; prueba adicional del JAR sin fixtures/llaves. Los controladores DTO/telemetría de pruebas siguen aislados y no forman parte de los tests OIDC ni del JAR.
+
+Mínimos web: 37 Vitest, 13 Playwright previos y 5 de identidad reales con Chromium/HTTPS/Keycloak/PostgreSQL. `node tools/ci/auth-browser.mjs` compila el harness sólo de tests, mantiene Ryuk y cierra recursos mediante comando interno al JVM; no depende de matar un shim Java de Windows. Valida también ocho schemas sobre respuestas HTTP reales en memoria, sin persistir tokens de invitación/CSRF como evidencia. Capturas sólo del producto, nunca pantallas de credenciales; trace/video/screenshot automático de autenticación deshabilitados para no retener cookies.
+
+[Comandos/resultados/entorno](../../backend/VALIDATION-27.md), [arquitectura y límites](../security/AUTHENTICATION.md), [capturas](../ux/evidence/issue-27/README.md). Ningún resultado antiguo sustituye estas suites nuevas. REMOTE CI NOT VERIFIED; seguimiento #79 y presupuesto $0.
