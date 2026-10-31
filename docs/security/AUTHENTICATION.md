@@ -104,3 +104,9 @@ No borrar el volumen para resolver errores de permisos o clave. Diagnóstico: co
 **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0 sin cambios. Linux nativo/Temurin de Actions no se presume aprobado por pruebas Windows con contenedores Linux.
 
 Faltan decisión de proveedor/operación productiva, revisión humana de seguridad, límites de carga y rotación de claves, recuperación/MFA de producción y las capacidades de #28. No hay datos fiscales reales ni integración SAT; #74 permanece vigente. RLS complementa la autenticación/autorización y no resiste compromiso del BFF/migrador.
+
+## Integración durable #29
+
+[Journal](AUDIT-JOURNAL.md) registra cambios reales de invitación/membresía y bootstrap aprobado mediante V5, sin cambiar V1–V4 ni almacenar tokens/issuer/subject en eventos. Actor y correlación verificados se vinculan por xid antes del comando; triggers y outbox participan en su transacción. Denegaciones atribuibles de operaciones privilegiadas se registran después del rollback en una frontera global sin tenant solicitado, con revalidación y prueba específica. No se reemplaza OIDC ni se añade un lector AUDIT_VIEW.
+
+El transporte outbox no recibe sesiones, SecurityContext ni AuthorizedAccess; no usa membresía owner para procesar y no puede abrir contexto de negocio. No hay cuenta/worker de producción configurado. Custodia/rotación de la clave de atestación existente y proveedor/MFA productivos siguen pendientes.

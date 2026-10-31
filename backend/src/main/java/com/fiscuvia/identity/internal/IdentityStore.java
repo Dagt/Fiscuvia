@@ -8,6 +8,7 @@ import com.fiscuvia.platform.AccessDecisionEvent;
 import com.fiscuvia.platform.ApiErrorCode;
 import com.fiscuvia.platform.ApiFailure;
 import com.fiscuvia.platform.TenantTransactions;
+import com.fiscuvia.audit.AuditJournal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -39,9 +40,13 @@ class IdentityStore implements AuthorizedTenantOperations {
     private final TransactionTemplate transactions;
     private final TenantTransactions tenants;
     private final IdentitySettings settings;
+    private final AuditJournal journal;
+    private final TransactionTemplate rejectedTransactions;
 
-    IdentityStore(DataSource source,PlatformTransactionManager manager,TenantTransactions tenants,IdentitySettings settings) {
+    IdentityStore(DataSource source,PlatformTransactionManager manager,TenantTransactions tenants,IdentitySettings settings,AuditJournal journal) {
         jdbc=new JdbcTemplate(source); transactions=new TransactionTemplate(manager); this.tenants=tenants; this.settings=settings;
+        this.journal=journal; rejectedTransactions=new TransactionTemplate(manager);
+        rejectedTransactions.setPropagationBehavior(org.springframework.transaction.TransactionDefinition.PROPAGATION_REQUIRES_NEW);
     }
     private <T> T transaction(Supplier<T> work) {
         try { return transactions.execute(status -> work.get()); }
@@ -99,14 +104,16 @@ class IdentityStore implements AuthorizedTenantOperations {
         if (tenant==null || capability==null || target==null || work==null) throw new ApiFailure(ApiErrorCode.ACCESS_DENIED);
         try {
             return transaction(()->{
-                var actor=validate(principal());
+                var authenticated=principal();var actor=validate(authenticated);
                 String code=jdbc.queryForObject("SELECT access_control.authorize_operation(?,?,?,?)",String.class,
                         tenant,capability.name(),target.kind().name(),target.id());
                 var reason=AccessDecisionEvent.Reason.valueOf(code);
                 decision(capability,target,reason);
-                if(reason!=AccessDecisionEvent.Reason.AUTHORIZED)
+                if(reason!=AccessDecisionEvent.Reason.AUTHORIZED) {
+                    persistDenialAfterRollback(authenticated,capability,reason);
                     throw new ApiFailure(target.id()!=null && reason!=AccessDecisionEvent.Reason.CONTEXT_REJECTED
                             ? ApiErrorCode.NOT_FOUND : ApiErrorCode.ACCESS_DENIED);
+                }
                 return tenants.execute(tenant,()->{
                     var access=new TransactionAccess(actor.id(),tenant,capability,target,
                             jdbc.queryForObject("SELECT pg_current_xact_id()::text",String.class));
@@ -118,6 +125,27 @@ class IdentityStore implements AuthorizedTenantOperations {
             if(rejected.code()==ApiErrorCode.AUTHENTICATION_REQUIRED) decision(capability,target,AccessDecisionEvent.Reason.AUTHENTICATION_REQUIRED);
             throw rejected;
         }
+    }
+    private void persistDenialAfterRollback(AppPrincipal actor,Capability capability,AccessDecisionEvent.Reason reason) {
+        AuditJournal.PrivilegedOperation operation;
+        try { operation=AuditJournal.PrivilegedOperation.valueOf(capability.name()); }
+        catch(IllegalArgumentException ordinaryOperation){return;}
+        var denied=new AuditJournal.Denial(operation,AuditJournal.DenialReason.valueOf(reason.name()),UUID.randomUUID(),
+            com.fiscuvia.platform.RequestCorrelation.currentOrCreate());
+        org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
+            new org.springframework.transaction.support.TransactionSynchronization(){
+                public void afterCompletion(int status){
+                    if(status!=STATUS_ROLLED_BACK)return;
+                    try { rejectedTransactions.execute(s->{validate(actor);journal.recordDenial(denied);return null;}); }
+                    catch(RuntimeException unavailable){
+                        // Rejection remains rejection. A bounded typed diagnostic, never the principal/exception.
+                        org.slf4j.LoggerFactory.getLogger("com.fiscuvia.identity.authorization").atError()
+                            .addKeyValue("accessDecision",new AccessDecisionEvent(AccessDecisionEvent.Decision.DENY,
+                                AccessDecisionEvent.Reason.INTERNAL_FAILURE,AccessDecisionEvent.Category.TENANT,AccessDecisionEvent.Operation.MANAGE))
+                            .log("Denial persistence unavailable");
+                    }
+                }
+            });
     }
     private final class TransactionAccess implements AuthorizedAccess {
         private final Actor actor; private final Tenant tenant; private final Capability capability;
@@ -159,6 +187,7 @@ class IdentityStore implements AuthorizedTenantOperations {
     }
     Invitation invite(UUID tenant,String subject,String role) {
         return execute(tenant,Capability.MEMBERSHIP_INVITE,ResourceTarget.tenant(),access->{
+            journal.bindCommand(UUID.randomUUID());
             jdbc.queryForObject("SELECT identity.authorize_tenant(?,true)",Object.class,tenant);
             byte[] bytes=new byte[32]; new SecureRandom().nextBytes(bytes);
             String token=Base64.getUrlEncoder().withoutPadding().encodeToString(bytes); Instant expires=Instant.now().plusSeconds(86400);
@@ -169,19 +198,21 @@ class IdentityStore implements AuthorizedTenantOperations {
     }
     void revokeInvite(UUID tenant,UUID id) {
         execute(tenant,Capability.MEMBERSHIP_INVITE,ResourceTarget.tenant(),access->{
+            journal.bindCommand(UUID.randomUUID());
             jdbc.queryForObject("SELECT identity.authorize_tenant(?,true)",Object.class,tenant);
             return jdbc.queryForObject("SELECT identity.revoke_invitation(?,?)",Boolean.class,tenant,id);
         });
     }
     void changeMember(UUID tenant,UUID id,String state) {
         execute(tenant,Capability.MEMBERSHIP_DISABLE,ResourceTarget.tenant(),access->{
+            journal.bindCommand(UUID.randomUUID());
             jdbc.queryForObject("SELECT identity.authorize_tenant(?,true)",Object.class,tenant);
             return jdbc.queryForObject("SELECT identity.change_membership(?,?,?)",Boolean.class,tenant,id,state);
         });
     }
     UUID accept(String token) {
         if (token==null || !token.matches("[A-Za-z0-9_-]{43}")) throw new ApiFailure(ApiErrorCode.ACCESS_DENIED);
-        return transaction(()->{ validate(principal()); return jdbc.queryForObject("SELECT identity.accept_invitation(?)",UUID.class,hash(token)); });
+        return transaction(()->{ validate(principal()); journal.bindCommand(UUID.randomUUID()); return jdbc.queryForObject("SELECT identity.accept_invitation(?)",UUID.class,hash(token)); });
     }
     private static byte[] hash(String token) {
         try { return MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.US_ASCII)); }

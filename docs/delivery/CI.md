@@ -8,6 +8,8 @@ PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propieta
 
 #28 amplía el gate de reportes a 203 backend (181 Surefire, 22 Failsafe), incluidas 37 pruebas de recurso y tres de migración V4. No cambia workflows, permisos, presupuesto ni mínimos web/OIDC anteriores. [Protocolo local y límites de evidencia](../../backend/VALIDATION-28.md). El SHA final y las duraciones/resultados exactos se publican en el PR y summaries depurados; Linux remoto no se presume validado por tests Windows con contenedores Linux.
 
+#29 amplía a **250 backend (225 Surefire + 25 Failsafe)**: 44 pruebas de journal/outbox y tres de upgrade/checksum/rollback V5. [Comandos y evidencia](../../backend/VALIDATION-29.md). No cambian workflows, presupuesto/permisos del repositorio ni mínimos frontend. PostgreSQL/Keycloak y cuentas de transporte efímeras de prueba permanecen locales a Testcontainers; no se provisiona un worker ni un secreto GitHub.
+
 Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada histórica: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. La base actual incorpora API #24 desde PR #80; #25 añade observabilidad sin negocio, migraciones nuevas, RLS ni despliegues.
 
 ## Workflow y checks estables

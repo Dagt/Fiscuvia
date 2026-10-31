@@ -63,3 +63,9 @@ Referencias primarias: [RLS y políticas restrictivas PostgreSQL 18](https://www
 El conjunto de recursos de una colección se fija al autorizarla, además de bloquear los grants existentes: asignaciones nuevas concurrentes sólo aparecen en la siguiente unidad. El predicado RLS exige pertenencia a ese conjunto privado y grant activo. Se prueba una concesión confirmada durante un callback detenido sin ampliar sus filas. Medir memoria/almacenamiento del conjunto UUID antes de permitir carteras grandes; no trasladarlo a una cookie, log o token del cliente.
 
 V4 restringe además la lectura SQL runtime de memberships a las propias, aun con owner/MFA/contexto administrativo de #27. MEMBERSHIP_VIEW de terceros sigue sin aprobarse. Los comandos estrechos conservan su lectura interna necesaria bajo migrador/FORCE; no conceden un directorio general. La prueba de owner con MFA y SELECT sin WHERE verifica que no aparecen otros miembros.
+
+## Integración #29
+
+[Journal durable](AUDIT-JOURNAL.md) recibe cambios reales de identidad en la misma transacción, sin convertir ACCESS_DECISION en historial. Rechazos privilegiados atribuibles registran una sincronización y persisten sólo después del rollback, mediante revalidación y prueba específica global, sin tenant/recurso solicitado. Un fallo de persistencia no concede acceso y no se presenta como evento durable.
+
+AuditJournal.execute permite un comando interno idempotente después de esta autorización fresca; un replay no evita la membresía/capacidad actual. El recibo no es un AuthorizedAccess reutilizable ni una respuesta HTTP cacheada. La cuenta de transporte de outbox no usa este puerto ni adquiere autoridad de negocio; futuros trabajos deben definir autoridad/revalidación aprobada. AUDIT_VIEW sigue DENY, sin lector público. Las referencias a #29 anteriores son el estado histórico previo a esta integración.

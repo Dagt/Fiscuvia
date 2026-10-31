@@ -57,3 +57,17 @@ Ataques negativos incluyen UUID/headers/SQL de otro actor, ausencia de contexto,
 | Logs de denegación revelan PII/reglas | Evento tipado cerrado y formatter por allowlist, RFC 9457 fijo/correlación | Persistencia audit/outbox #29 y control de carga/bloat pendientes |
 
 [Diseño físico y guía](RESOURCE-AUTHORIZATION.md). No se implementan políticas fiscales, reportes reales ni autorización documental productiva por usar esos nombres en fixtures sintéticos.
+
+## Base #29 — integridad durable
+
+| Amenaza | Control/evidencia | Límite pendiente |
+|---|---|---|
+| Cambio confirmado sin journal/outbox; falso éxito tras rollback | Triggers de cambios reales y escritura en misma transacción; fallo de INSERT revierte todo | Nuevos módulos deben integrar el puerto y pruebas; no hay dominio fiscal |
+| Borrado/modificación de historial o exposición a owner | Sin DML/SELECT runtime, FORCE RLS, triggers append-only, AUDIT_VIEW denegado, oráculos de grants/cerca/trigger | No WORM ni protección frente a DDL de DBA/migrador; retención/custodia pendientes |
+| Actor/correlación/payload forjados | Actor OIDC ligado a xid, HMAC de comando separado, DTOs/columnas cerradas, JSON outbox sólo UUID de evento | BFF/clave comprometidos exceden frontera; rotación productiva pendiente |
+| Capturar denegación permite escribir en tenant ajeno | Revalidación después de rollback, prueba específica, journal global sin tenant ni recurso, sin endpoint arbitrario | Si persiste falla, se mantiene DENY y diagnóstico; tasa/alertas/retención antes del piloto |
+| Crash entre commit y dispatch; doble claim/ack obsoleto | Outbox SQL, SKIP LOCKED, lease token/attempts, fencing y recibo de consumidor idempotente | At-least-once: efecto externo necesita deduplicación downstream |
+| Tenant del payload se usa como autoridad de negocio | Cuenta de transporte con scope explícito por OID, sin app/identity, sin cuentas por defecto ni scheduler | Servicio de negocio y política de revalidación deben aprobarse; no owner ficticio |
+| Datos sensibles en cola/logs/artifacts | Payload sólo auditEventId, metadata cerrada, canarios, allowlists de log/artifacts | Revisión humana y límites de carga/bloat siguen siendo necesarios |
+
+[Journal](AUDIT-JOURNAL.md), [outbox/runbook](../delivery/OUTBOX.md), [pruebas](../../backend/VALIDATION-29.md). #30 continúa independiente; #74 no se modifica.

@@ -66,6 +66,7 @@ class SessionStorageConfiguration {
                     AND NOT EXISTS(SELECT 1 FROM pg_auth_members WHERE member=(SELECT oid FROM pg_roles WHERE rolname=current_user))
                     AND NOT has_schema_privilege('identity_private','USAGE') AND NOT has_schema_privilege('identity','USAGE')
                     AND NOT has_schema_privilege('access_control_private','USAGE') AND NOT has_schema_privilege('access_control','USAGE')
+                    AND NOT has_schema_privilege('journal','USAGE') AND NOT has_schema_privilege('journal_private','USAGE')
                     AND NOT has_schema_privilege('app','USAGE') AND NOT has_schema_privilege('infrastructure','USAGE')
                     AND NOT has_schema_privilege('auth_sessions','CREATE')
                     AND has_table_privilege('auth_sessions.spring_session','SELECT') AND has_table_privilege('auth_sessions.spring_session','INSERT')

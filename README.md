@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-31:** base #20–27 integrada; #83 quedó en main `06707ffcd221c55f6b4e1a6437a82c8571823bee`. Esta rama añade [autorización por capacidad/recurso #28](docs/security/RESOURCE-AUTHORIZATION.md), denegación por defecto y pruebas negativas con PostgreSQL/OIDC reales. No hay proveedor de producción ni matriz fiscal aprobados, tablas fiscales o integración SAT. Los documentos Proposed conservan ese estado.
+> **Estado al 2026-10-31:** base #20–28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0` (#84). Esta rama implementa [journal/outbox #29](docs/security/AUDIT-JOURNAL.md), transacciones, append-only lógico y protocolo de entrega sin worker. Sin proveedor productivo, matriz fiscal aprobada ni tablas fiscales; #74 sigue vigente. Documentos Proposed conservan su estado.
 
 ## Web local — issue #21
 
@@ -50,7 +50,7 @@ El workflow [CI](.github/workflows/ci.yml) valida PRs a main, incluso Draft, pus
 
 ## Contratos API — issue #24
 
-`GET /api/v1/public/info` devuelve sólo marca/eslogan/versión. Errores RFC 9457 seguros, validación servidor y cliente TypeScript con validación runtime, sin nuevas pantallas ni solicitudes automáticas. [Contrato implementado](docs/api/openapi-v1.yaml) separado del [borrador propuesto](docs/api/openapi-v1-draft.yaml); [guía #24 y comandos](docs/api/foundation-24.md). `/api/v1/me`, OIDC, dominio fiscal e idempotencia durable permanecen futuros.
+`GET /api/v1/public/info` devuelve sólo marca/eslogan/versión. Errores RFC 9457 seguros, validación servidor y cliente TypeScript con validación runtime, sin nuevas pantallas ni solicitudes automáticas. [Contrato implementado](docs/api/openapi-v1.yaml) separado del [borrador propuesto](docs/api/openapi-v1-draft.yaml); [guía #24 y comandos](docs/api/foundation-24.md). `/api/v1/me` y OIDC local/test están implementados en #27; el dominio fiscal sigue futuro. #29 añade deduplicación de comandos internos sin prometer replay HTTP de tokens.
 
 ## Para Codex y desarrolladores
 1. [AGENTS.md](AGENTS.md): reglas obligatorias, documentación fuente de verdad y PR Draft sin merge.
@@ -78,3 +78,7 @@ La referencia aprobada es una composición conceptual de seis pantallas, con sid
 
 ## Seguridad
 Datos sintéticos hasta gates de privacidad/seguridad. No subir llaves e.firma, contraseñas SAT, RFC/CFDI reales, tokens ni información fiscal de clientes. No afirmar certificación SAT ni estados oficiales sin fuente.
+
+## Journal y outbox — issue #29
+
+[Journal, catálogo y privacidad](docs/security/AUDIT-JOURNAL.md), [outbox y diagnóstico](docs/delivery/OUTBOX.md), [validación reproducible](backend/VALIDATION-29.md). Cambios sensibles de identidad, evento y outbox se confirman juntos; rollback/fallo de auditoría revierte todo. No hay lector público, worker automático ni autoridad de negocio a partir del tenant_id de una fila.
