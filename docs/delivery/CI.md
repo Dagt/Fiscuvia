@@ -6,6 +6,8 @@ PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propieta
 
 #24 añade conformidad de respuestas HTTP reales y tipos generados desde `docs/api/openapi-v1.yaml`, manteniendo el borrador propuesto separado. Después de Maven verify ejecutar `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json`; Backend CI incluye ese paso. `npm run openapi --prefix tools/ci` valida ambos documentos y la generación exacta. Versiones nuevas: openapi-typescript 7.13.0, AJV 8.20.0 / ajv-formats 3.0.1, Prettier 3.9.10 (formato del generado), con lockfile.
 
+#28 amplía el gate de reportes a 201 backend (179 Surefire, 22 Failsafe), incluidas 35 pruebas de recurso y tres de migración V4. No cambia workflows, permisos, presupuesto ni mínimos web/OIDC anteriores. [Protocolo local y límites de evidencia](../../backend/VALIDATION-28.md). El SHA final y las duraciones/resultados exactos se publican en el PR y summaries depurados; Linux remoto no se presume validado por tests Windows con contenedores Linux.
+
 Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada histórica: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. La base actual incorpora API #24 desde PR #80; #25 añade observabilidad sin negocio, migraciones nuevas, RLS ni despliegues.
 
 ## Workflow y checks estables

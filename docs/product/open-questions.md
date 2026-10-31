@@ -18,6 +18,7 @@
 - **OQ-013 [MVP]** ¿Soportaremos relación de un contribuyente con múltiples responsables, sucursales y contactos?
 - **OQ-014 [MVP security] — Open, autorización técnica parcial 2026-10-30:** BFF same-origin, OIDC Code+PKCE, sesiones JDBC privadas, Keycloak local/test, identidad global/membresías, cuatro roles, bootstrap interno e invitaciones exactas autorizados por el propietario en PR #83. Pendientes: proveedor de producción, semántica/factores MFA, recuperación/revocación federada, costos/operación e invitaciones por correo. [Guía efectiva](../security/AUTHENTICATION.md). No Resolved.
 - **OQ-015 [MVP]** ¿Qué permisos se aplican a auxiliares sobre datos fiscales/financieros y archivos?
+  En #28 permanece Open: se propone capacidad explícita por rol + asignación por operación/recurso, sin acceso ilimitado implícito para owner/supervisor. Alternativa tenant-wide requeriría capacidad distinta, aprobación y pruebas propias. Sin decisión del propietario, capacidades operativas de auxiliares y demás combinaciones propuestas permanecen DENY. [Mecanismo implementado y frontera de aprobación](../security/RESOURCE-AUTHORIZATION.md).
 - **OQ-016 [MVP]** ¿Cómo proceden baja, portabilidad y suspensión de tenant sin destrucción prematura?
 - **OQ-017 [future]** Qué versiones CFDI/complementos y fuente de validación deben soportarse.
 - **OQ-018 [future]** Servicio SAT vigente, límites temporales, solicitud, firma y devolución; investigación técnica.

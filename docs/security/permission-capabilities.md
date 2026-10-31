@@ -42,3 +42,9 @@ Denegar cross-tenant, same-tenant fuera de cartera, resource ID adivinado, role 
 ## Alcance efectivo #27
 
 Los cuatro códigos de rol iniciales pertenecen a cada membresía persistida, no a tokens/UI. Esta entrega sólo autoriza membresía ACTIVE y operaciones mínimas owner+MFA de invitación/revocación; no implementa esta matriz completa de capacidades. #28 debe consumir AuthorizedTenantOperations y añadir capacidad/recurso antes del trabajo fiscal. [Guía efectiva](AUTHENTICATION.md).
+
+## Infraestructura efectiva #28 y aprobación pendiente
+
+[Política implementada y modelo físico](RESOURCE-AUTHORIZATION.md). Los códigos del catálogo no conceden acceso. Únicos grants productivos conservados de #27: TENANT_READ para los cuatro roles iniciales; MEMBERSHIP_INVITE/MEMBERSHIP_DISABLE para owner con MFA reciente. Las demás combinaciones permanecen DENY, incluso owner/supervisor. No hay ALL ni permisos heredados de claims.
+
+V4 implementa asignación explícita por tenant/membresía/capacidad/categoría/UUID y una cerca SQL por recurso ligada a la transacción. Los permisos fiscales y documentales usados en las pruebas son sintéticos y no se instalan por Flyway. Propuesta para aprobación: capacidades por rol + asignación exacta por operación, sin alcance tenant-wide implícito. OQ-015, asignaciones múltiples OQ-013 y matriz definitiva requieren decisión del propietario; no se resuelven aquí.

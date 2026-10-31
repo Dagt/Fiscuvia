@@ -17,7 +17,7 @@ public final class AllowlistLogFormatter implements StructuredLogFormatter<ILogg
         String logger = event.getLoggerName() == null ? "" : event.getLoggerName();
         fields.put("component", logger.startsWith("com.fiscuvia.") ? "APPLICATION" : logger.startsWith("org.flywaydb.")
                 || logger.startsWith("com.zaxxer.hikari.") || logger.startsWith("org.postgresql.") ? "DATABASE" : "FRAMEWORK");
-        fields.put("module", logger.startsWith("com.fiscuvia.") ? "platform" : "runtime");
+        fields.put("module", logger.startsWith("com.fiscuvia.identity.") ? "identity" : logger.startsWith("com.fiscuvia.") ? "platform" : "runtime");
         fields.put("event", "RUNTIME_LOG");
         var context = SafeLogContext.current();
         if (context != null) {
@@ -36,6 +36,14 @@ public final class AllowlistLogFormatter implements StructuredLogFormatter<ILogg
                     if (safe.port() != null) fields.put("port", safe.port());
                     if (safe.failure() != null) fields.put("failure_code", safe.failure().name());
                     if (safe.fingerprint() != null) fields.put("error_fingerprint", safe.fingerprint());
+                });
+        if (event.getKeyValuePairs()!=null) event.getKeyValuePairs().stream()
+                .filter(pair->"accessDecision".equals(pair.key) && pair.value instanceof com.fiscuvia.platform.AccessDecisionEvent)
+                .findFirst().ifPresent(pair->{
+                    var safe=(com.fiscuvia.platform.AccessDecisionEvent)pair.value;
+                    fields.put("event","ACCESS_DECISION"); fields.put("decision",safe.decision().name());
+                    fields.put("reason_code",safe.reason().name()); fields.put("resource_category",safe.category().name());
+                    fields.put("operation_category",safe.operation().name());
                 });
         return JSON.writeValueAsString(fields) + "\n";
     }
