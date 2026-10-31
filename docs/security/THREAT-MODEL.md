@@ -44,3 +44,16 @@ La [propuesta #27](../decisions/issue-27-oidc-session-proposal.md) registra deci
 La tabla anterior es el antecedente del diseño, no el estado actual. [Guía efectiva](AUTHENTICATION.md) y [evidencia](../../backend/VALIDATION-27.md) documentan los controles implementados: firma/issuer/audience/expiración y nonce/state/PKCE reales con Keycloak; sesión mínima privada y sin tokens; CSRF/rotación/expiraciones/logout; actor HMAC+xid inmutable; RLS de lectura propia; membresía ACTIVE antes del contexto y función SQL runtime protegida; MFA reciente y rol interno para privilegios; invitación exacta atómica/hasheada con revocación.
 
 Ataques negativos incluyen UUID/headers/SQL de otro actor, ausencia de contexto, otro tenant, pool reutilizado, concurrencia, aceptación doble, usuario deshabilitado, MFA ausente/futuro/vencido y canarios en logs/respuestas. Las credenciales de sesión no tienen USAGE de datos de negocio; runtime no accede a sesiones/clave HMAC. El BFF/migrador y la cuenta de sesiones son fronteras de confianza: su compromiso no queda resuelto por RLS. Rotación/custodia productiva, carga/bloat/DoS, proveedor/MFA/recuperación/revocación federada, capacidades y expedientes permanecen pendientes. No hay proveedor de producción ni aceptación tácita de claims MFA arbitrarios.
+
+## Base #28: IDOR dentro del despacho
+
+| Amenaza | Control/evidencia | Límite |
+|---|---|---|
+| UUID conocido de cartera ajena, rol/permit falsificado | Actor de sesión verificada, rol SQL, capacidad aprobada y asignación exacta; HTTP 404 y filas protegidas | Matriz fiscal/OQ-015 sigue DENY hasta aprobación |
+| WHERE de tenant o asignación omitido | Cerca RLS restrictiva de tenant y recurso en fixtures; list/count/page/export/download bajo misma operación | Cada futura tabla debe incorporar ambas cercas y pruebas; #74 no se anticipa |
+| Revocación entre check y uso | FOR SHARE usuario/membresía/rol/política/asignación hasta commit; pruebas con bloqueos PostgreSQL observados | Revocación posterior se ordena después de una operación ya autorizada, no cancela commits |
+| Lectura utilizada para editar/exportar | Capacidad por operación y políticas SQL por comando con WITH CHECK | No hay wildcard, owner universal ni herencia supervisor |
+| Scope/GUC/contexto retenido o cambiado | Actor+operación+xid privados, inmutabilidad, callback temporal, pool/concurrencia y rollback | BFF/DBA comprometidos no están contenidos por RLS |
+| Logs de denegación revelan PII/reglas | Evento tipado cerrado y formatter por allowlist, RFC 9457 fijo/correlación | Persistencia audit/outbox #29 y control de carga/bloat pendientes |
+
+[Diseño físico y guía](RESOURCE-AUTHORIZATION.md). No se implementan políticas fiscales, reportes reales ni autorización documental productiva por usar esos nombres en fixtures sintéticos.

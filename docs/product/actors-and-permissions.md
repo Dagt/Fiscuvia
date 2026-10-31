@@ -41,3 +41,7 @@ Autenticación -> membresía activa en despacho -> capacidad explícita -> asign
 ## Roles iniciales efectivos de #27 (local/test)
 
 FIRM_OWNER_ADMIN, FIRM_SUPERVISOR, ACCOUNTANT y ASSISTANT se asignan a membresías servidor, nunca a roles arbitrarios del IdP/UI. Todos requieren membresía ACTIVE para abrir contexto. Sólo owner con MFA local reciente puede invitar/revocar/suspender en esta base; no hay promoción pública a owner. Supervisor/contador/auxiliar no reciben una matriz funcional implícita. Capacidad, asignación de expediente y administración completa siguen en #28/#33. [Controles y límites de producción](../security/AUTHENTICATION.md).
+
+## Base #28
+
+[Capacidad y asignación por recurso](../security/RESOURCE-AUTHORIZATION.md) se comprueban en backend/SQL dentro de la misma transacción. Esta implementación no aprueba la matriz orientativa: owner y supervisor tampoco reciben acceso fiscal universal. Sólo se conservan permisos técnicos explícitos de #27; permisos operativos no configurados deniegan. La prueba de dos contadores con carteras separadas usa políticas/recursos sintéticos desechables, no tablas fiscales ni una resolución de OQ-015.

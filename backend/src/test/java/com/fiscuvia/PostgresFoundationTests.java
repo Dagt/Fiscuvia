@@ -80,11 +80,12 @@ class PostgresFoundationTests {
                         "infrastructure.rls_transaction_context", "app.tenants", "identity_private.proof_key",
                         "identity_private.users", "identity_private.external_identities", "identity_private.actor_context",
                         "identity_private.owner_approvals", "identity_private.membership_events", "identity.memberships", "identity.membership_roles", "identity.invitations",
-                        "auth_sessions.spring_session", "auth_sessions.spring_session_attributes");
+                        "auth_sessions.spring_session", "auth_sessions.spring_session_attributes",
+                        "access_control.resource_grants","access_control_private.role_capabilities","access_control_private.operation_context");
             }
-            try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2','3')")) {
+            try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2','3','4')")) {
                 assertThat(result.next()).isTrue();
-                assertThat(result.getInt(1)).isEqualTo(3);
+                assertThat(result.getInt(1)).isEqualTo(4);
                 assertThat(result.getBoolean(2)).isTrue();
             }
             try (var result = statement.executeQuery("SELECT pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname='app'")) {

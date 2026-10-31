@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-30:** base #20–26 integrada (PR #75–78 y #80–82). Esta rama implementa [OIDC/BFF, sesiones y membresías #27](docs/security/AUTHENTICATION.md) con Keycloak real exclusivamente local/test, pendiente de revisión de seguridad. No hay proveedor de producción aprobado. Sin tablas fiscales, autorización funcional ni integración SAT. Los documentos Proposed conservan ese estado hasta aceptación explícita.
+> **Estado al 2026-10-31:** base #20–27 integrada; #83 quedó en main `06707ffcd221c55f6b4e1a6437a82c8571823bee`. Esta rama añade [autorización por capacidad/recurso #28](docs/security/RESOURCE-AUTHORIZATION.md), denegación por defecto y pruebas negativas con PostgreSQL/OIDC reales. No hay proveedor de producción ni matriz fiscal aprobados, tablas fiscales o integración SAT. Los documentos Proposed conservan ese estado.
 
 ## Web local — issue #21
 

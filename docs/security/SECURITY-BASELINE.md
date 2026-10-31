@@ -16,8 +16,14 @@ Threat model actualizado, revisión independiente adecuada al riesgo, tests tena
 
 RLS no autentica ni autoriza un UUID: #27/#28 deben resolver identidad, membresía, capacidades y recurso antes de llamar el puerto interno. Credenciales runtime comprometidas o código interno malicioso quedan fuera de esa garantía; el migrador/DBA puede alterar DDL y necesita custodia separada. PostgreSQL local/tests suprime errores SQL/sentencias/parámetros que podrían contener valores privados, con prueba canario; no ampliar logging sin revisión. El piloto sigue bloqueado por los gates restantes, no sólo por tests de DB.
 
-## Base de identidad #27 en revisión
+## Base de identidad #27 integrada
 
 [Controles implementados y límites](AUTHENTICATION.md): BFF OIDC/PKCE con IdP real sólo local, sesión JDBC privada sin tokens OAuth, CSRF, cookie __Host Secure/HttpOnly/Lax, rotación/inactividad/expiración absoluta y revocación por auth_version. V3 separa globales/sesiones/membresías, protege el bootstrap con HMAC por xid y exige membresía autorizada incluso en la entrada SQL de contexto runtime. Sin BYPASSRLS ni endpoints de registro propietario.
 
 Privilegios administrativos: owner activo y MFA local verificable de los últimos 10 min. Perfiles MFA desconocidos y proveedor productivo no aprobado no conceden privilegios. Invitaciones sólo issuer/subject exactos, hashes, expiración y consumo atómico; sin email autolink. Los secretos de fixtures son efímeros/ignorados, fuera del JAR/artifacts. Workflows conservan permisos mínimos/checks; presupuesto $0 y REMOTE CI NOT VERIFIED (#79). #28, #33, proveedor/MFA/operación productivos y #74 no se declaran completados.
+
+## Base de autorización #28
+
+[Autorización por recurso](RESOURCE-AUTHORIZATION.md): capacidades no configuradas deniegan, sin jerarquía implícita; asignaciones exactas de membresía/capacidad/recurso; contexto SQL privado inmutable por xid; chequeo y uso en la misma transacción con bloqueos contra revocación concurrente. Puertos de negocio no exponen TenantTransactions ni actores/roles HTTP. Tablas futuras requieren RLS tenant **y** recurso antes de listas, búsqueda, reportes, descargas o comandos. Fixtures y endpoints sintéticos no entran al JAR.
+
+V4 no concede permisos fiscales/documentales/reportes: matriz Proposed/OQ-015/#74 siguen bloqueando esos grants. El migrador administra únicamente mediante cambios revisados; runtime no puede leer/escribir grants ni políticas. Decisiones operacionales tienen categorías cerradas y correlación, sin identificadores/PII; no sustituyen auditoría/outbox #29.

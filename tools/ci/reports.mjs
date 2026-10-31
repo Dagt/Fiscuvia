@@ -9,7 +9,7 @@ const parser = new XMLParser({ ignoreAttributes: false, processEntities: false }
 const list = value => value === undefined ? [] : Array.isArray(value) ? value : [value]
 const baseline = {
   'com.fiscuvia.platform.internal.ScaffoldRuntimeConfigurationTests': 15,
-  'com.fiscuvia.ModuleBoundariesTests': 3,
+  'com.fiscuvia.ModuleBoundariesTests': 4,
   'com.fiscuvia.FiscuviaApplicationTests': 17,
   'com.fiscuvia.ApiContractsTests': 39,
   'com.fiscuvia.ApiPrimitivesTests': 3,
@@ -19,7 +19,7 @@ const baseline = {
   'com.fiscuvia.ObservabilityHttpTests': 3,
   'com.fiscuvia.HealthAvailabilityTests': 1,
   'com.fiscuvia.platform.internal.http.CorrelationFilterTests': 1,
-  'com.fiscuvia.platform.internal.observability.StructuredLoggingTests': 4,
+  'com.fiscuvia.platform.internal.observability.StructuredLoggingTests': 5,
   'com.fiscuvia.platform.internal.observability.ObservabilityGuardTests': 3,
   'com.fiscuvia.platform.internal.observability.MeterPrivacyTests': 2,
   'com.fiscuvia.platform.internal.observability.TracingConfigurationTests': 2,
@@ -29,6 +29,8 @@ const baseline = {
   'com.fiscuvia.TenantMigrationIT': 3,
   'com.fiscuvia.OidcAuthenticationTests': 22,
   'com.fiscuvia.IdentityMigrationIT': 3,
+  'com.fiscuvia.ResourceAuthorizationTests': 37,
+  'com.fiscuvia.AuthorizationMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {

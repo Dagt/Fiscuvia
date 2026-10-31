@@ -66,4 +66,8 @@
 Accepted ADR > requisito/regla aprobada > estado/workflow aprobado > alcance MVP > descubrimiento > supuestos. Un conflicto requiere issue y revisión; Codex no lo resuelve en silencio.
 
 ## Estado real
-Base #20–26 integrada mediante PR #75–78 y #80–82. Esta rama implementa identidad/sesiones #27 sólo local/test, en revisión de seguridad; [guía efectiva](security/AUTHENTICATION.md). CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales ni negocio; proveedor productivo, #74, #28–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
+Base #20–27 integrada mediante PR #75–78 y #80–83; identidad/sesiones sólo local/test, [guía efectiva](security/AUTHENTICATION.md). Esta rama implementa infraestructura de autorización por recurso #28, sin aceptar la matriz funcional Proposed. CI definido, remoto no verificado por presupuesto/facturación con seguimiento #79 y presupuesto $0. Sin tablas fiscales ni negocio; proveedor productivo, #74, permisos funcionales/OQ-015, #29–30 y #52/#56 siguen pendientes. No cerrar preguntas técnicas o fiscales sin evidencia ni considerar una imagen conceptual captura real.
+
+## Autorización por recurso #28
+
+[Políticas, asignaciones, transacciones, RLS y diagnóstico](security/RESOURCE-AUTHORIZATION.md). [Validación local y suite negativa](../backend/VALIDATION-28.md). La matriz funcional sigue Proposed y OQ-015/#74 conservan sus gates.

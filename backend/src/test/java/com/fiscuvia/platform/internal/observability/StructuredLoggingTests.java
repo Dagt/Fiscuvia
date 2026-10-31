@@ -13,6 +13,24 @@ import tools.jackson.databind.json.JsonMapper;
 import static org.assertj.core.api.Assertions.*;
 
 class StructuredLoggingTests {
+    @Test void accessDecisionsExposeOnlyTypedCategoriesAndTrustedCorrelation() throws Exception {
+        var e=new LoggingEvent(); e.setTimeStamp(0); e.setLevel(Level.INFO); e.setLoggerName("com.fiscuvia.identity.authorization");
+        e.setMessage(PRIVATE); e.addKeyValuePair(new KeyValuePair("resourceId",PRIVATE));
+        e.addKeyValuePair(new KeyValuePair("accessDecision",new com.fiscuvia.platform.AccessDecisionEvent(
+            com.fiscuvia.platform.AccessDecisionEvent.Decision.DENY,com.fiscuvia.platform.AccessDecisionEvent.Reason.RESOURCE_UNASSIGNED,
+            com.fiscuvia.platform.AccessDecisionEvent.Category.TAXPAYER,com.fiscuvia.platform.AccessDecisionEvent.Operation.EXPORT)));
+        var id=UUID.randomUUID();
+        try(var context=new SafeLogContext(new SafeLogContext.Context(id,null,null))) {
+            String json=formatter.format(e); var fields=new JsonMapper().readTree(json);
+            assertThat(fields.path("event").asString()).isEqualTo("ACCESS_DECISION");
+            assertThat(fields.path("module").asString()).isEqualTo("identity");
+            assertThat(fields.path("reason_code").asString()).isEqualTo("RESOURCE_UNASSIGNED");
+            assertThat(fields.path("correlation_id").asString()).isEqualTo(id.toString());
+            assertThat(fields.propertyNames()).containsExactlyInAnyOrder("timestamp","application","severity","component","module","event",
+                "correlation_id","decision","reason_code","resource_category","operation_category");
+            assertThat(json).doesNotContain(PRIVATE,"resourceId","tenantId","userId","SQL");
+        }
+    }
     private static final String PRIVATE = "DEMO900101XX1-private-token-cookie-CFDI-query";
     private final AllowlistLogFormatter formatter = new AllowlistLogFormatter();
 

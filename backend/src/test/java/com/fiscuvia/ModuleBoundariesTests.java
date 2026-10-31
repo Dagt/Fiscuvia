@@ -8,6 +8,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ModuleBoundariesTests {
 
+    @Test void domainModulesMustNotDependOnTheLowerLevelRlsPort() {
+        com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses().that()
+            .resideOutsideOfPackages("com.fiscuvia.platform..","com.fiscuvia.identity.internal..")
+            .should().dependOnClassesThat().haveFullyQualifiedName("com.fiscuvia.platform.TenantTransactions")
+            .check(new com.tngtech.archunit.core.importer.ClassFileImporter()
+                .withImportOption(com.tngtech.archunit.core.importer.ImportOption.Predefined.DO_NOT_INCLUDE_TESTS).importPackages("com.fiscuvia"));
+    }
+
     @Test
     void discoversAndVerifiesActualProductionModules() {
         var modules = ApplicationModules.of(FiscuviaApplication.class);

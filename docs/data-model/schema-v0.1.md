@@ -4,6 +4,8 @@
 
 ## 1. Convenciones globales
 
+**Enmienda de estado #27/#28 (2026-10-31):** identidad/membresías/sesiones V3 ya integradas en #83; V4 añade únicamente infraestructura genérica de capacidad/asignación y contexto de operación, según [modelo efectivo](../security/RESOURCE-AUTHORIZATION.md). No deriva las tablas fiscales de esta propuesta ni resuelve OQ-013/015 o #74. Las asignaciones fiscales de prueba son fixtures desechables, no un esquema productivo de contribuyentes.
+
 **Enmienda de estado #26 (2026-10-30):** existe una [base física mínima de tenancy](tenant-foundation-26.md), separada de este modelo Proposed: `app.tenants(tenant_id,created_at)` y metadatos privados de contexto. No hay users/memberships ni tablas fiscales definitivas; #27 y #74 conservan sus gates. Esta enmienda no acepta las tablas propuestas abajo ni deriva sus migraciones.
 - UUID PK; RFC normalizado como clave comercial, nunca PK. El mismo RFC puede existir en tenants distintos.
 - Timestamps PostgreSQL `timestamptz` UTC; fecha fiscal de vencimiento `date`, zona IANA al calcular fecha si aplica.

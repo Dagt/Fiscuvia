@@ -27,6 +27,10 @@ Errores RFC 9457 con type/title/status/detail/instance/code/traceId/fieldErrors 
 
 #27 usa sesión BFF: 401 no anuncia Bearer (no se aceptan tokens Bearer). 405 preserva Allow cuando la solicitud alcanza MVC; una mutación sin CSRF es rechazada antes con 403. No se exponen encabezados arbitrarios de excepciones. Los filtros OIDC usan el puerto HttpProblemResponder y SafeErrorController conserva el fallback seguro; los redirects del protocolo conducen a rutas de UI fijas, sin errores privados. Rate limiting y reglas de dominio no se declaran operativos por disponer de sus códigos.
 
+### Autorización por recurso #28
+
+[Puerto interno y cerca SQL](../security/RESOURCE-AUTHORIZATION.md): una sesión/membresía no concede todo el despacho. El backend fija capacidad y categoría; el UUID recibido sólo es candidato. Item ausente/no asignado/ajeno devuelve el mismo 404 seguro. Sin capacidad de colección: 403; colección autorizada sin asignaciones: vacío; sin sesión vigente: 401; conflicto de versión: 409. Razones internas no se devuelven al cliente. List/count/page/report/export/download deben aplicar la frontera de filas antes de generar salida. No hay nuevas rutas públicas ni endpoint de consulta genérica de permisos; los probes HTTP existen sólo en tests. OpenAPI implementado conserva #24/#27 y no incorpora contratos fiscales ficticios.
+
 ## Propuestas de negocio y siguientes slices
 
 ## Autenticación
