@@ -35,7 +35,7 @@ Mínimos web: 37 Vitest, 13 Playwright previos y 5 de identidad reales con Chrom
 
 ## Autorización por recurso #28
 
-Mínimo **202 backend (180 Surefire + 22 Failsafe)**, sin reducir las 161 anteriores: 36 ResourceAuthorizationTests, tres AuthorizationMigrationIT, una guarda de arquitectura y una prueba de logging adicional. PostgreSQL 18.6/runtime + Keycloak real/HTTPS; sin mocks de autenticación. [Diseño y alcance de permisos](../security/RESOURCE-AUTHORIZATION.md), [comandos/evidencia](../../backend/VALIDATION-28.md).
+Mínimo **203 backend (181 Surefire + 22 Failsafe)**, sin reducir las 161 anteriores: 37 ResourceAuthorizationTests, tres AuthorizationMigrationIT, una guarda de arquitectura y una prueba de logging adicional. PostgreSQL 18.6/runtime + Keycloak real/HTTPS; sin mocks de autenticación. [Diseño y alcance de permisos](../security/RESOURCE-AUTHORIZATION.md), [comandos/evidencia](../../backend/VALIDATION-28.md).
 
 Casos: 401 anónimo/expirado/deshabilitado; membresías suspendidas/revocadas; cross-tenant y same-tenant sin asignación; lectura/edición/exportación/descarga separadas; supervisor/owner sin grants fiscales, auxiliar administrativo, rol desconocido/spoof; UUID conocido/adivinado; list/count/page sin filtros; revocaciones concurrentes de membresía/política/asignación con bloqueos observados; operación que retiene autoridad hasta commit; pool/sesiones multitenant; SQL directo, MFA, mensajes/logs seguros; estado/versionado/rollback, lote parcialmente autorizado, contexto retenido/anidado y FK compuesta. Oráculo real falla deliberadamente al quitar resource_fence y vuelve a pasar al restaurarla; guardas detectan drift FORCE/grants. V4 verifica upgrade V3, checksums previos, instalación una vez, checksum alterado y rollback/reintento.
 

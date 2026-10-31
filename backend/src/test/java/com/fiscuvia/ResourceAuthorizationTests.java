@@ -121,6 +121,14 @@ class ResourceAuthorizationTests {
             assertThat(f.get("raw-invite").statusCode()).isEqualTo(403);
         }
     }
+    @Test void ownerMfaDoesNotGrantDirectoryOfOtherMembersBySql() throws Exception {
+        try(var f=new Fixture("FIRM_OWNER_ADMIN","bob");var other=new OidcBrowser(TLS,OIDC)) {
+            UUID peer=membership(f.tenant,id(other.login("carol")),"ACCOUNTANT");
+            var result=f.get("raw-member-directory");
+            assertThat(result.statusCode()).isEqualTo(200);
+            assertThat(result.body()).contains(f.member.toString()).doesNotContain(peer.toString());
+        }
+    }
     @Test void unconfiguredCapabilityAndUnknownRoleFailClosed() throws Exception {
         try(var f=new Fixture("ACCOUNTANT")) {
             assertThat(f.get("admin").statusCode()).isEqualTo(403);
@@ -398,6 +406,7 @@ class ResourceAuthorizationTests {
         @GetMapping(ROOT+"{tenant}/download/{id}") List<UUID> download(@PathVariable UUID tenant,@PathVariable UUID id){ return operations.execute(tenant,Capability.DOCUMENT_DOWNLOAD,ResourceTarget.item(ResourceTarget.Kind.DOCUMENT,id),s->sql.queryForList("SELECT id FROM resource_fixture.items WHERE id=?",UUID.class,id)); }
         @GetMapping(ROOT+"{tenant}/admin") String admin(@PathVariable UUID tenant){ return operations.execute(tenant,Capability.TENANT_SETTINGS_MANAGE,ResourceTarget.tenant(),s->"unused"); }
         @GetMapping(ROOT+"{tenant}/raw-invite") UUID rawInvite(@PathVariable UUID tenant){ return operations.execute(tenant,Capability.TENANT_READ,ResourceTarget.tenant(),s->{ sql.queryForObject("SELECT identity.authorize_tenant(?,true)",Object.class,tenant); return sql.queryForObject("SELECT identity.create_invitation(?,'DEMO','DEMO','ACCOUNTANT',decode(repeat('00',32),'hex'),clock_timestamp()+interval '1 hour')",UUID.class,tenant); }); }
+        @GetMapping(ROOT+"{tenant}/raw-member-directory") List<UUID> rawMembers(@PathVariable UUID tenant){ return operations.execute(tenant,Capability.TENANT_READ,ResourceTarget.tenant(),s->{ sql.queryForObject("SELECT identity.authorize_tenant(?,true)",Object.class,tenant); return sql.queryForList("SELECT id FROM identity.memberships",UUID.class); }); }
         @GetMapping(ROOT+"{tenant}/retained") String retained(@PathVariable UUID tenant){ AuthorizedAccess access=operations.execute(tenant,Capability.TAXPAYER_VIEW,ResourceTarget.collection(ResourceTarget.Kind.TAXPAYER),s->s); access.requireCurrent(); return "unused"; }
         @GetMapping(ROOT+"{tenant}/nested/{id}") String nested(@PathVariable UUID tenant,@PathVariable UUID id){ return operations.execute(tenant,Capability.TAXPAYER_VIEW,ResourceTarget.collection(ResourceTarget.Kind.TAXPAYER),s->operations.execute(tenant,Capability.TAXPAYER_VIEW,ResourceTarget.item(ResourceTarget.Kind.TAXPAYER,id),a->"unused")); }
         @PostMapping(ROOT+"{tenant}/rollback/{id}") void rollback(@PathVariable UUID tenant,@PathVariable UUID id){ operations.execute(tenant,Capability.TAXPAYER_EDIT,ResourceTarget.item(ResourceTarget.Kind.TAXPAYER,id),s->{ sql.update("UPDATE resource_fixture.items SET version=version+1 WHERE id=?",id); throw new ApiFailure(ApiErrorCode.CONFLICT); }); }

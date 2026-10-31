@@ -29,7 +29,7 @@ const baseline = {
   'com.fiscuvia.TenantMigrationIT': 3,
   'com.fiscuvia.OidcAuthenticationTests': 22,
   'com.fiscuvia.IdentityMigrationIT': 3,
-  'com.fiscuvia.ResourceAuthorizationTests': 36,
+  'com.fiscuvia.ResourceAuthorizationTests': 37,
   'com.fiscuvia.AuthorizationMigrationIT': 3,
 }
 

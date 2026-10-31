@@ -45,8 +45,8 @@ POSIX: `./mvnw` y `PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json npm r
 
 | Comprobación | Mínimo/contenido |
 |---|---|
-| clean verify | **202**: 180 Surefire + 22 Failsafe; cero fallos/errores/omisiones; conserva 161 previas |
-| ResourceAuthorizationTests | **36**: HTTP real/Keycloak/HTTPS y PostgreSQL runtime, capacidades y filas, sin mocks de identidad |
+| clean verify | **203**: 181 Surefire + 22 Failsafe; cero fallos/errores/omisiones; conserva 161 previas |
+| ResourceAuthorizationTests | **37**: HTTP real/Keycloak/HTTPS y PostgreSQL runtime, capacidades y filas, sin mocks de identidad |
 | AuthorizationMigrationIT | **3**: V3→V4 una vez, checksums previos conservados, checksum alterado rechazado, DDL completo rollback/reintento; sólo seis políticas TENANT previamente autorizadas |
 | Arquitectura/logging | Modulith previo + rechazo de dependencia de dominio al puerto RLS inferior; decisión JSON cerrada/correlación sin identificadores ni canarios |
 | Regresión backend | Todas las suites RLS/pool/OIDC/sesiones/MFA/invitaciones/Flyway/contratos/health/observabilidad/JAR anteriores |
@@ -56,7 +56,7 @@ POSIX: `./mvnw` y `PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json npm r
 | Seguridad | Gitleaks historial/worktree, actionlint, zizmor, Trivy npm dev + SBOM Maven test HIGH/CRITICAL; no exclusiones nuevas |
 | Artifacts | Sólo summaries/JUnit depurado; escaneo adicional, sin logs crudos/CSRF/tokens/llaves/sesiones/JAR/fixtures |
 
-Las 36 pruebas nuevas abarcan anónimo/expirado/global DISABLED, membresías suspendidas/revocadas, cross-tenant read/edit, carteras distintas same-tenant, lectura sin edición/borrado, edición sin exportación, auxiliar administrativo, supervisor sin scope, owner sin ALL, rol desconocido/no configurado/falsificado y UUID adivinado. Consultas sin filtros de tenant/asignación sólo devuelven filas autorizadas, incluso COUNT/page/export/download/report. Lotes mixtos hacen rollback completo. Estado real/versionado se verifican servidor.
+Las 37 pruebas nuevas abarcan anónimo/expirado/global DISABLED, membresías suspendidas/revocadas, cross-tenant read/edit, carteras distintas same-tenant, lectura sin edición/borrado, edición sin exportación, auxiliar administrativo, supervisor sin scope, owner sin ALL, rol desconocido/no configurado/falsificado y UUID adivinado. Consultas sin filtros de tenant/asignación sólo devuelven filas autorizadas, incluso COUNT/page/export/download/report. Lotes mixtos hacen rollback completo. Estado real/versionado se verifican servidor.
 
 Tres revocaciones concurrentes (asignación/membresía/política) se mantienen no confirmadas mientras la solicitud llega al bloqueo; el test observa `pg_locks` sin conceder pg_monitor y confirma la revocación antes de continuar: operación denegada. El caso inverso demuestra que un permiso ya bloqueado vive hasta commit, la revocación espera y la siguiente operación deniega. No se confunde el inicio de una revocación con su confirmación.
 

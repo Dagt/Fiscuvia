@@ -128,7 +128,9 @@ LANGUAGE plpgsql SET search_path=pg_catalog,pg_temp AS $$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM access_control_private.operation_context c WHERE c.transaction_id=pg_current_xact_id_if_assigned()
       AND c.actor_id=identity.current_actor_id() AND c.tenant_id=p_tenant AND c.tenant_id=app.current_tenant_id()
-      AND c.resource_kind='TENANT' AND c.resource_id IS NULL AND c.capability=p_capability) THEN
+      AND c.resource_kind='TENANT' AND c.resource_id IS NULL AND c.capability=p_capability
+      AND EXISTS(SELECT 1 FROM identity_private.actor_context a WHERE a.transaction_id=c.transaction_id AND a.privileged
+        AND a.mfa_at BETWEEN extract(epoch FROM clock_timestamp())::bigint-600 AND extract(epoch FROM clock_timestamp())::bigint+30)) THEN
       RAISE EXCEPTION USING ERRCODE='42501',MESSAGE='ACCESS_DENIED';
     END IF;
 END;
@@ -159,3 +161,9 @@ REVOKE ALL ON FUNCTION identity.create_invitation(uuid,text,text,text,bytea,time
   identity.change_membership(uuid,uuid,text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION identity.create_invitation(uuid,text,text,text,bytea,timestamptz),identity.revoke_invitation(uuid,uuid),
   identity.change_membership(uuid,uuid,text) TO fiscuvia_runtime;
+
+-- #27's self-directory remains available. Owner+MFA is not MEMBERSHIP_VIEW: other people's
+-- membership metadata stays private until an explicit directory capability is approved.
+-- Administrative writes above use narrow definer functions, not broad runtime reads.
+ALTER POLICY membership_runtime ON identity.memberships USING(user_id=identity.current_actor_id());
+ALTER POLICY membership_fence ON identity.memberships USING(user_id=identity.current_actor_id()) WITH CHECK(false);
