@@ -54,8 +54,11 @@ export function checkWorkflow(text) {
   }
 }
 
-function run(image, args, { network = false, mounts = [], environment = [], capture = false } = {}) {
+function run(image, args, { network = false, mounts = [], environment = [], capture = false, writableCache = false } = {}) {
   const result = spawnSync('docker', ['run', '--rm', '--cap-drop=ALL', '--security-opt=no-new-privileges',
+    // POSIX bind mounts preserve ownership. Match the runner only for the writable
+    // Trivy cache; no DAC_OVERRIDE, world-writable chmod or privileged container.
+    ...(writableCache && process.getuid ? ['--user', `${process.getuid()}:${process.getgid()}`] : []),
     ...(!network ? ['--network=none'] : []), ...environment.flatMap(e => ['-e', e]), ...mounts.flatMap(m => ['-v', m]), image, ...args],
   { cwd: root, encoding: 'utf8', stdio: capture ? 'pipe' : 'inherit' })
   if (result.status !== 0) {
@@ -95,10 +98,10 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const mounts = [`${scan}:/source:ro`, `${cache}:/cache`]
   const common = ['--cache-dir', '/cache', '--quiet']
   const privateScan = ['--offline-scan', '--disable-telemetry', '--skip-version-check']
-  run(images.trivy, [...common, 'fs', ...privateScan, '--scanners=vuln', '--include-dev-deps', '--severity=HIGH,CRITICAL', '--exit-code=1', '/source'], { mounts, network: true })
+  run(images.trivy, [...common, 'fs', ...privateScan, '--scanners=vuln', '--include-dev-deps', '--severity=HIGH,CRITICAL', '--exit-code=1', '/source'], { mounts, network: true, writableCache: true })
   const bom = resolve(root, 'backend/target/bom.json')
   if (!existsSync(bom)) throw Error('Generar SBOM Maven incluyendo dependencias test antes de security')
-  run(images.trivy, [...common, 'sbom', ...privateScan, '--severity=HIGH,CRITICAL', '--exit-code=1', '/bom.json'], { mounts: [...mounts, `${bom}:/bom.json:ro`], network: true })
+  run(images.trivy, [...common, 'sbom', ...privateScan, '--severity=HIGH,CRITICAL', '--exit-code=1', '/bom.json'], { mounts: [...mounts, `${bom}:/bom.json:ro`], network: true, writableCache: true })
   const sha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
   const dir = resolve(root, '.ci-artifacts/security')
   mkdirSync(dir, { recursive: true })
