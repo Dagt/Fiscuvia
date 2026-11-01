@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process'
-import { readFileSync, mkdirSync, mkdtempSync, cpSync, existsSync, writeFileSync } from 'node:fs'
+import { readFileSync, mkdirSync, mkdtempSync, chmodSync, cpSync, existsSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse } from 'yaml'
@@ -10,6 +10,15 @@ export const images = {
   actionlint: 'rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667',
   zizmor: 'ghcr.io/zizmorcore/zizmor:1.31.1@sha256:42d409dbb851d4c5d35a058cf042b828bea1e3f2884378c526eb0974780e18d9',
   trivy: 'aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c',
+}
+
+// mkdtemp uses 0700 on POSIX. Container root with cap-drop=ALL cannot traverse
+// a runner-owned 0700 bind mount. Only this allowlisted source snapshot is shared;
+// never chmod the private work directory, logs, harness handoff or credentials.
+export function createScanDirectory(parent) {
+  const directory = mkdtempSync(resolve(parent, 'source-'))
+  chmodSync(directory, 0o755)
+  return directory
 }
 
 export function checkPath(path) {
@@ -60,7 +69,7 @@ function run(image, args, { network = false, mounts = [], environment = [], capt
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const files = execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean)
   mkdirSync(resolve(root, '.ci-work'), { recursive: true })
-  const scan = mkdtempSync(resolve(root, '.ci-work/source-'))
+  const scan = createScanDirectory(resolve(root, '.ci-work'))
   for (const path of files) {
     checkPath(path)
     if (/\.(java|[cm]?[jt]sx?)$/.test(path) && !path.startsWith('tools/ci/')) {

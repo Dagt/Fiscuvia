@@ -51,7 +51,7 @@ POSIX: `./mvnw`, `PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json npm ru
 | Regresión | Todas las suites anteriores Modulith/RLS/roles/pool/Keycloak/CSRF/MFA/sesiones/invitaciones/API/observabilidad/JAR; tercer módulo audit sin ciclos |
 | Frontend | npm ci/typecheck/lint/format/build, **37 Vitest**, **13 Playwright** de fundación + **5 OIDC** con Chromium/HTTPS/Keycloak reales, sin retries/flaky/omitidos |
 | Contratos | Ambos OpenAPI y generación TS reproducible; **51** respuestas HTTP conformes + ocho schemas de identidad sobre HTTP real en memoria |
-| tools/ci | Ocho pruebas de gates/contratos, mínimos elevados sin reducir ninguno |
+| tools/ci | Nueve pruebas de gates/contratos, incluida regresión de permisos POSIX del snapshot, sin reducir ninguno |
 | Seguridad | Gitleaks historial/worktree, actionlint, zizmor, Trivy incluyendo npm dev y SBOM Maven test; gate HIGH/CRITICAL sin nuevas exclusiones |
 | Artifacts | Summary/JUnit depurado únicamente, allowlist y scan; sin JAR/keystores/tokens/sesiones/fixtures/logs/reportes crudos |
 
@@ -67,4 +67,8 @@ Sin cambios visibles de UI ni nuevos endpoints de auditoría. Se conserva identi
 
 [Journal](../docs/security/AUDIT-JOURNAL.md) y [outbox/runbook](../docs/delivery/OUTBOX.md) describen los riesgos: no WORM ante DBA/BFF; fallos de almacenamiento de denegación producen rechazo+diagnóstico, no garantía de persistencia; autoridad de negocio/operación de workers, retención/alertas/carga y aprobación de lector pendientes. No se implementan #30 ni dominio #74. Se mantienen los avisos moderados heredados de tooling (#27/#28), sin audit fix --force; el PR informa la consulta actual HIGH/CRITICAL.
 
-**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0 sin modificaciones ni reruns/bypasses. El estado remoto se comprueba por SHA/run; cero pasos pre-runner no son CI aprobada ni fallo de código.
+Presupuesto $0 sin modificaciones ni reruns/bypasses. Si GitHub rechaza antes del runner: **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** No atribuir ese estado a una ejecución que sí inició pasos.
+
+La primera ejecución de #29 ([run 41255185037](https://github.com/Dagt/Fiscuvia/actions/runs/41255185037), head 224a554) sí inició Ubuntu/Temurin. Security encontró un fallo de permisos del snapshot: mkdtemp crea 0700 en POSIX; root del contenedor sin DAC_OVERRIDE no puede atravesar el directorio del runner. Se reprodujo el mismo error Gitleaks en Docker Linux y se corrigió únicamente el snapshot allowlisted a 0755, sin abrir work/logs/credenciales ni quitar cap-drop=ALL. La regresión verifica permisos de lectura/traversal y que el padre privado no cambia. El resultado remoto del SHA final se registra en el PR; no se asume éxito ni bloqueo de billing.
+
+Prueba adicional Linux del gate: imagen oficial Node 24.13.1 Alpine `node@sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03`, `node --test tools/ci/gates.test.mjs`, con repositorio read-only, red deshabilitada, tmpfs temporal y cap-drop=ALL. Cinco gates, cero fallos/omitidos; no sustituye clean verify ni las nueve pruebas completas de tools/ci. En Windows fs.stat no representa bits POSIX execute: se comprueba lectura y traversal observable; en Linux también los bits de acceso de grupo/otros. No se deshabilita la prueba en ninguna plataforma.
