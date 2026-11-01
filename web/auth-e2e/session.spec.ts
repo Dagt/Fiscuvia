@@ -242,6 +242,12 @@ test('state alterado produce error real seguro, responsive y recuperable', async
   page,
 }) => {
   await page.goto('/login')
+  // Wait for the page's initial CSRF session before issuing API requests through
+  // its shared cookie jar. Two anonymous CSRF requests can create different
+  // sessions; a late Set-Cookie must not replace the POST-approved login session.
+  await expect(
+    page.getByRole('button', { name: 'Continuar con acceso seguro' }),
+  ).toBeVisible()
   const csrf = await (await page.request.get('/api/v1/auth/csrf')).json()
   const start = await page.request.post('/api/v1/auth/login', {
     headers: { 'X-CSRF-TOKEN': csrf.token },

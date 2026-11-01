@@ -7,3 +7,9 @@ Monolito modular: identity, tenants, taxpayers, obligations, workflow, tasks, do
 React -> API con validación/autorización -> servicios de dominio -> PostgreSQL; archivos privados fuera de DB y registrados con metadatos. Jobs con contexto de tenant verificado. API y worker pueden usar la misma imagen, escalados separadamente según demanda.
 ## Operación
 Entornos local/test/staging/prod separados. Secret manager; TLS; despliegue reproducible; health checks, métricas, trazas, logs redactados; backups y restauración probada. Contratos REST /api/v1, errores estándar y versionado. Recomendaciones sujetas a smoke test de dependencias al crear scaffold.
+
+## Base efectiva #29 — infraestructura local/test
+
+#20–28 están integrados en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0`. Los módulos reales son platform, identity y audit; identity → audit → platform, sin ciclos. [Journal append-only](../security/AUDIT-JOURNAL.md) y [outbox/protocolo](../delivery/OUTBOX.md) añaden V5 sin cambiar V1–V4. Eventos reales de identidad y outbox se escriben en la misma transacción PostgreSQL; errores revierten el cambio sensible. Denegaciones verificadas usan una política global privada tras rollback, sin tenant ajeno.
+
+No hay lector AUDIT_VIEW, worker automático, broker externo ni autoridad de negocio de sistema. El transporte, sin cuentas/scopes configurados al instalar, sólo puede manipular avisos de su cola explícitamente aprobada; no establece contexto de negocio ni serializa sesiones. Interfaces y consumidores sintéticos se prueban con roles efímeros en PostgreSQL real. Módulos fiscales, #74, proveedor productivo, matriz funcional y operación de workers siguen sujetos a aprobación. ADR-008 no se marca Accepted.

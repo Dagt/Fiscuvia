@@ -2,11 +2,13 @@
 
 ## Política temporal vigente — #79
 
-PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propietario decidió mantener presupuesto Actions **$0** y pruebas locales completas. **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** No cambiar billing, deshabilitar workflows, reintentar runners ni asumir reinicio de cuota en una fecha concreta. #79 registra la comprobación remota futura; los fallos pre-runner no son fallos de código ni CI aprobada. El diagnóstico de #23 abajo es histórico, no una instrucción vigente para aumentar el presupuesto.
+PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propietario decidió mantener presupuesto Actions **$0** y pruebas locales completas. Cuando no ejecutan runners: **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79**, con evidencia del rechazo. No cambiar billing, deshabilitar workflows, reintentar runners ni asumir reinicio de cuota en una fecha concreta. La primera ejecución de #29 sí inició pasos; informar su resultado real por SHA, no reutilizar un diagnóstico pre-runner histórico. El diagnóstico de #23 abajo no es una instrucción vigente para aumentar el presupuesto.
 
 #24 añade conformidad de respuestas HTTP reales y tipos generados desde `docs/api/openapi-v1.yaml`, manteniendo el borrador propuesto separado. Después de Maven verify ejecutar `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json`; Backend CI incluye ese paso. `npm run openapi --prefix tools/ci` valida ambos documentos y la generación exacta. Versiones nuevas: openapi-typescript 7.13.0, AJV 8.20.0 / ajv-formats 3.0.1, Prettier 3.9.10 (formato del generado), con lockfile.
 
 #28 amplía el gate de reportes a 203 backend (181 Surefire, 22 Failsafe), incluidas 37 pruebas de recurso y tres de migración V4. No cambia workflows, permisos, presupuesto ni mínimos web/OIDC anteriores. [Protocolo local y límites de evidencia](../../backend/VALIDATION-28.md). El SHA final y las duraciones/resultados exactos se publican en el PR y summaries depurados; Linux remoto no se presume validado por tests Windows con contenedores Linux.
+
+#29 amplía a **250 backend (225 Surefire + 25 Failsafe)**: 44 pruebas de journal/outbox y tres de upgrade/checksum/rollback V5. [Comandos y evidencia](../../backend/VALIDATION-29.md). No cambian workflows, presupuesto/permisos del repositorio ni mínimos frontend. PostgreSQL/Keycloak y cuentas de transporte efímeras de prueba permanecen locales a Testcontainers; no se provisiona un worker ni un secreto GitHub.
 
 Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada histórica: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. La base actual incorpora API #24 desde PR #80; #25 añade observabilidad sin negocio, migraciones nuevas, RLS ni despliegues.
 
@@ -124,3 +126,9 @@ Se conservan los cinco nombres de checks. Web CI añade JDK 25/Docker y ejecuta 
 Requiere daemon Docker Linux/Ryuk activo, puertos loopback efímeros y 4174 libre, pulls fijados de PG/Keycloak, espacio/memoria para JVM/IdP/Chromium. El handoff privado del harness, keystores, sesiones, logs crudos y reportes completos del navegador no se suben. Artifacts mantienen allowlist de summary/JUnit depurado. El SHA del resumen identifica el commit probado, no sólo el nombre de rama.
 
 El propietario decidió presupuesto Actions $0: no modificar facturación ni intentar evadirla. REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79. La compatibilidad Ubuntu/Temurin remota requiere una futura ejecución autorizada; no atribuir verde a la mera existencia del YAML.
+
+## Ejecución observada y regresión Linux #29
+
+El [primer run de #29](https://github.com/Dagt/Fiscuvia/actions/runs/41255185037), head 224a554, sí inició Ubuntu/Temurin sin cambios de facturación. Security falló porque mkdtemp usa 0700: el contenedor con cap-drop=ALL no puede leer el bind mount del runner y Gitleaks muestra un error de configuración secundario. El snapshot allowlisted ahora recibe 0755; no se amplían permisos de logs/handoff/credenciales ni se otorgan capabilities. Prueba de regresión POSIX añadida: **nueve tests tools/ci**, sin reducir los ocho anteriores. Resultado del SHA final y de cada job en el PR; no declarar verde ni billing por anticipado. Se conservan los cinco checks y el presupuesto $0.
+
+El run 41255643316 confirmó esa corrección y detectó caché Trivy no escribible por root sin DAC_OVERRIDE. Para los dos scans Trivy se usa UID/GID efectivo del runner en POSIX, con caché propia; se conservan cap-drop=ALL, no-new-privileges y mounts fuente/BOM read-only. No chmod 777, usuario privilegiado ni omisión de DB de vulnerabilidades. El caso se reprodujo en un volumen Linux efímero con propietario distinto de root.

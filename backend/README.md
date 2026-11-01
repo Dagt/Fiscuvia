@@ -1,4 +1,4 @@
-# Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–28
+# Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–29
 
 Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–26 integrada con raíz mínima de despachos y RLS. Sin tablas fiscales ni endpoints de negocio. Gate #74 y matriz funcional/OQ-015 siguen pendientes. #27 está integrado; #28 añade [capacidad/recurso y transacciones autorizadas](../docs/security/RESOURCE-AUTHORIZATION.md), V4 y pruebas negativas. No se otorgan permisos fiscales todavía.
 
@@ -8,9 +8,9 @@ PR #82/#26 está integrado en main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. #
 
 `GET /api/v1/public/info` devuelve únicamente producto/eslogan/versión. Validación Jakarta servidor, UUID/binding estricto, RFC 9457/códigos/correlación seguros y primitivas reutilizables, sin JPA ni autenticación. [Guía y ejemplos](../docs/api/foundation-24.md), [contrato implementado](../docs/api/openapi-v1.yaml). Dependencia nueva: starter-validation 4.1.2 → Hibernate Validator 9.1.5.Final / Jakarta Validation 3.1.1 administrados por Boot.
 
-`clean verify` exige **203** pruebas (181 Surefire + 22 Failsafe), conserva las 161 anteriores y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts. [Observabilidad #25](../docs/delivery/OBSERVABILITY.md); [tenancy física, convenciones transaccionales y riesgos #26](../docs/data-model/tenant-foundation-26.md); [evidencia #26](VALIDATION-26.md).
+`clean verify` exige **250** pruebas (225 Surefire + 25 Failsafe), conserva las 203 anteriores y prueba HTTP real con controladores sólo de tests. El JAR confirma info pública y ausencia de fixtures; logs/respuestas no contienen canarios secretos. Después ejecutar desde la raíz `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json` para comprobar las 51 respuestas frente al esquema. Requiere `npm ci --prefix tools/ci --ignore-scripts`. Esas respuestas no se suben como artifacts. [Observabilidad #25](../docs/delivery/OBSERVABILITY.md); [tenancy física, convenciones transaccionales y riesgos #26](../docs/data-model/tenant-foundation-26.md); [evidencia #26](VALIDATION-26.md).
 
-**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementan #29–30 ni reglas fiscales de #74; #27 se limita a identidad local/test.
+**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por facturación/presupuesto; seguimiento #79.** Presupuesto $0; no se deshabilitan workflows ni reintentan runners. No se implementa #30 ni reglas fiscales de #74; #27 se limita a identidad local/test.
 
 ## Tenancy transaccional #26
 
@@ -178,3 +178,7 @@ Metodología contrastada con [AGENTS](https://github.com/Dagt/TrailerSaas/blob/m
 ## Autorización por recurso #28
 
 [Modelo físico, contrato tipado, asignaciones y runbook](../docs/security/RESOURCE-AUTHORIZATION.md); [protocolo de validación](VALIDATION-28.md). V4 es aditiva y no cambia V1/V2/V3. No hay nuevas dependencias ni cambios de UI. El puerto público AuthorizedTenantOperations ahora recibe Capability y ResourceTarget; no expone el booleano privileged. Los permisos operativos no aprobados deniegan y sólo los fixtures desechables añaden combinaciones sintéticas. El SHA y los resultados finales se registran en el PR y summaries depurados, nunca en logs crudos publicados.
+
+## Journal y outbox #29
+
+Base #28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0`. Nuevo módulo audit (identity → audit → platform), V5 sin cambios a V1–V4. [Catálogo/modelo/privacidad](../docs/security/AUDIT-JOURNAL.md), [protocolo y runbook](../docs/delivery/OUTBOX.md), [comandos completos y mínimos 250](VALIDATION-29.md). No hay dependencias nuevas, lector AUDIT_VIEW ni cuenta/scheduler de worker. Los transportes sólo se prueban con roles efímeros sin permisos de negocio; scopes vacíos al instalar. El SHA probado y resultados finales se publican en el PR y summaries depurados.

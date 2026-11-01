@@ -31,6 +31,8 @@ const baseline = {
   'com.fiscuvia.IdentityMigrationIT': 3,
   'com.fiscuvia.ResourceAuthorizationTests': 37,
   'com.fiscuvia.AuthorizationMigrationIT': 3,
+  'com.fiscuvia.AuditJournalTests': 44,
+  'com.fiscuvia.JournalMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {

@@ -20,7 +20,7 @@ class ModuleBoundariesTests {
     void discoversAndVerifiesActualProductionModules() {
         var modules = ApplicationModules.of(FiscuviaApplication.class);
         assertThat(modules.stream().map(module -> module.getIdentifier().toString()))
-                .containsExactlyInAnyOrder("platform", "identity");
+                .containsExactlyInAnyOrder("platform", "identity", "audit");
         modules.verify();
     }
 

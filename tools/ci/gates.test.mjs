@@ -1,11 +1,26 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, writeFileSync, rmSync, statSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { backendReports, webReports, completeWebReports } from './reports.mjs'
 import { checkLocalRefs, validate } from './openapi.mjs'
-import { checkPath, checkWorkflow } from './security.mjs'
+import { checkPath, checkWorkflow, createScanDirectory } from './security.mjs'
+
+test('Snapshot: lectura y traversal para scanner sin DAC_OVERRIDE, sin abrir archivos privados', () => {
+  const parent = mkdtempSync(join(tmpdir(), 'fiscuvia-permissions-'))
+  const before = statSync(parent).mode
+  try {
+    const snapshot = createScanDirectory(parent)
+    // Windows does not represent directory execute bits in fs.stat().mode.
+    const readableTraversal = process.platform === 'win32' ? 0o444 : 0o555
+    assert.equal(statSync(snapshot).mode & readableTraversal, readableTraversal)
+    assert.equal(statSync(parent).mode, before)
+    writeFileSync(join(snapshot, 'public-source.txt'), 'synthetic source')
+    assert.deepEqual(readdirSync(snapshot), ['public-source.txt'])
+    assert.equal(readFileSync(join(snapshot, 'public-source.txt'), 'utf8'), 'synthetic source')
+  } finally { rmSync(parent, { recursive: true, force: true }) }
+})
 
 test('JUnit: exige suites completas; elimina propiedades y salida del proceso', () => {
   const xml = '<testsuite name="example" tests="1" failures="0" errors="0" skipped="0"><properties><property name="sensitive" value="synthetic-value"/></properties><testcase name="works" classname="example" time="1"/><system-out>synthetic-output</system-out></testsuite>'

@@ -27,3 +27,9 @@ Privilegios administrativos: owner activo y MFA local verificable de los último
 [Autorización por recurso](RESOURCE-AUTHORIZATION.md): capacidades no configuradas deniegan, sin jerarquía implícita; asignaciones exactas de membresía/capacidad/recurso; contexto SQL privado inmutable por xid; chequeo y uso en la misma transacción con bloqueos contra revocación concurrente. Puertos de negocio no exponen TenantTransactions ni actores/roles HTTP. Tablas futuras requieren RLS tenant **y** recurso antes de listas, búsqueda, reportes, descargas o comandos. Fixtures y endpoints sintéticos no entran al JAR.
 
 V4 no concede permisos fiscales/documentales/reportes: matriz Proposed/OQ-015/#74 siguen bloqueando esos grants. El migrador administra únicamente mediante cambios revisados; runtime no puede leer/escribir grants ni políticas. Decisiones operacionales tienen categorías cerradas y correlación, sin identificadores/PII; no sustituyen auditoría/outbox #29.
+
+## Journal/outbox #29
+
+[Política y modelo físico](AUDIT-JOURNAL.md): eventos de identidad por cambios reales, append-only lógico, FORCE RLS/tenant-first, sin lectura ni DML runtime/sesiones. Éxito sensible, journal y outbox son atómicos; falla al insertar impide commit. Actor/correlación son verificados por servidor y prueba ligada a xid; ningún JSON/actor arbitrario del frontend se convierte en hecho.
+
+Denegaciones privilegiadas atribuibles se escriben después de rollback en un journal global privado sin tenant/recurso solicitado; indisponibilidad/revalidación fallida conserva el rechazo y diagnóstico seguro, sin afirmar persistencia. [Transporte](../delivery/OUTBOX.md) tiene autoridad separada, vacía por defecto, sin permisos de app/identity ni worker productivo. At-least-once/fencing/idempotencia, no exactly-once ni WORM. DBA/migrador/BFF comprometidos superan esta frontera; retención, custodia, lector AUDIT_VIEW y servicio de negocio requieren aprobación posterior.

@@ -71,3 +71,7 @@ Base #20–27 integrada mediante PR #75–78 y #80–83; identidad/sesiones sól
 ## Autorización por recurso #28
 
 [Políticas, asignaciones, transacciones, RLS y diagnóstico](security/RESOURCE-AUTHORIZATION.md). [Validación local y suite negativa](../backend/VALIDATION-28.md). La matriz funcional sigue Proposed y OQ-015/#74 conservan sus gates.
+
+## Journal/outbox #29
+
+Base #20–28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0` (#84). [Auditoría append-only y política de denegaciones](security/AUDIT-JOURNAL.md), [outbox/autoridad de transporte/runbook](delivery/OUTBOX.md), [validación](../backend/VALIDATION-29.md). Sin worker automático, lector de historial ni negocio fiscal; #30/#74/#79 y decisiones productivas conservan su alcance.
