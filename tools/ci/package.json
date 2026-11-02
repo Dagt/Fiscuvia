@@ -9,7 +9,7 @@
     "npm": ">=11.8.0 <12"
   },
   "scripts": {
-    "test": "node --test *.test.mjs",
+    "test": "node test-gates.mjs",
     "openapi": "node openapi.mjs ../../docs/api/openapi-v1-draft.yaml && node openapi.mjs ../../docs/api/openapi-v1.yaml && node contracts.mjs",
     "generate:api": "node contracts.mjs --generate",
     "security": "node security.mjs"

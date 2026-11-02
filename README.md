@@ -4,7 +4,7 @@
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.
 
-> **Estado al 2026-10-31:** base #20–28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0` (#84). Esta rama implementa [journal/outbox #29](docs/security/AUDIT-JOURNAL.md), transacciones, append-only lógico y protocolo de entrega sin worker. Sin proveedor productivo, matriz fiscal aprobada ni tablas fiscales; #74 sigue vigente. Documentos Proposed conservan su estado.
+> **Estado al 2026-11-02:** base #20–29 integrada en main `f40a4980c1eaf268c16fcc39b2855dbcc71378a6` (#85). Esta rama añade [regresión transversal #30](docs/security/CROSS-TENANT-REGRESSION.md) sobre identidad, RLS, autorización y journal/outbox. #79 cerrado tras CI Ubuntu exitosa de #85; cada PR se verifica por SHA, presupuesto $0 intacto. Sin proveedor productivo, matriz fiscal aprobada ni tablas fiscales; #74 sigue vigente. Documentos Proposed conservan su estado.
 
 ## Web local — issue #21
 

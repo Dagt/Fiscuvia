@@ -75,3 +75,7 @@ Base #20–27 integrada mediante PR #75–78 y #80–83; identidad/sesiones sól
 ## Journal/outbox #29
 
 Base #20–28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0` (#84). [Auditoría append-only y política de denegaciones](security/AUDIT-JOURNAL.md), [outbox/autoridad de transporte/runbook](delivery/OUTBOX.md), [validación](../backend/VALIDATION-29.md). Sin worker automático, lector de historial ni negocio fiscal; #30/#74/#79 y decisiones productivas conservan su alcance.
+
+## Regresión transversal #30
+
+Base #20–29 integrada por #85, main f40a4980c1eaf268c16fcc39b2855dbcc71378a6; #79 cerrado tras cinco checks Ubuntu. Presupuesto $0 intacto; no reutilizar aquel resultado para el SHA nuevo. [Matriz cross-tenant y cobertura diferida](security/CROSS-TENANT-REGRESSION.md), [mutaciones negativas](security/NEGATIVE-TESTING.md), [evidencia reproducible](../backend/VALIDATION-30.md). Sin proveedor productivo, aprobación OQ-015/#74, storage documental ni worker fiscal. Las secciones anteriores conservan el estado histórico de cada entrega.

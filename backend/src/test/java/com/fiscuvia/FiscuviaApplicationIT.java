@@ -77,6 +77,8 @@ class FiscuviaApplicationIT {
                     || name.contains("OidcBrowser") || name.contains("ContractFixtureSecurity") || name.contains("FixtureController")
                     || name.contains("ResourceAuthorizationTests") || name.contains("resource-authorization-fixture")
                     || name.contains("AuditJournalTests") || name.contains("journal-fixture")
+                    || name.contains("CrossTenantRegressionTests") || name.contains("ThreatHarness")
+                    || name.contains("OidcTokenAttackProxy") || name.contains("threat-regression-fixture")
                     || name.contains("test-infra") || name.contains("realm-template") || name.endsWith(".p12") || name.endsWith(".pem") || name.endsWith(".key"));
             String config=new String(archive.getInputStream(archive.getEntry("BOOT-INF/classes/application.yml")).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
             assertThat(config).contains("${FISCUVIA_OIDC_ENABLED:false}").doesNotContain(DATABASE.actorKey,DATABASE.sessionPassword);
