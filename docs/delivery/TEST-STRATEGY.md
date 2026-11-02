@@ -7,7 +7,7 @@ Backend JUnit + Testcontainers PostgreSQL real: reglas dominio, estado fiscal, t
 - Archivos hostiles, XML con XXE, ZIP grande, MIME falso, accesos a URLs firmadas sin autorización.
 - UI teclado, mobile, idiomas consistentes, loading/empty/error, capturas reales.
 - Conector SAT futuro: reintentos, caducidad firma, fallas, límites y jobs reanudables.
-## CI definida en #23 e integrada; verificación remota pendiente #79
+## CI definida en #23; #79 resuelto, verificar cada SHA
 
 Ver [CI.md](CI.md) y `.github/workflows/ci.yml`. PRs a main, incluyendo Draft, push main y manual; sin filtros de rutas. #24 conserva la cobertura anterior y amplía a 90 pruebas backend (80 Surefire + 10 Failsafe), 21 Vitest y 13 Playwright/axe. Incluye Modulith/PostgreSQL real, checksum/rollback Flyway, JAR y 39 HTTP de contratos con validación/errores/canarios seguros. AJV valida las 51 respuestas capturadas contra OpenAPI implementado; tipos TS/metadatos se regeneran y comprueban. Los gates rechazan fallos, omisiones, reintentos/flaky y suites ausentes.
 
@@ -21,7 +21,7 @@ Artifacts de siete días: JUnit backend sin propiedades/stdout/stderr, resúmene
 
 #26 amplía a **135 pruebas backend (120 Surefire + 15 Failsafe)**, diecinueve suites, sin reducir mínimos anteriores: veinte casos RLS/catálogo/privilegios/pool/mutaciones deliberadas, dos de concurrencia real, dos HTTP/privacidad y tres upgrade/checksum/rollback V2. Se demuestra ausencia de predicado Java, canarios, contexto malformado/falsificado y mismo RFC DEMO en dos despachos. [Diseño y evidencia negativa](../data-model/tenant-foundation-26.md), [validación local](../../backend/VALIDATION-26.md).
 
-Autorización de negocio/API/archivos/jobs #27–30, build de imagen de aplicación y regresión visual aprobada son futuros. La base RLS de #26 no acredita esos escenarios de producto ni completa el gate piloto.
+Identidad #27, autorización por recurso #28 y journal/outbox #29 están integrados; #30 combina sus garantías. Archivos, caches, jobs fiscales, build de imagen de aplicación y regresión visual aprobada siguen futuros. La base de seguridad no acredita esos escenarios de producto ni completa el gate piloto.
 ## Datos de prueba
 Ficticios, marcados DEMO; nunca datos personales, XML fiscales reales, certificados ni llaves de producción.
 
@@ -46,3 +46,9 @@ Los fixtures no son tablas fiscales ni autorizan una matriz de producto. Las pru
 Mínimo **250 backend (225 Surefire + 25 Failsafe)**, conservando las 203 anteriores: 44 AuditJournalTests y tres JournalMigrationIT. [Protocolo reproducible](../../backend/VALIDATION-29.md), [política de auditoría](../security/AUDIT-JOURNAL.md), [garantías outbox](OUTBOX.md).
 
 Pruebas observables HTTP/SQL con OIDC y PG reales, roles runtime/sesiones/transportes separados: atomicidad/rollback, fallos de INSERT, replay/concurrencia, actor/correlación, bootstrap/invitaciones/membresías reales, denegaciones tras rollback, privilegios/append-only/RLS, payload canario, claims/leases/retries/agotamiento/fencing y no pérdida después de crash. Oráculos mutan/restauran cercas/grants/triggers; el JAR excluye los fixtures. No hay worker automático, usuario owner sintético de sistema o autoridad de negocio de transporte. Se conservan 37 Vitest, 13+5 Playwright y todos los gates de contratos/seguridad. Tools/ci aumenta a nueve casos con permisos POSIX del snapshot, sin abrir archivos privados. Estado remoto real por SHA en el PR; #79 si persiste un bloqueo pre-runner.
+
+## Regresión transversal #30
+
+295 backend: 250 anteriores más 45 CrossTenantRegressionTests (270 Surefire + 25 Failsafe). Se conservan 37 Vitest, 13 Playwright y cinco OIDC; tools/ci aumenta de nueve a 16. Harness A/B/C con usuarios/carpetas separados, sesiones reales, corrupción de tokens por callback, transacciones y filas/journal/outbox observables. Concurrencia con barreras/latches/pg_locks; propagación REQUIRES_NEW sin autoridad heredada, NESTED rechazado, threads virtuales/pool y PID reutilizado. [Matriz de amenazas](../security/CROSS-TENANT-REGRESSION.md), [guía de mutaciones](../security/NEGATIVE-TESTING.md), [evidencia](../../backend/VALIDATION-30.md).
+
+El gate exige métodos concretos para 28 escenarios críticos y distingue siete escenarios futuros/pendientes/decisiones sin PASS. No hay Redis, storage documental ni worker fiscal de demostración. Rutas inexistentes denegadas no acreditan esos componentes. #79 cerrado tras #85; validar los cinco jobs nuevamente para cada SHA, conservando presupuesto $0. Párrafos históricos anteriores no representan un bloqueo remoto vigente.

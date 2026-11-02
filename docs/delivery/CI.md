@@ -1,14 +1,16 @@
 # CI reproducible — issue #23
 
-## Política temporal vigente — #79
+## Estado actual — #79 resuelto; evidencia nueva por SHA
 
-PR #78 integrado en main `edbc6ddc1a54e17e5cd38dd108af67cc5eb7e1c7`. El propietario decidió mantener presupuesto Actions **$0** y pruebas locales completas. Cuando no ejecutan runners: **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79**, con evidencia del rechazo. No cambiar billing, deshabilitar workflows, reintentar runners ni asumir reinicio de cuota en una fecha concreta. La primera ejecución de #29 sí inició pasos; informar su resultado real por SHA, no reutilizar un diagnóstico pre-runner histórico. El diagnóstico de #23 abajo no es una instrucción vigente para aumentar el presupuesto.
+PR #85 integrado en main `f40a4980c1eaf268c16fcc39b2855dbcc71378a6`; #79 cerrado tras cinco checks Ubuntu exitosos. Presupuesto **$0** intacto, sin cambios de billing. Cada PR debe ejecutar nuevamente los cinco checks y registrar links/conclusiones para su source SHA final. No reutilizar verde histórico, ni atribuir un fallo de código/scanner a billing. Si reaparece rechazo pre-runner, reportar REMOTE CI NOT VERIFIED y evidencia concreta; no evadirlo ni modificar presupuesto. El diagnóstico de #23 abajo se conserva como historia, no instrucción vigente para aumentar gasto.
 
 #24 añade conformidad de respuestas HTTP reales y tipos generados desde `docs/api/openapi-v1.yaml`, manteniendo el borrador propuesto separado. Después de Maven verify ejecutar `node tools/ci/contracts.mjs --responses backend/target/contract-responses.json`; Backend CI incluye ese paso. `npm run openapi --prefix tools/ci` valida ambos documentos y la generación exacta. Versiones nuevas: openapi-typescript 7.13.0, AJV 8.20.0 / ajv-formats 3.0.1, Prettier 3.9.10 (formato del generado), con lockfile.
 
 #28 amplía el gate de reportes a 203 backend (181 Surefire, 22 Failsafe), incluidas 37 pruebas de recurso y tres de migración V4. No cambia workflows, permisos, presupuesto ni mínimos web/OIDC anteriores. [Protocolo local y límites de evidencia](../../backend/VALIDATION-28.md). El SHA final y las duraciones/resultados exactos se publican en el PR y summaries depurados; Linux remoto no se presume validado por tests Windows con contenedores Linux.
 
 #29 amplía a **250 backend (225 Surefire + 25 Failsafe)**: 44 pruebas de journal/outbox y tres de upgrade/checksum/rollback V5. [Comandos y evidencia](../../backend/VALIDATION-29.md). No cambian workflows, presupuesto/permisos del repositorio ni mínimos frontend. PostgreSQL/Keycloak y cuentas de transporte efímeras de prueba permanecen locales a Testcontainers; no se provisiona un worker ni un secreto GitHub.
+
+#30 exige **295 backend (270 Surefire + 25 Failsafe)**, 37 Vitest, 13 Playwright de fundación, cinco OIDC y **16 tools/ci**. Se preservan todos los mínimos anteriores. Backend CI ejecuta automáticamente la [matriz crítica](../../tools/ci/security-scenarios.mjs) después de verificar JUnit: ausencia de un método crítico, suite reducida, fallo u omisión impiden publicar el reporte. Añade únicamente `.ci-artifacts/backend/regression.json` a la allowlist y upload de siete días; metadatos estáticos revisados, SHA probado/origen y resultado por escenario, sin datos de prueba ni logs. Futuros/pendientes son NOT VERIFIED, nunca PASS. [Harness, límites y contratos futuros](../security/CROSS-TENANT-REGRESSION.md), [mutaciones](../security/NEGATIVE-TESTING.md), [evidencia](../../backend/VALIDATION-30.md).
 
 Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Proposed). Base auditada histórica: main `bf61a9697e606cfd6b709a09ed2997947c8c268f`, PR #75–77 integrados. La base actual incorpora API #24 desde PR #80; #25 añade observabilidad sin negocio, migraciones nuevas, RLS ni despliegues.
 
@@ -19,7 +21,7 @@ Trazabilidad: #23, épica #3, NFR-040/044, dirección ADR-013 (continúa Propose
 | Check | Alcance | Timeout |
 |---|---|---|
 | `Backend CI` | Wrapper clean verify, JUnit/Spring Modulith, PostgreSQL/Flyway y JAR real, verificación de reportes | 20 min |
-| `Web CI` | npm ci, TS, ESLint, Prettier, Vitest, build, Chromium/Playwright completo | 15 min |
+| `Web CI` | npm ci, TS, ESLint, Prettier, Vitest, build, Chromium/Playwright y OIDC real | 20 min |
 | `OpenAPI CI` | Tests negativos de los gates, sintaxis/estructura/refs del borrador | 10 min |
 | `Security CI` | Secretos/historial, archivos sensibles, workflows, vulnerabilidades npm/Maven | 20 min |
 | `CI Required` | `always()`, exige los cuatro resultados `success`; skipped/cancelled/failure no pasan | 2 min |
@@ -71,6 +73,7 @@ npm run build
 npx --no-install playwright install --with-deps chromium
 PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json npm run test:e2e -- --reporter=line,json
 cd ..
+node tools/ci/auth-browser.mjs
 node tools/ci/reports.mjs web
 node tools/ci/artifacts.mjs backend
 node tools/ci/artifacts.mjs web
@@ -86,7 +89,7 @@ Los tests Playwright regeneran capturas históricas de #21. No confirmar diferen
 
 Maven usa `clean verify`; la cache sólo guarda descargas `.m2`, no target. npm usa `npm ci`; la cache guarda descargas, no node_modules/dist. No se cachean reportes ni bases con credenciales. Desde #26, `reports.mjs` exige diecinueve suites backend (mínimos 120 Surefire + 15 Failsafe), 21 Vitest y 13 Playwright, cero fallos/omitidos/flaky/reintentos. Reducciones intencionales requieren revisar esos mínimos, sin flags skip. La política busca también anotaciones Disabled/Ignore y tests skip/todo/only. Sus pruebas negativas demuestran rechazo de omisiones, suites ausentes y resultados incompletos.
 
-Sólo se suben archivos permitidos: backend `summary.json` + `junit.xml` depurado, web y seguridad `summary.json`. Se escanean antes de subirlos. JUnit publicado omite propiedades JVM/env, stdout/stderr y cuerpos de excepciones. No se suben `.env`, archivos SAT, certificados, SBOM, JAR, dumps, reportes crudos, trazas, HTML ni capturas. Si falla una suite, Maven/Playwright conservan el fallo en el job; el verificador vuelve a fallar y **no publica artifacts crudos para diagnosticarlo**. Examinar logs en la ejecución privada, sin copiarlos a servicios externos. Las contraseñas de Testcontainers son UUID temporales; las pruebas existentes verifican su ausencia en logs.
+Sólo se suben archivos permitidos: backend `summary.json`, `junit.xml` depurado y `regression.json` (#30), web y seguridad `summary.json`. Se escanean antes de subirlos. JUnit publicado omite propiedades JVM/env, stdout/stderr y cuerpos de excepciones. No se suben `.env`, archivos SAT, certificados, SBOM, JAR, dumps, reportes crudos, trazas, HTML ni capturas. Si falla una suite, Maven/Playwright conservan el fallo en el job; el verificador vuelve a fallar y **no publica artifacts crudos para diagnosticarlo**. Examinar logs en la ejecución privada, sin copiarlos a servicios externos. Las contraseñas de Testcontainers son UUID temporales; las pruebas existentes verifican su ausencia en logs.
 
 Gitleaks analiza historial completo y snapshot actual de archivos versionados/nuevos no ignorados; nunca copia el `.env` ignorado. El inventario rechaza `.env` (salvo el ejemplo), llaves, certificados, bases/backups/XML/PDF no autorizados. Esto es prevención automática, no una garantía de detectar cualquier dato fiscal posible: el review humano debe mantener el veto a datos reales. No hay exclusiones globales de secretos. Trivy bloquea HIGH/CRITICAL, incluye dev npm y test Maven, sin ignorar unfixed. Otros niveles no son un bloqueo en esta primera política y requieren seguimiento. actionlint valida YAML/expresiones/shell; zizmor offline revisa riesgos sin token, sin consultar advisories de acciones mediante API. Las referencias externas OpenAPI están prohibidas para evitar lecturas arbitrarias o descargas; fixtures negativos comprueban refs rotas/estructura/YAML.
 

@@ -69,6 +69,7 @@ jobs:
           path: |
             .ci-artifacts/backend/summary.json
             .ci-artifacts/backend/junit.xml
+            .ci-artifacts/backend/regression.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7

@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
 import { XMLParser, XMLValidator, XMLBuilder } from 'fast-xml-parser'
+import { regressionReport } from './regression.mjs'
 
 const root = fileURLToPath(new URL('../../', import.meta.url))
 const parser = new XMLParser({ ignoreAttributes: false, processEntities: false })
@@ -33,11 +34,13 @@ const baseline = {
   'com.fiscuvia.AuthorizationMigrationIT': 3,
   'com.fiscuvia.AuditJournalTests': 44,
   'com.fiscuvia.JournalMigrationIT': 3,
+  'com.fiscuvia.CrossTenantRegressionTests': 45,
 }
 
 export function backendReports(xmls, expected = baseline) {
   let tests = 0
   const found = new Map()
+  const passedCases = new Set()
   const suites = xmls.map(xml => {
     if (XMLValidator.validate(xml) !== true || /<!DOCTYPE|<!ENTITY/i.test(xml)) throw Error('XML inválido')
     const suite = parser.parse(xml).testsuite
@@ -53,6 +56,7 @@ export function backendReports(xmls, expected = baseline) {
     if (found.has(name)) throw Error('Suite duplicada')
     found.set(name, count)
     tests += count
+    for (const c of cases) passedCases.add(`${name}#${String(c['@_name']).split('(')[0]}`)
     // Deliberately omit properties, stdout, stderr and exception bodies.
     return {
       '@_name': name, '@_tests': count, '@_failures': 0, '@_errors': 0, '@_skipped': 0,
@@ -62,7 +66,7 @@ export function backendReports(xmls, expected = baseline) {
   for (const [name, count] of Object.entries(expected)) {
     if ((found.get(name) ?? 0) < count) throw Error(`Suite ausente o reducida: ${name}`)
   }
-  return { tests, xml: new XMLBuilder({ ignoreAttributes: false, format: true }).build({ testsuites: { testsuite: suites } }) }
+  return { tests, passedCases, xml: new XMLBuilder({ ignoreAttributes: false, format: true }).build({ testsuites: { testsuite: suites } }) }
 }
 
 export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
@@ -112,8 +116,11 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       const base = resolve(root, 'backend/target', dir)
       return readdirSync(base).filter(f => /^TEST-.*\.xml$/.test(f)).map(f => readFileSync(resolve(base, f), 'utf8'))
     })
-    const { tests, xml } = backendReports(xmls)
-    publish(kind, { tests, skipped: 0, failed: 0 }, xml)
+    const { tests, passedCases, xml } = backendReports(xmls)
+    const sha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+    const regression = regressionReport(passedCases, sha, process.env.SOURCE_SHA ?? sha)
+    publish(kind, { tests, skipped: 0, failed: 0, securityCoverage: regression.coverage }, xml)
+    writeFileSync(resolve(root, '.ci-artifacts/backend/regression.json'), JSON.stringify(regression, null, 2) + '\n')
   } else if (kind === 'web') {
     publish(kind, completeWebReports(
       JSON.parse(readFileSync(resolve(root, '.ci-work/vitest.json'), 'utf8')),

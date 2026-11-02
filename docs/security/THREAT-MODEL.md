@@ -71,3 +71,7 @@ Ataques negativos incluyen UUID/headers/SQL de otro actor, ausencia de contexto,
 | Datos sensibles en cola/logs/artifacts | Payload sólo auditEventId, metadata cerrada, canarios, allowlists de log/artifacts | Revisión humana y límites de carga/bloat siguen siendo necesarios |
 
 [Journal](AUDIT-JOURNAL.md), [outbox/runbook](../delivery/OUTBOX.md), [pruebas](../../backend/VALIDATION-29.md). #30 continúa independiente; #74 no se modifica.
+
+## Regresión transversal #30
+
+La [matriz ejecutable y cobertura](CROSS-TENANT-REGRESSION.md) conecta amenaza, frontera, control, ataque, expectativa y métodos exactos. A/B/C, carteras separadas, claims/cookies/UUID/GUC falsos, revocaciones concurrentes, pool físico/threads, journal y leases se comprueban con HTTP real/Keycloak/PostgreSQL. [Mutaciones](NEGATIVE-TESTING.md) detectan retirada de cercas, FORCE, BYPASSRLS, grants, search_path, chequeos ACTIVE y MFA. No se promete inmunidad frente a DBA/IdP/BFF comprometidos. Futuros caches/archivos/autoridad de jobs y decisiones #74/OQ-015/producción aparecen como NOT VERIFIED, nunca como checks verdes. No se modifica el modelo productivo V1–V5.

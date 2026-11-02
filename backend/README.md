@@ -182,3 +182,7 @@ Metodología contrastada con [AGENTS](https://github.com/Dagt/TrailerSaas/blob/m
 ## Journal y outbox #29
 
 Base #28 integrada en main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0`. Nuevo módulo audit (identity → audit → platform), V5 sin cambios a V1–V4. [Catálogo/modelo/privacidad](../docs/security/AUDIT-JOURNAL.md), [protocolo y runbook](../docs/delivery/OUTBOX.md), [comandos completos y mínimos 250](VALIDATION-29.md). No hay dependencias nuevas, lector AUDIT_VIEW ni cuenta/scheduler de worker. Los transportes sólo se prueban con roles efímeros sin permisos de negocio; scopes vacíos al instalar. El SHA probado y resultados finales se publican en el PR y summaries depurados.
+
+## Regresión de amenaza #30
+
+[Harness y cobertura](../docs/security/CROSS-TENANT-REGRESSION.md), [mutaciones](../docs/security/NEGATIVE-TESTING.md), [evidencia](VALIDATION-30.md). Ejecutar clean verify completo: mínimo 295 tests (250 previos + 45 nuevos), sin skip ni Docker opcional. Luego `node tools/ci/reports.mjs backend` desde raíz exige suites y métodos críticos y genera regression.json sanitizado por SHA. PostgreSQL/Keycloak reales y roles efímeros sólo en Testcontainers; no ejecutar mutaciones en base local persistente ni remota. No se cambian V1–V5, contratos productivos ni matriz fiscal.
