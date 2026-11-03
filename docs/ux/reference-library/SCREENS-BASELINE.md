@@ -1,6 +1,6 @@
-# Seis pantallas de referencia y estados — candidata v1
+# Seis pantallas de referencia y estados — referencia v1 aprobada
 
-**No son seis pantallas implementadas.** La imagen conceptual falta; esta especificación escrita es alternativa para aprobación humana ([registro](README.md)). Todos los layouts precisos son PROPUESTA POR APROBAR, con [componentes y medidas comunes](VISUAL-SPEC.md). La marca y ES-MX conservan la dirección autorizada. Contribuyente es entidad del despacho; evitar “cliente” ambiguo como tenant.
+**No son seis pantallas implementadas.** Dagt aprobó esta referencia escrita para implementación visual el 2026-11-03 mediante opción B OQ-021 ([registro](README.md)); el collage falta. Los layouts y [medidas comunes](VISUAL-SPEC.md) guían el diseño; no autorizan construir módulos ni sus reglas fiscales/roles. [Entrega efectiva #52](../DESIGN-SYSTEM-52.md). Contribuyente es entidad del despacho; evitar “cliente” ambiguo como tenant.
 
 ## S01 — Acceso /login
 

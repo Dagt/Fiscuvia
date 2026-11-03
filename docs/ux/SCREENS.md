@@ -1,6 +1,6 @@
 # Especificación visual y funcional de pantallas
 
-Inventario **conceptual**: no es avance funcional. [Layout/estados candidatos de las seis pantallas](reference-library/SCREENS-BASELINE.md), [rutas reales y auditoría](reference-library/CURRENT-UI-AUDIT.md). Hoy /app presenta sesión/selección de despacho, no dashboard. OQ-021 sigue Open y la referencia escrita requiere aprobación; original ausente.
+Inventario **conceptual**: no es avance funcional. [Layouts de referencia](reference-library/SCREENS-BASELINE.md) aprobados como dirección visual por Dagt el 2026-11-03, opción B OQ-021; [decisión y límites](reference-library/README.md). El original continúa ausente. `/app` presenta sesión/selección autorizada dentro del shell compartido, no dashboard fiscal. [Componentes implementados #52](DESIGN-SYSTEM-52.md), [auditoría histórica #19](reference-library/CURRENT-UI-AUDIT.md). OQ-021 Resolved para implementación visual; funciones fiscales y permisos siguen sus gates.
 
 1. **Login /login:** panel de marca Fiscuvia + acceso OIDC real, errores claros, móvil columna única. Credenciales/MFA/recuperación en el proveedor configurado; Fiscuvia no añade formulario de correo/contraseña propio. Card/composición exacta son propuestas de referencia, no autorización para cambiar BFF.
 2. **Dashboard /app:** sidebar navy, header con búsqueda/período, KPI clientes activos, próximos/vencidos, revisión, honorarios; calendario semanal, distribución estados, actividad reciente. CFDI card sólo cuando exista módulo real. Cada KPI enlaza a vista filtrada.

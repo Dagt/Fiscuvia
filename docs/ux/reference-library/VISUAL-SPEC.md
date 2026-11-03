@@ -4,7 +4,7 @@ Estado: **APROBADA por Dagt el 2026-11-03, opción B OQ-021**, [comentario expl�
 
 ## Paleta y semántica
 
-| Rol semántico candidato | Valor | Estado / uso permitido |
+| Rol semántico aprobado | Valor | Estado / uso permitido |
 |---|---|---|
 | navigation.background / hover | #0C1D31 / #18344F | IMPLEMENTADO; mantener navy, nunca sidebar clara como identidad alternativa |
 | action.primary / hover | #087E80 / #07696B | IMPLEMENTADO; texto blanco, acción primaria |
@@ -13,12 +13,12 @@ Estado: **APROBADA por Dagt el 2026-11-03, opción B OQ-021**, [comentario expl�
 | canvas / surface | #F5F8FB / #FFFFFF | IMPLEMENTADO; lienzo común y paneles útiles, evitar tarjeta por cada dato |
 | border.subtle | #DCE5ED | IMPLEMENTADO; separador decorativo, no única delimitación de control interactivo |
 | text.primary / secondary | #15283B / #536B80 | IMPLEMENTADO; sustituye el secundario documental #667A8F, que sigue siendo propuesta histórica |
-| border.control | #7C909F | PROPUESTA POR APROBAR / PENDIENTE; borde identificable de input/checkbox/selector sobre blanco |
+| border.control | #7C909F | APROBADO / IMPLEMENTADO #52; borde identificable de input/checkbox/selector sobre blanco |
 | focus.light / focus.dark | #087E80 / #8CF0E0 | IMPLEMENTADO en controles/nav; anillo visible sin depender sólo de sombra |
-| status.success text/bg | #166859 / #E9F6F4 | PROPUESTA POR APROBAR para StatusPill; verde actual en identidad no implica catálogo implementado |
-| status.warning text/bg | #855800 / #FFF7E5 | PROPUESTA POR APROBAR / PENDIENTE |
+| status.success text/bg | #166859 / #E9F6F4 | APROBADO / IMPLEMENTADO #52 para StatusPill; el color no implica un estado fiscal |
+| status.warning text/bg | #855800 / #FFF7E5 | APROBADO / IMPLEMENTADO #52 |
 | status.error text/bg | #A43535 / #FFF0EE | IMPLEMENTADO para error; generalización semántica pendiente |
-| status.info text/bg | #245D7B / #EDF4F8 | PROPUESTA POR APROBAR / PENDIENTE |
+| status.info text/bg | #245D7B / #EDF4F8 | APROBADO / IMPLEMENTADO #52 |
 | accent.amber | #D79C32 | Propuesta histórica; sólo acento no textual hasta resolver combinación accesible |
 
 Tokens nuevos semánticos deben mapearse a estas funciones en #52; no añadir hex arbitrario por pantalla. Éxito/alerta/error/información siempre requieren texto + icono o forma. No mapear un color a una regla fiscal aún no aprobada ni usar “Verificado SAT” sin procedencia.

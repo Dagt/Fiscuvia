@@ -27,7 +27,9 @@ for (const shot of manifest.screenshots) {
   const content = shot.geometry['.page-container'], sidebar = shot.geometry['.desktop-sidebar'], header = shot.geometry['.topbar']
   if (content) {
     const padding = shot.width >= 1024 ? 32 : shot.width >= 700 ? 24 : 16
-    assert(Math.abs(parseFloat(content.padding) - padding) <= 1, `${shot.file}: content padding`)
+    const paddingParts = content.padding.split(/\s+/)
+    const horizontalPadding = parseFloat(paddingParts[1] ?? paddingParts[0])
+    assert(Math.abs(horizontalPadding - padding) <= 1, `${shot.file}: horizontal content padding`)
     assert(header.height >= (shot.width >= 1024 ? 66 : 64), `${shot.file}: header height`)
     if (shot.width >= 1024) {
       assert.equal(sidebar.width, 240)
