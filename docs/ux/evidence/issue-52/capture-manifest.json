@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-11-03T17:35:01.994Z",
-  "captureSourceCommit": "717b448b361be7833d3ecb17a70b4a00946130e0",
-  "applicationTree": "af68fe74956a2d853baa8f56d3687c3631cdb14b",
+  "capturedAt": "2026-11-03T18:01:15.282Z",
+  "captureSourceCommit": "7b1dab55fb0210d2f8674cc435c26bb6c3f13b8c",
+  "applicationTree": "1b34c85e4929750806bda1db9523fb69d9062418",
   "captureScriptSha256": "62149981e5e518353fde3115b0448734647b2ef125d16bcc042a1f88e4d5cc76",
   "harnessRunnerSha256": "00b7c102bffb3d7d850ae95e3abf7241b697327e237e0f3b4a22dbb112ff12d7",
   "chromium": "156.0.8078.4",
@@ -345,7 +345,7 @@
       "height": 900,
       "source": "State OIDC alterado, error real seguro",
       "target": "page-start",
-      "sha256": "42a2bf967adc2d5fa099553f1049d8262fef81bf1867235e95b50dfab2083274",
+      "sha256": "c69a1db9338eab2372becf22aa92005daead81bcc42586b9f033953676ea5196",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
