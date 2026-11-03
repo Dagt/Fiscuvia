@@ -146,6 +146,7 @@ export function CatalogData() {
         </SideDrawer>
       </div>
       <FilterBar
+        pending={state === 'loading'}
         searchLabel="Buscar en registros DEMO"
         search={search}
         onSearchChange={(value) => {

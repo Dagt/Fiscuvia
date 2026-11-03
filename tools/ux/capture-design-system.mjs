@@ -133,6 +133,13 @@ try {
   await page.getByRole('button', { name: 'Abrir panel lateral', exact: true }).click()
   await both('drawer', 'Panel modal contextual400/full móvil; no contiene un recurso de negocio')
   await page.keyboard.press('Escape')
+  for (const [state, name] of [['loading', 'carga'], ['error', 'error']]) {
+    await page.getByLabel('Estado del panel lateral DEMO').selectOption(state)
+    await page.getByRole('button', { name: 'Abrir panel lateral', exact: true }).click()
+    await both(`drawer-${name}`, 'Estado transversal sin contenido o acciones anteriores')
+    await page.keyboard.press('Escape')
+  }
+  await page.getByLabel('Estado del panel lateral DEMO').selectOption('ready')
   await page.getByRole('button', { name: 'Ver detalle de DEMO-001', exact: true }).click()
   await both('detalle-inline', 'Aside inline, no modal; texto100 caracteres y cifra grande sintética', '.details-panel')
   await page.getByRole('button', { name: 'Cerrar detalle', exact: true }).click()

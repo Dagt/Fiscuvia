@@ -24,6 +24,16 @@ for (const shot of manifest.screenshots) {
   assert.equal(bytes.readUInt32BE(16), shot.width); assert.equal(bytes.readUInt32BE(20), shot.height)
   assert([[1440,900],[1280,800],[768,1024],[390,844]].some(([w,h]) => shot.width === w && shot.height === h))
   assert.equal(shot.axeViolations, 0); assert.equal(shot.horizontalOverflow, false)
+  const content = shot.geometry['.page-container'], sidebar = shot.geometry['.desktop-sidebar'], header = shot.geometry['.topbar']
+  if (content) {
+    const padding = shot.width >= 1024 ? 32 : shot.width >= 700 ? 24 : 16
+    assert(Math.abs(parseFloat(content.padding) - padding) <= 1, `${shot.file}: content padding`)
+    assert(header.height >= (shot.width >= 1024 ? 66 : 64), `${shot.file}: header height`)
+    if (shot.width >= 1024) {
+      assert.equal(sidebar.width, 240)
+      assert.equal(content.width - padding * 2, shot.width - 240 - 64)
+    } else assert.equal(sidebar.display, 'none')
+  }
 }
 assert.equal(readdirSync(dir).filter(name => name.endsWith('.png')).length, manifest.screenshots.length)
 let links = 0

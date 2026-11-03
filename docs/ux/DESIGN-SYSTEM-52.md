@@ -42,7 +42,7 @@ Los tipos completos residen junto a cada componente y se verifican en modo estri
 | FilterBar | search/searchLabel/onSearchChange, SelectFilter[], onClear, activeCount, pending | disclosure móvil, conserva filtros; no persiste búsquedas/PII en URL; el consumidor decide cómo consultar datos autorizados |
 | StatusPill | tone, children string | neutral/success/warning/danger/info, icono + texto, no deriva permisos/estado fiscal |
 | StatCard | title, value?, description, state, onRetry?, action? | retira valor en carga/vacío/error/denied; nunca sustituye ausencia por cero; origen/fecha pueden componerse en description/action |
-| SideDrawer | title, description, trigger, children, footer? | estado interno, Radix modal400/full mobile, cuerpo scrolleable, Escape/trap/restore; errores/pending del contenido mediante estados compartidos |
+| SideDrawer | title, description, trigger, children, footer?, state?, onRetry? | Radix modal400/full mobile, scroll/Escape/trap/restore; loading/error/empty/denied retiran contenido y acciones anteriores, retry explícito; carga de lectura puede cerrarse sin bloquear al usuario |
 | DetailsPanel | title, children | aside inline, sin trap ni modalidad; 320px lateral cuando cabe, debajo en espacio reducido |
 | Notification | useNotification(string o {message,tone,action?}) | una notificación polite, cierre explícito44, no roba foco ni apila sin límite; no sustituye journal/confirmación |
 

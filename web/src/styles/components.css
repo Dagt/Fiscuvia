@@ -252,10 +252,16 @@
   font-size: var(--text-help);
 }
 .filter-bar {
+  flex-wrap: wrap;
   display: flex;
   align-items: end;
   gap: var(--space-16);
   margin-bottom: var(--space-16);
+}
+.filter-count {
+  flex-basis: 100%;
+  font-size: var(--text-help);
+  color: var(--muted);
 }
 .filter-bar > .field {
   flex: 1;
@@ -301,6 +307,12 @@
   font-size: var(--text-label);
   white-space: nowrap;
   height: 44px;
+}
+.data-table thead th {
+  padding-block: 0;
+}
+.data-table tbody tr {
+  height: 52px;
 }
 .data-table th,
 .data-table td {

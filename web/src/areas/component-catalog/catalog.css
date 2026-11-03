@@ -2,6 +2,9 @@
   width: 100%;
   overflow-wrap: anywhere;
 }
+.composition-links {
+  margin-top: var(--space-24);
+}
 .catalog-intro {
   background: var(--navy);
   color: var(--surface);

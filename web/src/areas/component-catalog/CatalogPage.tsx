@@ -1,4 +1,6 @@
 import { PageHeader } from '../../shared/ui/PageHeader'
+import { Link } from 'react-router'
+import { Button } from '../../shared/ui/button'
 import { Brand } from '../../shared/ui/Brand'
 import { StatCard, type ViewState } from '../../shared/ui/StatCard'
 import { StatusPill, type Tone } from '../../shared/ui/StatusPill'
@@ -96,6 +98,33 @@ export function CatalogPage() {
               <small>{value}</small>
             </div>
           ))}
+        </div>
+      </section>
+      <section className="catalog-section" aria-labelledby="composition-title">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">COMPOSICIÓN P0</p>
+            <h2 id="composition-title">
+              Una base compartida para cada contexto
+            </h2>
+            <p>
+              AppShell, Navigation y PageHeader componen esta página. El
+              selector de despacho se prueba con una sesión OIDC real y
+              membresías autorizadas; aquí no se simulan identidades ni
+              permisos.
+            </p>
+          </div>
+        </div>
+        <Brand appearance="light" size="sm" />
+        <div className="component-actions composition-links">
+          <Button asChild variant="secondary">
+            <Link to="/login">Ver acceso real y contexto autorizado</Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link to="/referencia-no-disponible">
+              Ver estado de ruta inexistente
+            </Link>
+          </Button>
         </div>
       </section>
       <CatalogControls />

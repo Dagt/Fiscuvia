@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowRight, Plus, Search } from 'lucide-react'
 import { Button } from '../../shared/ui/button'
 import { Field } from '../../shared/ui/Field'
+import type { ViewState } from '../../shared/ui/StatCard'
 import { ConfirmationDialog, SideDrawer } from '../../shared/ui/Panels'
 import { useNotification } from '../../shared/presentation/notification-context'
 
@@ -10,6 +11,7 @@ export function CatalogControls() {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [pendingDemo, setPendingDemo] = useState(false)
+  const [drawerState, setDrawerState] = useState<ViewState>('ready')
   return (
     <section
       className="catalog-section"
@@ -121,7 +123,34 @@ export function CatalogControls() {
         </div>
         <Button type="submit">Validar ejemplo</Button>
       </form>
+      <div className="field table-state-control">
+        <label htmlFor="demo-drawer-state">Estado del panel lateral DEMO</label>
+        <select
+          className="input"
+          id="demo-drawer-state"
+          value={drawerState}
+          onChange={(event) => setDrawerState(event.target.value as ViewState)}
+        >
+          {(
+            ['ready', 'loading', 'error', 'empty', 'unauthorized'] as const
+          ).map((value, index) => (
+            <option key={value} value={value}>
+              {
+                [
+                  'Con contenido',
+                  'Cargando',
+                  'Error recuperable',
+                  'Vacío',
+                  'Sin permisos',
+                ][index]
+              }
+            </option>
+          ))}
+        </select>
+      </div>
       <SideDrawer
+        state={drawerState}
+        onRetry={() => setDrawerState('ready')}
         title="Panel lateral DEMO"
         description="Información contextual sin abandonar la página."
         trigger={<Button variant="secondary">Abrir panel lateral</Button>}

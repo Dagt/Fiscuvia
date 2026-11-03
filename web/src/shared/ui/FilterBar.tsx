@@ -77,6 +77,10 @@ export function FilterBar({
           Limpiar filtros
         </Button>
       </div>
+      <p className="filter-count" aria-live="polite">
+        {activeCount}{' '}
+        {activeCount === 1 ? 'filtro aplicado' : 'filtros aplicados'}
+      </p>
     </div>
   )
 }

@@ -2,6 +2,8 @@ import { useRef, useState, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 import { Button } from './button'
+import { EmptyState, ErrorState, LoadingState, PermissionState } from './States'
+import type { ViewState } from './StatCard'
 
 export function SideDrawer({
   title,
@@ -9,19 +11,23 @@ export function SideDrawer({
   trigger,
   children,
   footer,
+  state = 'ready',
+  onRetry,
 }: {
   title: string
   description: string
   trigger: ReactNode
   children: ReactNode
   footer?: ReactNode
+  state?: ViewState
+  onRetry?: () => void
 }) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="layer-overlay" />
-        <Dialog.Content className="side-drawer">
+        <Dialog.Content className="side-drawer" aria-busy={state === 'loading'}>
           <header className="panel-heading">
             <div>
               <Dialog.Title>{title}</Dialog.Title>
@@ -33,8 +39,27 @@ export function SideDrawer({
               </Button>
             </Dialog.Close>
           </header>
-          <div className="drawer-body">{children}</div>
-          {footer && <footer>{footer}</footer>}
+          <div className="drawer-body">
+            {state === 'loading' ? (
+              <LoadingState />
+            ) : state === 'error' ? (
+              onRetry ? (
+                <ErrorState onRetry={onRetry} />
+              ) : (
+                <p role="alert">
+                  No pudimos cargar este detalle. Cierra el panel y vuelve a
+                  intentar.
+                </p>
+              )
+            ) : state === 'unauthorized' ? (
+              <PermissionState />
+            ) : state === 'empty' ? (
+              <EmptyState />
+            ) : (
+              children
+            )}
+          </div>
+          {state === 'ready' && footer && <footer>{footer}</footer>}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

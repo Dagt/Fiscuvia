@@ -149,6 +149,37 @@ describe('contratos visuales reutilizables', () => {
     )
     expect(screen.queryByText('CANARY_PRIVATE')).not.toBeInTheDocument()
   })
+  it.each(['loading', 'error', 'unauthorized'] as const)(
+    'retira detalle y acciones del drawer en estado %s',
+    async (state) => {
+      const retry = vi.fn()
+      render(
+        <SideDrawer
+          trigger={<Button>Abrir estado</Button>}
+          title="Detalle"
+          description="DEMO"
+          state={state}
+          onRetry={retry}
+          footer={<Button>Acción privada</Button>}
+        >
+          <p>PRIVATE-CANARY</p>
+        </SideDrawer>,
+      )
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Abrir estado' }),
+      )
+      expect(screen.queryByText('PRIVATE-CANARY')).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'Acción privada' }),
+      ).not.toBeInTheDocument()
+      if (state === 'error') {
+        await userEvent.click(
+          screen.getByRole('button', { name: 'Reintentar' }),
+        )
+        expect(retry).toHaveBeenCalledOnce()
+      }
+    },
+  )
   it('cierra drawer con Escape y devuelve foco al disparador', async () => {
     render(
       <SideDrawer
