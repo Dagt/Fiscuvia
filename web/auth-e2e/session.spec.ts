@@ -8,7 +8,7 @@ import { resolve } from 'node:path'
 const settings = JSON.parse(
   readFileSync(process.env.FISCUVIA_AUTH_HARNESS_FILE!, 'utf8'),
 ) as { password: string; otpSecret: string }
-const evidence = resolve('../docs/ux/evidence/issue-27')
+const evidence = resolve('../.ci-work/auth-browser-evidence')
 mkdirSync(evidence, { recursive: true })
 function otp() {
   const counter = Buffer.alloc(8)
@@ -46,6 +46,80 @@ async function completeProviderLogin(page: Page, username: string) {
   await page.locator('#otp').fill(otp())
   await page.locator('#kc-login').click()
 }
+
+test('AppShell autenticado, selector y navegación móvil con OIDC real', async ({
+  page,
+}) => {
+  await login(page, 'alice-1')
+  await expect
+    .poll(
+      async () =>
+        (await (await page.request.get('/api/v1/me')).json()).memberships
+          .length,
+    )
+    .toBe(2)
+  await page.reload()
+  for (const [width, height] of [
+    [1440, 900],
+    [390, 844],
+  ] as const) {
+    await page.setViewportSize({ width, height })
+    await expect(page.locator('main')).toHaveCount(1)
+    await expect(page.locator('h1')).toHaveCount(1)
+    await page.getByRole('button', { name: /Despacho 1/ }).click()
+    await expect(
+      page.getByRole('heading', { name: 'Despacho autorizado' }),
+    ).toBeVisible()
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+          .analyze()
+      ).violations,
+    ).toEqual([])
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    if (width === 390) {
+      const trigger = page.getByRole('button', {
+        name: 'Abrir menú de navegación',
+      })
+      await trigger.click()
+      await expect(
+        page.getByRole('dialog', { name: 'Navegación de Fiscuvia' }),
+      ).toBeVisible()
+      await expect(
+        page.getByRole('button', { name: 'Contribuyentes', exact: true }),
+      ).toBeDisabled()
+      await page.keyboard.press('Escape')
+      await expect(trigger).toBeFocused()
+    }
+    await page
+      .getByRole('button', { name: 'Contexto actual: Despacho 1', exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', { name: 'Elige tu despacho' }),
+    ).toBeVisible()
+    await page.getByRole('button', { name: /Despacho 2/ }).click()
+    await expect(
+      page.getByRole('button', {
+        name: 'Contexto actual: Despacho 2',
+        exact: true,
+      }),
+    ).toBeVisible()
+    await page
+      .getByRole('button', { name: 'Cambiar de despacho', exact: true })
+      .click()
+  }
+  expect(
+    await page.evaluate(() => ({
+      local: localStorage.length,
+      session: sessionStorage.length,
+    })),
+  ).toEqual({ local: 0, session: 0 })
+})
 test('acceso navy/teal responsive y accesible con emisor real disponible', async ({
   page,
 }) => {

@@ -1,6 +1,6 @@
 # Biblioteca visual aprobable — UX-00 / #19
 
-**Estado: propuesta para revisión humana.** Base inspeccionada: main `3621a7d1e319f6ec8bbedad5db015d4a98a8591c` (#86). La épica de seguridad está integrada para local/test; eso no aprueba UX, proveedor productivo ni reglas fiscales. Refs #19; NFR-030–036, OQ-021, ADR-004/011 **Proposed**.
+**Estado: referencia escrita aprobada para #52 por Dagt, 2026-11-03, opción B OQ-021** ([decisión explícita](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416)). Base de la auditoría histórica #19: `3621a7d1e319f6ec8bbedad5db015d4a98a8591c`; implementación #52 desde main `9007bca9388a2051da0acbd2e6836e524883fc48`. [Contratos realmente implementados](../DESIGN-SYSTEM-52.md). La aprobación visual no aprueba proveedor productivo, capacidades ni reglas fiscales; ADR-004/011 conservan Proposed.
 
 ## Lectura y autoridad
 
@@ -34,7 +34,7 @@ Al recibirlo, registrar propietario/autorización, fecha, origen legítimo, arch
 - **B — aprobar expresamente la especificación escrita:** aceptar esta revisión de VISUAL-SPEC, COMPONENTS-52 y SCREENS-BASELINE como fuente de implementación, con los ajustes que indique el propietario. No requiere inventar/reconstruir el collage.
 - Confirmar valores propuestos de estados/borde de controles, escala tipográfica, geometría y densidad; las capturas actuales sirven para evaluar diferencias, no se proponen como aprobación automática del aspecto completo.
 
-Registrar decisión, alcance, fecha, propietario y comentario/PR de autorización. **Ahora no hay selección A/B ni aprobación final y OQ-021 sigue Open.** El merge de documentación por sí solo no cierra esa pregunta. #52 y #31 no se implementan ni se declaran completados. #56 conserva baseline pixel-diff/umbrales y automatización visual futura.
+**Decisión registrada:** Dagt eligió **B** el 2026-11-03 en el comentario enlazado: VISUAL-SPEC, COMPONENTS-52 y SCREENS-BASELINE aprobados, con CURRENT-UI-AUDIT como estado inicial. OQ-021 Resolved para implementar design system. La etiqueta histórica «PROPUESTA POR APROBAR» conserva la procedencia de #19; sus valores visuales quedan autorizados para #52. #31 no está implementado; #56 conserva pixel-diff/umbrales independientes. El merge de documentación por sí solo no habría bastado: aquí existe aprobación explícita.
 
 ## Fronteras para próximas entregas
 

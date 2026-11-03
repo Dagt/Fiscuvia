@@ -1,0 +1,201 @@
+.catalog-page {
+  width: 100%;
+  overflow-wrap: anywhere;
+}
+.catalog-intro {
+  background: var(--navy);
+  color: var(--surface);
+  border-radius: var(--radius-panel);
+  padding: var(--space-32);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--space-32);
+  align-items: center;
+}
+.catalog-intro > div p {
+  margin-top: var(--space-16);
+}
+.catalog-intro > p {
+  color: var(--focus-dark);
+}
+.catalog-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  padding-block: var(--space-24);
+  border-bottom: 1px solid var(--line);
+}
+.catalog-index a {
+  color: var(--primary);
+  padding: var(--space-12);
+  min-height: var(--control-height);
+  border-radius: var(--radius-control);
+  font-weight: 500;
+}
+.catalog-index a:hover {
+  background: var(--teal-light);
+}
+.catalog-section {
+  margin-top: var(--space-32);
+  padding: var(--space-24);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  scroll-margin-top: var(--space-24);
+  min-width: 0;
+}
+.section-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-24);
+  margin-bottom: var(--space-24);
+}
+.section-heading > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.catalog-intro > * {
+  min-width: 0;
+}
+.section-heading p:not(.eyebrow) {
+  margin-top: var(--space-8);
+  color: var(--muted);
+}
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-16);
+}
+.token-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-width: 0;
+}
+.token-swatch > span {
+  height: 64px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--line);
+}
+.token-swatch strong {
+  font-size: var(--text-label);
+}
+.token-swatch code {
+  color: var(--muted);
+  font-size: var(--text-help);
+  overflow-wrap: anywhere;
+}
+.type-specimens {
+  margin-top: var(--space-24);
+  display: grid;
+  gap: var(--space-8);
+}
+.specimen-title {
+  font-size: var(--text-title);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.specimen-section {
+  font-size: var(--text-section);
+  font-weight: 600;
+}
+.spacing-specimens {
+  display: flex;
+  gap: var(--space-16);
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: var(--space-24);
+}
+.spacing-specimens > div {
+  display: grid;
+  gap: var(--space-8);
+}
+.spacing-specimens span {
+  display: block;
+  height: 16px;
+  background: var(--primary);
+}
+.spacing-specimens small {
+  color: var(--muted);
+}
+.button-specimens {
+  margin-bottom: var(--space-24);
+}
+.catalog-form {
+  max-width: 720px;
+  display: grid;
+  gap: var(--space-24);
+  margin-bottom: var(--space-24);
+}
+.catalog-form > .button {
+  justify-self: start;
+}
+.catalog-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-24);
+}
+.table-state-control {
+  max-width: 320px;
+  margin-bottom: var(--space-24);
+}
+.table-with-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--space-24);
+  align-items: start;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-16);
+  margin-top: var(--space-24);
+}
+.state-specimens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  margin-top: var(--space-24);
+}
+.state-specimens .state-view {
+  min-height: 320px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+}
+@media (max-width: 1279px) {
+  .token-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .table-with-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 699px) {
+  .catalog-intro {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-24);
+    gap: var(--space-24);
+  }
+  .catalog-section {
+    padding: var(--space-16);
+    margin-top: var(--space-24);
+  }
+  .section-heading {
+    flex-direction: column;
+  }
+  .token-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .catalog-two-columns,
+  .stat-grid,
+  .state-specimens {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .specimen-title {
+    font-size: 24px;
+  }
+  .catalog-index {
+    gap: 0;
+  }
+}

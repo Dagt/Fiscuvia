@@ -1,6 +1,12 @@
-export function Brand() {
+export function Brand({
+  size = 'md',
+  appearance = 'dark',
+}: {
+  size?: 'sm' | 'md'
+  appearance?: 'light' | 'dark'
+}) {
   return (
-    <div className="brand">
+    <div className={`brand brand-${size} brand-${appearance}`}>
       <svg
         className="brand-mark"
         viewBox="0 0 40 40"

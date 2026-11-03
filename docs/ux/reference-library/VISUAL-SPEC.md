@@ -1,6 +1,6 @@
-# Referencia escrita de identidad y composición — candidata v1
+# Referencia escrita de identidad y composición — v1 aprobada para #52
 
-Estado: **PROPUESTA POR APROBAR** en los valores precisos; [autoridad y decisión OQ-021](README.md). Se preserva la DIRECCIÓN APROBADA navy/teal/Inter/Lucide/ES-MX; no Fleet Simple. Los valores actuales provienen de [tokens.css](../../../web/src/styles/tokens.css), [index.css](../../../web/src/styles/index.css) y [auth.css](../../../web/src/areas/identity/auth.css).
+Estado: **APROBADA por Dagt el 2026-11-03, opción B OQ-021**, [comentario explícito](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416). Las menciones históricas a candidato/propuesta en las tablas se entienden aprobadas para la implementación visual #52; no aceptan ADR ni funciones fiscales. [Implementación efectiva](../DESIGN-SYSTEM-52.md). Se preserva navy/teal/Inter/Lucide/ES-MX; no Fleet Simple. Los tokens efectivos provienen de [tokens.css](../../../web/src/styles/tokens.css).
 
 ## Paleta y semántica
 

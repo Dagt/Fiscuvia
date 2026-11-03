@@ -1,5 +1,7 @@
 # Fiscuvia
 
+**Base visual #52:** [design system y AppShell implementados](docs/ux/DESIGN-SYSTEM-52.md), catálogo `/desarrollo/componentes` y [evidencia real](docs/ux/evidence/issue-52/README.md). Referencia escrita aprobada por Dagt el 2026-11-03 (opción B OQ-021); el collage continúa ausente. No implementa provisioning #31 ni pixel-diff #56.
+
 **Todo tu despacho, una sola vía.**
 
 SaaS B2B para la gestión operativa de despachos contables en México: contribuyentes, obligaciones, calendario, responsables, documentos y acuses, honorarios, reportes y control de cumplimiento **registrado por el despacho**. CFDI y conexión directa SAT son fases posteriores, sujetas a viabilidad/seguridad; no reemplaza CONTPAQi Contabilidad ni un PAC.

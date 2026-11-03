@@ -1,7 +1,9 @@
 # UX por rol y flujos Fiscuvia (Proposed)
 
 ## Documentos
-- [Biblioteca visual aprobable #19 y decisión pendiente OQ-021](reference-library/README.md)
+- [Biblioteca visual #19 aprobada por opción B OQ-021](reference-library/README.md)
+- [Componentes y AppShell implementados #52](DESIGN-SYSTEM-52.md)
+- [Evidencia y validación #52](evidence/issue-52/README.md)
 - [Auditoría/capturas reales #19](reference-library/CURRENT-UI-AUDIT.md) y [contrato de implementación #52](reference-library/COMPONENTS-52.md)
 - [Dirección visual y tokens](DESIGN-SYSTEM.md)
 - [Concepto de seis pantallas aprobado (imagen aún no subida)](APPROVED-CONCEPT.md)

@@ -1,12 +1,17 @@
 import { useState, type PropsWithChildren } from 'react'
-import { CheckCircle2, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Button } from '../ui/button'
-import { NotificationContext } from './notification-context'
+import { NotificationContext, type Notification } from './notification-context'
+import { StatusPill } from '../ui/StatusPill'
 
 export function NotificationProvider({ children }: PropsWithChildren) {
-  const [message, setMessage] = useState('')
+  const [notice, setNotice] = useState<Notification | null>(null)
   return (
-    <NotificationContext value={setMessage}>
+    <NotificationContext
+      value={(value) =>
+        setNotice(typeof value === 'string' ? { message: value } : value)
+      }
+    >
       {children}
       <div
         className="notification-region"
@@ -14,14 +19,20 @@ export function NotificationProvider({ children }: PropsWithChildren) {
         aria-live="polite"
         aria-atomic="true"
       >
-        {message && (
+        {notice && (
           <div className="notification">
-            <CheckCircle2 aria-hidden="true" size={20} />
-            <span>{message}</span>
+            <StatusPill tone={notice.tone ?? 'success'}>
+              {notice.message}
+            </StatusPill>
+            {notice.action && (
+              <Button variant="ghost" onClick={notice.action.onClick}>
+                {notice.action.label}
+              </Button>
+            )}
             <Button
               variant="ghost"
               aria-label="Cerrar notificación"
-              onClick={() => setMessage('')}
+              onClick={() => setNotice(null)}
             >
               <X size={18} aria-hidden="true" />
             </Button>
