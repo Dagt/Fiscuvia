@@ -1,18 +1,18 @@
 # Biblioteca visual aprobable — UX-00 / #19
 
-**Estado: propuesta para revisión humana.** Base inspeccionada: main `3621a7d1e319f6ec8bbedad5db015d4a98a8591c` (#86). La épica de seguridad está integrada para local/test; eso no aprueba UX, proveedor productivo ni reglas fiscales. Refs #19; NFR-030–036, OQ-021, ADR-004/011 **Proposed**.
+**Estado: referencia escrita aprobada para #52 por Dagt, 2026-11-03, opción B OQ-021** ([decisión explícita](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416)). Base de la auditoría histórica #19: `3621a7d1e319f6ec8bbedad5db015d4a98a8591c`; implementación #52 desde main `9007bca9388a2051da0acbd2e6836e524883fc48`. [Contratos realmente implementados](../DESIGN-SYSTEM-52.md). La aprobación visual no aprueba proveedor productivo, capacidades ni reglas fiscales; ADR-004/011 conservan Proposed.
 
 ## Lectura y autoridad
 
 | Etiqueta | Significado |
 |---|---|
 | DIRECCIÓN APROBADA | Fiscuvia, eslogan, navy/teal, Inter, Lucide, superficies claras, sobriedad/legibilidad, ES-MX; autorización del propietario en las instrucciones de producto |
-| PROPUESTA POR APROBAR | Medida, token exacto, composición o contrato de esta biblioteca; requiere revisión antes de adoptarlo como baseline |
+| APROBADO PARA #52 | Referencia escrita autorizada por Dagt el 2026-11-03; los cambios nuevos fuera de esa referencia requieren revisión |
 | IMPLEMENTADO | Existe en el frontend inspeccionado; no equivale a aprobación visual ni funcionalidad fiscal |
 | PENDIENTE | Componente o integración aún no implementados; issue responsable explícito |
 | CONCEPTO FUTURO | Pantalla de negocio documentada; no captura de producto, dato real ni autorización para construirla ahora |
 
-Una fila puede decir IMPLEMENTADO + PROPUESTA POR APROBAR para conservar una medida actual como candidato. **Ningún hex, captura o componente se vuelve aprobado por estar en Git o por pasar axe.** Si el collage se recupera, resolver diferencias con el propietario antes de #52; no sobrescribir esta propuesta silenciosamente.
+**Ningún hex, captura o componente se vuelve aprobado por estar en Git o por pasar axe.** En este caso existe una decisión expresa del propietario, enlazada arriba. Si aparece el collage, registrar su procedencia y resolver diferencias con el propietario; no sustituir silenciosamente la referencia aprobada.
 
 1. [Especificación visual y tokens](VISUAL-SPEC.md): valores candidatos, contraste y composición.
 2. [Contratos e inventario para #52](COMPONENTS-52.md): prioridad, props, variantes, estados y pruebas.
@@ -30,11 +30,11 @@ Al recibirlo, registrar propietario/autorización, fecha, origen legítimo, arch
 
 ## Decisiones concretas del propietario
 
-- **A — aportar el collage original:** revisar su procedencia y contrastar esta especificación antes de aprobar el baseline. OQ-021 permanece Open mientras falta esa revisión.
+- **A — alternativa no seleccionada:** aportar el collage original y revisar procedencia/diferencias. Su ausencia no bloquea #52 porque el propietario eligió B.
 - **B — aprobar expresamente la especificación escrita:** aceptar esta revisión de VISUAL-SPEC, COMPONENTS-52 y SCREENS-BASELINE como fuente de implementación, con los ajustes que indique el propietario. No requiere inventar/reconstruir el collage.
 - Confirmar valores propuestos de estados/borde de controles, escala tipográfica, geometría y densidad; las capturas actuales sirven para evaluar diferencias, no se proponen como aprobación automática del aspecto completo.
 
-Registrar decisión, alcance, fecha, propietario y comentario/PR de autorización. **Ahora no hay selección A/B ni aprobación final y OQ-021 sigue Open.** El merge de documentación por sí solo no cierra esa pregunta. #52 y #31 no se implementan ni se declaran completados. #56 conserva baseline pixel-diff/umbrales y automatización visual futura.
+**Decisión registrada:** Dagt eligió **B** el 2026-11-03 en el comentario enlazado: VISUAL-SPEC, COMPONENTS-52 y SCREENS-BASELINE aprobados, con CURRENT-UI-AUDIT como estado inicial. OQ-021 Resolved para implementar design system. La etiqueta histórica «PROPUESTA POR APROBAR» conserva la procedencia de #19; sus valores visuales quedan autorizados para #52. #31 no está implementado; #56 conserva pixel-diff/umbrales independientes. El merge de documentación por sí solo no habría bastado: aquí existe aprobación explícita.
 
 ## Fronteras para próximas entregas
 
@@ -53,4 +53,4 @@ Los [NFR de UX](../../architecture/non-functional-requirements.md) conservan Pro
 | NFR-034 | contrato DataTable móvil/lista y criterios UX52-03/05 | tabla móvil productiva no implementada; no se declara PASS |
 | NFR-035 | auditamos vistas sin métricas fiscales; cinco pantallas de negocio son conceptos | fuente/estado fiscal real y revisión #74 en sus módulos |
 | NFR-036 | errores/sesión reales y galería demo rotulada, contrato de estados por pantalla | conflictos/validaciones y estados específicos de cada módulo futuro |
-| OQ-021 / ADR-004/011 | registro de asset faltante, alternativas A/B y propuesta revisable | decisión explícita del propietario; ADR siguen Proposed |
+| OQ-021 / ADR-004/011 | Opción B aprobada expresamente por Dagt, 2026-11-03; asset faltante registrado | OQ-021 Resolved para design system; ADR siguen Proposed; no aprobación fiscal/permisos/proveedor |

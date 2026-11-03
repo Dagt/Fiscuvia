@@ -1,4 +1,10 @@
 # Estrategia de pruebas
+
+## Regresión visual funcional #52
+
+Se preserva backend295 y tools/ci16. Web aumenta a **70 Vitest,33 Playwright de fundación/catálogo y6 OIDC**: contratos de Field/Button/StatCard/tabla/filtros/notificación, confirmación async sin doble envío, paneles y foco; cancelación/limpieza de cache y respuestas tardías, cambio de identidad/revocación durante selección; catálogos125 DEMO con búsqueda/orden/paginación y retirada de filas/conteos en estados no disponibles. E2E real Keycloak/BFF comprueba shell, dos despachos autorizados, navegación móvil, MFA y ausencia de storage, conservando las pruebas de autenticación anteriores. Los mocks unitarios verifican presentación, nunca sustituyen OIDC/PostgreSQL reales.
+
+Chromium ejecuta1440×900,1280×800,768×1024,390×844, reflow320 y texto200%, axe A/AA, teclado/Escape/trap/restore y reduced-motion. Capturas reales por SHA/tree, [manifest y comparación](../ux/evidence/issue-52/README.md); no pixel-diff #56 ni certificación WCAG completa. Fixtures sin personas/datos fiscales/credenciales visibles. Las rutas DEMO no solicitan APIs. Errores/estados conservan resultados observables, no sólo callbacks mockeados.
 Backend JUnit + Testcontainers PostgreSQL real: reglas dominio, estado fiscal, transacciones, Flyway, autorización, RLS y concurrencia. Contratos OpenAPI verificados. React con typecheck, lint, tests de componentes/interacción y E2E Playwright sobre app ejecutable.
 ## Escenarios obligatorios
 - Dos tenants con mismo RFC sintético: sin acceso cruzado a API, DB, archivos, reportes, jobs ni cache.

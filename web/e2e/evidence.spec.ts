@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { test, expect } from '@playwright/test'
 
 const evidenceDirectory = fileURLToPath(
-  new URL('../../docs/ux/evidence/issue-21/', import.meta.url),
+  new URL('../../.ci-work/foundation-browser-evidence/', import.meta.url),
 )
 
 test('capturas reales de la aplicación de producción', async ({ page }) => {

@@ -1,8 +1,10 @@
 # Inventario de rutas, pantallas y estados UX — propuesta v0.1
 
+**Estado actual #52 (prevalece sobre la enmienda histórica #19):** OQ-021 Resolved para implementación visual, Dagt opción B 2026-11-03. Se añade `/desarrollo/componentes`, catálogo público DEMO sin APIs; `/app` comparte AppShell tras verificar identidad/membresías. [Contratos efectivos](DESIGN-SYSTEM-52.md), [capturas/comparación](evidence/issue-52/README.md). Las demás rutas de negocio siguen propuestas; no se autorizan capacidades ni nombres comerciales de #31.
+
 **Propósito:** evitar replicar el problema de TrailerSaaS de mejorar UX después de la construcción. Ruta marcada Future no se debe simular como funcional.
 
-**Enmienda #19:** la tabla siguiente es planeación propuesta de producto/roles, no autorización ni lista de módulos implementados. Owner no obtiene AUDIT_VIEW o capacidades fiscales por esta tabla; OQ-015/#74 siguen vigentes. Rutas reales: `/login`, `/app` (sesión/membresías), `/desarrollo`, `/desarrollo/estados` y fallback404. El callback OIDC real es backend `/api/v1/auth/callback/local`, no página React `/auth/callback`. [Matriz UI actual](reference-library/CURRENT-UI-AUDIT.md), [criterios de seis conceptos](reference-library/SCREENS-BASELINE.md), [contratos #52](reference-library/COMPONENTS-52.md). OQ-021 Open.
+**Enmienda #19:** la tabla siguiente es planeación propuesta de producto/roles, no autorización ni lista de módulos implementados. Owner no obtiene AUDIT_VIEW o capacidades fiscales por esta tabla; OQ-015/#74 siguen vigentes. Rutas reales: `/login`, `/app` (sesión/membresías), `/desarrollo`, `/desarrollo/estados` y fallback404. El callback OIDC real es backend `/api/v1/auth/callback/local`, no página React `/auth/callback`. [Matriz UI actual](reference-library/CURRENT-UI-AUDIT.md), [criterios de seis conceptos](reference-library/SCREENS-BASELINE.md), [contratos #52](reference-library/COMPONENTS-52.md). OQ-021 figuraba Open en #19; ver la enmienda #52 anterior.
 
 | Ruta / familia | Roles | Pantallas y estados requeridos | MVP |
 |---|---|---|---|

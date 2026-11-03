@@ -1,0 +1,1595 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-11-03T18:01:15.282Z",
+  "captureSourceCommit": "7b1dab55fb0210d2f8674cc435c26bb6c3f13b8c",
+  "applicationTree": "1b34c85e4929750806bda1db9523fb69d9062418",
+  "captureScriptSha256": "62149981e5e518353fde3115b0448734647b2ef125d16bcc042a1f88e4d5cc76",
+  "harnessRunnerSha256": "00b7c102bffb3d7d850ae95e3abf7241b697327e237e0f3b4a22dbb112ff12d7",
+  "chromium": "156.0.8078.4",
+  "screenshots": [
+    {
+      "file": "login-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "OIDC local disponible; sin credenciales visibles",
+      "target": "page-start",
+      "sha256": "8d108df749b7abd9ca9407dddd4d5c0eae653c1f164789c0a2ff7388c3937f6b",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 604.796875,
+          "height": 900,
+          "padding": "48px 48px 24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 460,
+          "height": 746.40625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "login-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "OIDC local disponible; sin credenciales visibles",
+      "target": "page-start",
+      "sha256": "288939defe52c93df124bf93abced4e3319c93251ec97241ed9dd9f622ec0d0d",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 390,
+          "height": 182.5,
+          "padding": "24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 342,
+          "height": 547.90625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "seleccion-autorizada-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Identidad Keycloak real, membresías reales de fixture interno; sin nombres comerciales inventados",
+      "target": "page-start",
+      "sha256": "0b2c5cc1e3a871e770608f8ef562525969aa6b0ece3c2a4ce0a7284807afe2b2",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 369.78125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "seleccion-autorizada-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Identidad Keycloak real, membresías reales de fixture interno; sin nombres comerciales inventados",
+      "target": "page-start",
+      "sha256": "0181ca298bd1d9a84305118f8ead468fa4361289bd7eb6337857a702f4be3d33",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 370.171875,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "shell-autenticado-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Contexto comprobado por POST CSRF y revalidación de membresía",
+      "target": "page-start",
+      "sha256": "9f09b7f61988d874368e3708f3e47f6ba1dcee919ee93dd3efddd93d61e05b26",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 436.859375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "shell-autenticado-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Contexto comprobado por POST CSRF y revalidación de membresía",
+      "target": "page-start",
+      "sha256": "154ce2fa423f4093a29449ff8ca6307de50ccf3899b11f4d2bcfc84dc04c32f7",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 459.640625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "menu-autenticado-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Menú Radix, foco confinado y secciones futuras deshabilitadas",
+      "target": "page-start",
+      "sha256": "008bf7dc4bdfed32e2062068ace35e0ea6a9def13db6a0f44e0e7a17c1171470",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 459.640625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "sin-membresias-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Identidad real sin despachos; acceso fiscal no disponible",
+      "target": "page-start",
+      "sha256": "2f98f465f09f83d8a3bfff598456e29043270603db2bcb323dd18674a4ac6a56",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 330.46875,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "sin-membresias-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Identidad real sin despachos; acceso fiscal no disponible",
+      "target": "page-start",
+      "sha256": "7d204fc7aa952091edea17f9fb5416bd2ea8ad1805941685b0ded5f5c4b72965",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 375.640625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "sesion-expirada-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Logout real seguido de 401",
+      "target": "page-start",
+      "sha256": "f3fa7f5882ac7bc60a36f44cc8e0902b7eaa175d898027554142cec7517dd2c5",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 604.796875,
+          "height": 900,
+          "padding": "48px 48px 24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 460,
+          "height": 746.40625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "sesion-expirada-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Logout real seguido de 401",
+      "target": "page-start",
+      "sha256": "33fc5ea0588a9a6376f6c4808cc3aa8b56b8a9e807dd18f0919d33e3fae78126",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 390,
+          "height": 182.5,
+          "padding": "24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 342,
+          "height": 547.90625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "error-autenticacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "State OIDC alterado, error real seguro",
+      "target": "page-start",
+      "sha256": "c69a1db9338eab2372becf22aa92005daead81bcc42586b9f033953676ea5196",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 604.796875,
+          "height": 900,
+          "padding": "48px 48px 24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 460,
+          "height": 746.40625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "error-autenticacion-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "State OIDC alterado, error real seguro",
+      "target": "page-start",
+      "sha256": "29acf827d20f2c6b53e6273b737940c950c518f49d91f6e9a4f399f44c765765",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": null,
+        ".topbar": null,
+        ".page-container": null,
+        ".auth-brand-panel": {
+          "width": 390,
+          "height": 182.5,
+          "padding": "24px",
+          "display": "flex"
+        },
+        ".auth-content": {
+          "width": 342,
+          "height": 547.90625,
+          "padding": "0px",
+          "display": "flex"
+        }
+      }
+    },
+    {
+      "file": "shell-desarrollo-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Bienvenida existente, sin datos fiscales",
+      "target": "page-start",
+      "sha256": "cf539433fdc53196002d04f3807af17284e8b7127fd91e7b41be64d993a0f188",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 878.78125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "shell-desarrollo-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Bienvenida existente, sin datos fiscales",
+      "target": "page-start",
+      "sha256": "e5e71d5a00afeed03ca0f994864d320294bc8df832385b417246d3532dabf761",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1322.09375,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "catalogo-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Catálogo público de desarrollo; DEMO explícita",
+      "target": "page-start",
+      "sha256": "4d6e341eba4f419c7da6bfae1f18714f6d920a0a94b8f6cc484eee1b708cd652",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4368.015625,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "catalogo-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Catálogo público de desarrollo; DEMO explícita",
+      "target": "page-start",
+      "sha256": "ae01a834aefdad32915261db7c63c6efadff5303875401aa3a6fa2869687ed93",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9670.5625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "catalogo-1280.png",
+      "width": 1280,
+      "height": 800,
+      "source": "Geometría compacta y tableta",
+      "target": "page-start",
+      "sha256": "f91f7e043d08cdef34214a752573eebfa0066bd765d70621e5665b3f16f008dd",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 800,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1040,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1040,
+          "height": 4368.015625,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "catalogo-768.png",
+      "width": 768,
+      "height": 1024,
+      "source": "Geometría compacta y tableta",
+      "target": "page-start",
+      "sha256": "059d5538b57d073b5aa0185b805356fb4c72e85579522cc5f3e49a8380eab229",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 768,
+          "height": 66,
+          "padding": "8px 24px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 768,
+          "height": 4729.546875,
+          "padding": "24px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "controles-p0-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": "#controles",
+      "sha256": "7ea219d7586d4cc2f7551b8403e29fca202a7aaa9b9020ee13736fefe6cf02a0",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4368.015625,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "controles-p0-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": "#controles",
+      "sha256": "11cc361e3538290c8008c7db865b3d9ba67b17e6097c564b3cd5b295e9976e3a",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9670.5625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-p1-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": ".data-table",
+      "sha256": "523946d2e78c2ed7a57c2c03ee7d465d03a7370d2bfdfb22c6c7b064871ac5cf",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4368.015625,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-p1-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": ".data-table",
+      "sha256": "82aca1cc155c911d23da3a71cf12c74a5cc487140ca40ee9c8653e5ebb148007",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9670.5625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "estados-p1-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": "#estados",
+      "sha256": "99e8c4a9b02e7dcfdd12b562ee6dabe50527d4037f66e0e564b927e1e09edbda",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4368.015625,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "estados-p1-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Componentes compartidos con datos sintéticos, no funcionalidades fiscales",
+      "target": "#estados",
+      "sha256": "f94297583f39bafd83d00b9b4d64b9921bf8b7f48b9c443029f5995d5ab7ea9f",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9670.5625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-invalido-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Error asociado, texto seguro, foco en campo requerido",
+      "target": "#demo-name",
+      "sha256": "5c9c495687c713a508a6fa5e7c24902e0843d1ba88221f192e3d71c4eb9e4cd7",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-invalido-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Error asociado, texto seguro, foco en campo requerido",
+      "target": "#demo-name",
+      "sha256": "5da65f5ac5bbf1544562f8ddf047027ac81103609371b7adb2d8f99efb24fbfe",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9697.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "confirmacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Diálogo destructivo DEMO, cancelar inicialmente enfocado",
+      "target": "page-start",
+      "sha256": "c26e5d72717d540c88a6aa6b59f681a27b9b83171d91e2b9723e063195799aed",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "confirmacion-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Diálogo destructivo DEMO, cancelar inicialmente enfocado",
+      "target": "page-start",
+      "sha256": "25b3a246849a3b9873f877579a67d1d27317bd0b4476f69c2a8c9a77cbaa8214",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9697.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Panel modal contextual400/full móvil; no contiene un recurso de negocio",
+      "target": "page-start",
+      "sha256": "cff19657d0d3f46977d8b23d65f5bc8a98d8ac210cfbe6491f0d305d87fe1282",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Panel modal contextual400/full móvil; no contiene un recurso de negocio",
+      "target": "page-start",
+      "sha256": "bf21f22b3b6e871e633fca10f02acd760641a14e22984ea313f9bd90ea240c25",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9697.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-carga-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Estado transversal sin contenido o acciones anteriores",
+      "target": "page-start",
+      "sha256": "9940e5fd1ce3bd16758b821fb3e9bd4267c7109b56de676209c31cc3abc23323",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-carga-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Estado transversal sin contenido o acciones anteriores",
+      "target": "page-start",
+      "sha256": "7e4f6a6e70041087ad62eedbfbaf9185283cf665fe28965462709b49e6c5994b",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9697.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-error-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Estado transversal sin contenido o acciones anteriores",
+      "target": "page-start",
+      "sha256": "b18fbbcf500546832c71dd074374eb0e2bb059404ef8c4c3d6b5f36ea47218ce",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "drawer-error-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Estado transversal sin contenido o acciones anteriores",
+      "target": "page-start",
+      "sha256": "81349601ad691fe51688a79dc0ceecbd1038d4a00954ec09d1929f9a4217ff30",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9697.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "detalle-inline-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Aside inline, no modal; texto100 caracteres y cifra grande sintética",
+      "target": ".details-panel",
+      "sha256": "fa940a361fedc8d693514c72a1dce43557a46ea84b6918b490506ea9b3ade87d",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4395.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "detalle-inline-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Aside inline, no modal; texto100 caracteres y cifra grande sintética",
+      "target": ".details-panel",
+      "sha256": "e688649e314cf5774eb8c11012f484d67aa950ca468688c2cf25929a7928f57d",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 10104.15625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "pendiente-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Botón pendiente bloqueado y alternativa para restablecer DEMO",
+      "target": "#controles",
+      "sha256": "e2c7da178213637ccbab1e287370507803c6dc2f1bef73aebfc444017f076092",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4451.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "pendiente-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Botón pendiente bloqueado y alternativa para restablecer DEMO",
+      "target": "#controles",
+      "sha256": "15bec24976d36b41ec76a8c856ed7d587a23563acf02bd48a89aeb28c72a6030",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9753.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-carga-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "52510734520b82ffe6bc7ca03a68febb3b03f5fc0a92ffc36536909d35d698a1",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4069.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-carga-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "826784e6211ae641660c73d0d6d2982e80374036368f12fea3d6bcda0f93c736",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 6377.15625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-vacio-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "44f3e6b5b5c3de3a9133bee61e8210ee6955589a20c7e7805e9c95c5280c36ac",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4069.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-vacio-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "c39bceddfcbb9b480e32bbdbeb736a8517ebacaabd70fc23e4a9af7d1658b3ac",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 6377.15625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-error-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "bd21ecace46a5cf8f85bd79837cf5c3e109857ce86ba99e50e5fa104bf14818e",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4069.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-error-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "1c938313d9bc0cf4ced2e73f85ae5317e1a02d933ad4fc8aa22b33117d6205f1",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 6377.15625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-sin-permisos-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "b2d20bd5b0ffbcafa4595a1f8bd4f3b15b4f270b8ea81df41af80d405238e8fe",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4069.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "tabla-sin-permisos-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "No se muestran filas ni conteos del estado anterior",
+      "target": "#tabla",
+      "sha256": "9318434e717f8cda3cc26108100c40229251d9f51923cff78af1755dd415a2dd",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 6377.15625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "foco-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Foco visible por teclado en acción; disabled y pending diferenciados",
+      "target": "#controles",
+      "sha256": "62ffda48af2515bef00cbef1c119b4267ea66a36ec03f0136f7295d71c456760",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4451.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "notificacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Aviso DEMO local con cierre44; sin envío a servidor",
+      "target": "#controles",
+      "sha256": "15b092de899fd2592d32cd20ca16f8e716d45433af0945fe0e3a0d0e8f2fb5f6",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 4451.203125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "notificacion-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Aviso DEMO local con cierre44; sin envío a servidor",
+      "target": "#controles",
+      "sha256": "73168a54c9e03cf226a60b3963dbc2c05514629961c13f98710a3e035f2fe320",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 9753.75,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "authenticated-menu-escape-restore",
+      "passed": true
+    },
+    {
+      "id": "keyboard-focus-visible",
+      "passed": true
+    },
+    {
+      "id": "no-credential-or-provider-screenshots",
+      "passed": true
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # CI reproducible — issue #23
 
+## Gate visual #52
+
+Mínimos web efectivos: **70 Vitest,33 Playwright fundación/catálogo y6 OIDC**, conservando cada prueba anterior. `reports.mjs` y sus oráculos rechazan reducción, omisiones, reintentos/flaky o fallos. Tools/ci conserva16 y backend295 (270+25). No cambia el workflow ni sus cinco checks/permisos/presupuesto. Los screenshots de suites se generan en `.ci-work` privado, sin sobrescribir #21/#27 ni ampliar artifacts. [Referencia aprobada, contratos y comandos](../ux/DESIGN-SYSTEM-52.md), [evidencia real](../ux/evidence/issue-52/README.md). Ejecutar los cinco checks sobre el head final; no reutilizar resultados históricos.
+
 ## Estado actual — #79 resuelto; evidencia nueva por SHA
 
 PR #85 integrado en main `f40a4980c1eaf268c16fcc39b2855dbcc71378a6`; #79 cerrado tras cinco checks Ubuntu exitosos. Presupuesto **$0** intacto, sin cambios de billing. Cada PR debe ejecutar nuevamente los cinco checks y registrar links/conclusiones para su source SHA final. No reutilizar verde histórico, ni atribuir un fallo de código/scanner a billing. Si reaparece rechazo pre-runner, reportar REMOTE CI NOT VERIFIED y evidencia concreta; no evadirlo ni modificar presupuesto. El diagnóstico de #23 abajo se conserva como historia, no instrucción vigente para aumentar gasto.

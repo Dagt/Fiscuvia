@@ -21,10 +21,22 @@ const futureAreas = [
   { label: 'CFDI', Icon: ReceiptText },
 ]
 
-export function Navigation({ onNavigate }: { onNavigate?: () => void }) {
+export function Navigation({
+  onNavigate,
+  authenticated = false,
+}: {
+  onNavigate?: () => void
+  authenticated?: boolean
+}) {
   return (
     <nav aria-label="Navegación principal">
       <p className="nav-heading">TU ESPACIO</p>
+      {authenticated && (
+        <NavLink to="/app" className="nav-link" onClick={onNavigate}>
+          <Home size={19} aria-hidden="true" />
+          Tu acceso
+        </NavLink>
+      )}
       <NavLink end to="/desarrollo" className="nav-link" onClick={onNavigate}>
         <Home size={19} aria-hidden="true" />
         Bienvenida
@@ -36,6 +48,14 @@ export function Navigation({ onNavigate }: { onNavigate?: () => void }) {
       >
         <Blocks size={19} aria-hidden="true" />
         Estados de interfaz
+      </NavLink>
+      <NavLink
+        to="/desarrollo/componentes"
+        className="nav-link"
+        onClick={onNavigate}
+      >
+        <Blocks size={19} aria-hidden="true" />
+        Componentes DEMO
       </NavLink>
       <div className="nav-section-heading">
         <p className="nav-heading">GESTIÓN DEL DESPACHO</p>

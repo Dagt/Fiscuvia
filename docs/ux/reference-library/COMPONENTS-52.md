@@ -1,6 +1,6 @@
-# Inventario y contrato de entrega — #52 pendiente
+# Inventario y contrato de entrega — #52
 
-Estado: PROPUESTA POR APROBAR; **#19 no implementa este catálogo**. Las props son contratos de diseño, no nuevas APIs/backend ni un mandato de instalar paquetes. [Especificación común](VISUAL-SPEC.md), [pantallas](SCREENS-BASELINE.md), [diferencias reales](CURRENT-UI-AUDIT.md).
+Estado: referencia **aprobada por Dagt el 2026-11-03** ([opción B OQ-021](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416)). **#19 no implementó este catálogo**: la columna «Existe hoy» conserva esa fotografía histórica. [Contratos TypeScript realmente entregados por #52 y diferencias de composición](../DESIGN-SYSTEM-52.md). Las props candidatas de la tabla no son endpoints ni mandato de instalar paquetes. [Especificación común](VISUAL-SPEC.md), [pantallas](SCREENS-BASELINE.md), [diferencias anteriores](CURRENT-UI-AUDIT.md).
 
 ## Inventario priorizado
 

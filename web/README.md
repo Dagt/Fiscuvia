@@ -1,4 +1,18 @@
-# Fiscuvia web — scaffold #21
+# Fiscuvia web — design system y AppShell #52
+
+## Estado actual #52
+
+[Referencia aprobada por Dagt](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416): opción B OQ-021, 2026-11-03. [Biblioteca implementada, props y tokens](../docs/ux/DESIGN-SYSTEM-52.md), [capturas](../docs/ux/evidence/issue-52/README.md). React19/TypeScript estricto/Vite/Tailwind, Inter local/Lucide/Radix/Query; ninguna dependencia nueva ni cambio de contratos backend.
+
+`/login` conserva BFF/OIDC. `/app` comparte AppShell tras verificar identidad/membresías y selección por servidor; el contexto no es autorización reutilizable. Cache cancelada/retirada al cambiar despacho, respuestas tardías invalidadas, 401 expira sesión, logout POST CSRF. Sin localStorage/tokens ni datos fiscales. Nombres/logos comerciales esperan #31.
+
+`/desarrollo`, `/desarrollo/estados` y **`/desarrollo/componentes`** son demostraciones públicas sin APIs. Catálogo P0/P1:125 filas sintéticas paginadas, nombres largos, controles/confirmación/paneles y estados DEMO. El filtro local no es un mecanismo de seguridad.
+
+Estructura: `app/` routing/shell/providers; `areas/identity/` login/contexto; `areas/component-catalog/` composición DEMO; `shared/ui/` componentes; `shared/api/` transporte; `shared/presentation/` aviso; `styles/tokens.css` valores semánticos y `components.css` reglas compartidas. CSS anterior en capa legacy; sin kit paralelo.
+
+Node24.13.1/npm11.8.0 y lockfile existentes. Desde `web`: `npm ci`, `npm run dev`, `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm test`, `npm run build`, `npm run test:e2e`. Desde raíz: `node tools/ci/auth-browser.mjs` (OIDC real), `node tools/ci/auth-browser.mjs --design-system-audit` (capturas), `node tools/ux/validate-design-system.mjs` (evidencia). Docker Linux/Ryuk/JDK25 para OIDC; [CI local/remota](../docs/delivery/CI.md).
+
+Mínimos: **70 Vitest,33 Playwright fundación/catálogo y6 OIDC**, conservando todos los anteriores. Axe, cuatro viewports, reflow320/texto200%, teclado/foco y reduced-motion. Sin pixel-diff #56 ni certificación WCAG completa. Los bloques siguientes son antecedentes #21–30; sus contadores históricos no sustituyen estos mínimos.
 
 ## Cliente API #24 (para revisión)
 

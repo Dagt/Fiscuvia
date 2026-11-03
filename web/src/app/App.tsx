@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router'
+import { CatalogPage } from '../areas/component-catalog/CatalogPage'
 import { WelcomePage } from '../areas/welcome/WelcomePage'
 import { StatesPage } from '../areas/interface-demo/StatesPage'
 import { NotFoundState } from '../shared/ui/States'
@@ -11,6 +12,14 @@ export function App() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/app" element={<SessionPage />} />
+      <Route
+        path="/desarrollo/componentes"
+        element={
+          <AppShell>
+            <CatalogPage />
+          </AppShell>
+        }
+      />
       <Route
         path="/desarrollo"
         element={
