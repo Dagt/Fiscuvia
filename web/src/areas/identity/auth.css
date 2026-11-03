@@ -28,6 +28,7 @@
   margin-bottom: 24px;
 }
 .auth-brand-title {
+  font-weight: 600;
   font-size: clamp(32px, 3.2vw, 46px);
   line-height: 1.25;
   letter-spacing: -1.4px;
@@ -36,7 +37,7 @@
   font-style: normal;
   color: var(--brand-accent);
 }
-.auth-brand-copy > p {
+.auth-brand-copy > p:not(.auth-brand-title) {
   color: var(--text-on-navy);
   margin-top: 24px;
   font-size: 16px;
@@ -236,7 +237,7 @@
   .auth-brand-title {
     font-size: 29px;
   }
-  .auth-brand-copy > p,
+  .auth-brand-copy > p:not(.auth-brand-title),
   .auth-assurance,
   .auth-eyebrow,
   .auth-local {

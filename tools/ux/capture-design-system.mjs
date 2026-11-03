@@ -43,6 +43,8 @@ async function freshSession() { await context.close(); context = await browser.n
 async function shot(name, width, height, source, scrollTarget) {
   await page.setViewportSize({ width, height })
   await page.evaluate(() => document.fonts.ready)
+  await page.waitForFunction(() => !document.querySelector('.catalog-page') ||
+    (matchMedia('(max-width: 699px)').matches ? !document.querySelector('#tabla table') : !document.querySelector('.data-mobile-list')))
   if (scrollTarget) await page.locator(scrollTarget).evaluate(el => el.scrollIntoView({ block: 'start' }))
   else await page.evaluate(() => window.scrollTo(0, 0))
   assert.equal(new URL(page.url()).origin, 'https://127.0.0.1:4174', 'Capture only Fiscuvia, never provider credentials')
@@ -52,6 +54,11 @@ async function shot(name, width, height, source, scrollTarget) {
   const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()
   assert.equal(axe.violations.length, 0, 'Accessibility violation; inspect privately before publishing')
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Unexpected horizontal overflow')
+  // Responsive React rendering and axe may change scroll anchoring. Position again immediately before capture.
+  if (scrollTarget) {
+    await page.locator(scrollTarget).evaluate(el => el.scrollIntoView({ block: 'start' }))
+    assert(await page.locator(scrollTarget).evaluate(el => { const r = el.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0 }), 'Capture target must be in the viewport')
+  } else await page.evaluate(() => window.scrollTo(0, 0))
   const file = `${name}-${width}.png`
   await page.screenshot({ path: resolve(dir, file), animations: 'disabled', fullPage: false })
   const bytes = readFileSync(resolve(dir, file))
@@ -61,7 +68,7 @@ async function shot(name, width, height, source, scrollTarget) {
     const s = getComputedStyle(el), r = el.getBoundingClientRect()
     return [selector, { width: r.width, height: r.height, padding: s.padding, display: s.display }]
   })))
-  report.screenshots.push({ file, width, height, source, sha256: createHash('sha256').update(bytes).digest('hex'), axeViolations: 0, horizontalOverflow: false, geometry })
+  report.screenshots.push({ file, width, height, source, target: scrollTarget ?? 'page-start', sha256: createHash('sha256').update(bytes).digest('hex'), axeViolations: 0, horizontalOverflow: false, geometry })
 }
 async function both(name, source, scrollTarget) { for (const [w, h] of [[1440, 900], [390, 844]]) await shot(name, w, h, source, scrollTarget) }
 async function readyLogin() { await page.goto('/login'); await page.getByRole('button', { name: 'Continuar con acceso seguro' }).waitFor() }
@@ -116,7 +123,7 @@ try {
   await page.getByRole('heading', { name: 'Una sola identidad visual' }).waitFor()
   await both('catalogo', 'Catálogo público de desarrollo; DEMO explícita')
   for (const [w, h] of [[1280, 800], [768, 1024]]) await shot('catalogo', w, h, 'Geometría compacta y tableta')
-  for (const [name, target] of [['controles-p0', '#controles'], ['tabla-p1', '#tabla'], ['estados-p1', '#estados']])
+  for (const [name, target] of [['controles-p0', '#controles'], ['tabla-p1', '.data-table'], ['estados-p1', '#estados']])
     await both(name, 'Componentes compartidos con datos sintéticos, no funcionalidades fiscales', target)
   await page.getByRole('button', { name: 'Validar ejemplo', exact: true }).click()
   await both('formulario-invalido', 'Error asociado, texto seguro, foco en campo requerido', '#demo-name')

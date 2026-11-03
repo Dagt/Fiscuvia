@@ -136,6 +136,15 @@ test('acceso navy/teal responsive y accesible con emisor real disponible', async
       'font-family',
       /Inter Variable/,
     )
+    await expect(page.locator('.auth-brand-title')).toBeVisible()
+    await expect(page.locator('.auth-brand-title')).toHaveCSS(
+      'font-size',
+      width === 390 ? '29px' : '46px',
+    )
+    await expect(page.locator('.auth-brand-title')).toHaveCSS(
+      'font-weight',
+      '600',
+    )
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
