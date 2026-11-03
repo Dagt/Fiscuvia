@@ -9,7 +9,7 @@ Una plataforma moderna y visualmente sólida en primer PR de UI, no un diseño c
 Mantener [screen-inventory](screen-inventory.md) con vista/estado, actor, permisos, FR y issue. Las primeras seis pantallas guía: login, dashboard, clientes, detalle, CFDI (Future), calendario. No dibujar datos CFDI ficticios como producto implementado.
 
 ## Oleadas visuales
-UX-00: recuperar archivo aprobado, validar tokens y composición a 1440/390; aprobar dirección.
+UX-00 (#19): recuperar archivo aprobado **o aprobar expresamente especificación escrita alternativa**; [biblioteca candidata](reference-library/README.md), tokens/composición1440/390 y auditoría real. OQ-021 sigue Open hasta decisión del propietario. No implementa UX-01/#52 ni #31.
 UX-01: fundación React, tokens, tipografía, shell, nav, botones, inputs, tablas, cards, date period, empty/loading/error/unauthorized.
 UX-02: login y onboarding de despacho con OIDC real y permisos.
 UX-03: directorio y ficha del cliente; filtros, detalle, alertas metadata.
