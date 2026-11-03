@@ -24,7 +24,7 @@
 - **OQ-018 [future]** Servicio SAT vigente, límites temporales, solicitud, firma y devolución; investigación técnica.
 - **OQ-019 [future]** Formatos concretos de estados bancarios/criterios match y revisión humana.
 - **OQ-020 [brand]** Verificar marca Fiscuvia y disponibilidad de dominio ante IMPI/registro.
-- **OQ-021 [visual]** Incorporar archivo de mockup aprobado al repo con autorización; definir baseline de capturas reales.
+- **OQ-021 [visual] — Open, propuesta #19:** el collage original de seis pantallas sigue faltante tras búsqueda limitada a recursos legítimos del proyecto. [Biblioteca escrita aprobable y registro del asset](../ux/reference-library/README.md), [auditoría/capturas reales](../ux/reference-library/CURRENT-UI-AUDIT.md). El propietario debe elegir aportar el original autorizado o aprobar expresamente esta revisión de la especificación escrita como referencia de implementación. Registrar decisión, alcance, fecha y comentario/PR; ni este documento ni su merge implican Resolved. #52/#31 siguen separados y pendientes.
 - **OQ-022 [tech]** Matriz real de compatibilidad Java25/SpringBoot/Modulith/bibliotecas, y selección de repositorio de identidades.
 - **OQ-023 [tax law]** Jurisdicción/zona de cómputo de vencimientos, prórrogas y reglas de calendario que deberán validarse antes de automatizar.
 - **OQ-024 [MVP]** Uso mínimo de almacén: archivo completo o sólo metadata de e.firma/CSD para alarmas.

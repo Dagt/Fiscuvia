@@ -45,7 +45,8 @@ try {
     await pause(300)
   }
   const serve = process.argv.includes('--serve')
+  const referenceAudit = process.argv.includes('--reference-audit')
   if (serve) console.log('Entorno local real: https://127.0.0.1:4174. Credenciales sintéticas privadas en .ci-work/27-browser.json; no compartir ese archivo. Ctrl+C limpia los recursos.')
-  browser = run(process.execPath, serve ? ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '4174', '--strictPort'] : ['node_modules/@playwright/test/cli.js', 'test', '--config', 'playwright.auth.config.ts', '--reporter=line,json'], { cwd: resolve(root, 'web'), env: { ...process.env, FISCUVIA_AUTH_HARNESS_FILE: config, PLAYWRIGHT_JSON_OUTPUT_FILE: resolve(work, 'playwright-auth.json') }, stdio: 'inherit' })
+  browser = run(process.execPath, serve ? ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '4174', '--strictPort'] : referenceAudit ? [resolve(root, 'tools/ux/capture-reference.mjs')] : ['node_modules/@playwright/test/cli.js', 'test', '--config', 'playwright.auth.config.ts', '--reporter=line,json'], { cwd: resolve(root, 'web'), env: { ...process.env, FISCUVIA_AUTH_HARNESS_FILE: config, PLAYWRIGHT_JSON_OUTPUT_FILE: resolve(work, 'playwright-auth.json') }, stdio: 'inherit' })
   await wait(browser)
 } finally { await cleanup() }

@@ -1,6 +1,8 @@
 # UX por rol y flujos Fiscuvia (Proposed)
 
 ## Documentos
+- [Biblioteca visual aprobable #19 y decisión pendiente OQ-021](reference-library/README.md)
+- [Auditoría/capturas reales #19](reference-library/CURRENT-UI-AUDIT.md) y [contrato de implementación #52](reference-library/COMPONENTS-52.md)
 - [Dirección visual y tokens](DESIGN-SYSTEM.md)
 - [Concepto de seis pantallas aprobado (imagen aún no subida)](APPROVED-CONCEPT.md)
 - [Mapa de rutas y estados](screen-inventory.md)
