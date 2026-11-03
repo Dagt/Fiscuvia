@@ -28,6 +28,13 @@
 .page-header > div {
   min-width: 0;
 }
+.page-header {
+  flex-wrap: wrap;
+}
+.page-header > .component-actions {
+  flex-shrink: 0;
+  max-width: 100%;
+}
 .page-header,
 .page-description,
 .field,

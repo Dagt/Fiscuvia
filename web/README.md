@@ -12,7 +12,7 @@ Estructura: `app/` routing/shell/providers; `areas/identity/` login/contexto; `a
 
 Node24.13.1/npm11.8.0 y lockfile existentes. Desde `web`: `npm ci`, `npm run dev`, `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm test`, `npm run build`, `npm run test:e2e`. Desde raíz: `node tools/ci/auth-browser.mjs` (OIDC real), `node tools/ci/auth-browser.mjs --design-system-audit` (capturas), `node tools/ux/validate-design-system.mjs` (evidencia). Docker Linux/Ryuk/JDK25 para OIDC; [CI local/remota](../docs/delivery/CI.md).
 
-Mínimos: **70 Vitest,29 Playwright fundación/catálogo y6 OIDC**, conservando todos los anteriores. Axe, cuatro viewports, reflow320/texto200%, teclado/foco y reduced-motion. Sin pixel-diff #56 ni certificación WCAG completa. Los bloques siguientes son antecedentes #21–30; sus contadores históricos no sustituyen estos mínimos.
+Mínimos: **70 Vitest,33 Playwright fundación/catálogo y6 OIDC**, conservando todos los anteriores. Axe, cuatro viewports, reflow320/texto200%, teclado/foco y reduced-motion. Sin pixel-diff #56 ni certificación WCAG completa. Los bloques siguientes son antecedentes #21–30; sus contadores históricos no sustituyen estos mínimos.
 
 ## Cliente API #24 (para revisión)
 

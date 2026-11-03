@@ -92,7 +92,7 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
 }
 
 export function completeWebReports(unit, foundation, identity) {
-  const base = webReports(unit, foundation, 29, 70)
+  const base = webReports(unit, foundation, 33, 70)
   const auth = webReports(unit, identity, 6, 70)
   return { ...base, oidcPlaywright: auth.playwright }
 }

@@ -33,6 +33,12 @@ Handoff `.ci-work/27-browser.json`, claves, sesiones y logs privados no se versi
 
 ## Revisión y resultados
 
+### Regresión encontrada en Ubuntu y corrección
+
+La [primera ejecución remota](https://github.com/Dagt/Fiscuvia/actions/runs/41686371743) del head `e40629569914cbde5a7acf33599982d8ceb99f65` aprobó backend/OpenAPI/seguridad, pero Web CI falló28/29 en la prueba previa de zoom200%. No fue billing. El wrapper de acciones nuevo de PageHeader podía encogerse mientras su badge legado conservaba el ancho: en Linux se midió borde derecho1440.890625, scrollWidth1441 para viewport1440. Windows no mostraba overflow global, pero el wrapper ya era menor que su contenido.
+
+Se corrige permitiendo wrap en PageHeader y evitando el encogimiento del grupo de acciones, sin overflow:hidden global ni tolerancia añadida a la prueba. La reproducción Linux aislada con Playwright1.64.1/Chromium156.0.8078.80 midió después1440/1440 y wrapper135/135. La imagen oficial se usó sólo como diagnóstico local, sin red, sin escrituras al repositorio ni servicio externo: `mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f`. Los cuatro casos nuevos de `reflow.spec.ts` verifican la frontera del wrapper en bienvenida y catálogo además del ancho global; la prueba original queda intacta. La ejecución final y su SHA se enlazan en el PR; la ejecución fallida se conserva como evidencia.
+
 Galería: login [1440](login-1440.png)/[390](login-390.png), shell autenticado [1440](shell-autenticado-1440.png)/[390](shell-autenticado-390.png), [menú móvil](menu-autenticado-390.png), catálogo [1440](catalogo-1440.png)/[1280](catalogo-1280.png)/[768](catalogo-768.png)/[390](catalogo-390.png), controles [desktop](controles-p0-1440.png)/[móvil](controles-p0-390.png), tabla [desktop](tabla-p1-1440.png)/[lista móvil](tabla-p1-390.png), [formulario inválido](formulario-invalido-390.png), [confirmación](confirmacion-390.png), [panel lateral](drawer-390.png), [error del panel](drawer-error-390.png), [detalle inline](detalle-inline-390.png), [error de tabla](tabla-error-1440.png), [sin permisos](tabla-sin-permisos-390.png), [foco](foco-1440.png), [pendiente](pendiente-390.png) y [notificación](notificacion-390.png). Todas las variantes figuran en el manifest, sin reemplazar la evidencia anterior #19.
 
 ![Catálogo Fiscuvia en escritorio](catalogo-1440.png)
