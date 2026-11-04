@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-11-04T03:46:29.281Z",
-  "captureSourceCommit": "88f9ea34cc5a91ab96c492f6493a39c489e12dbd",
+  "capturedAt": "2026-11-04T04:26:05.612Z",
+  "captureSourceCommit": "59b0c48515646d1056c761c38dd3cfb0f534e11e",
   "applicationTree": "02fc310d2310175e6bce2ff5b75323e450753040",
-  "backendTree": "0d0c67f8b348eb7cc6bae03fb52694b54f378a34",
-  "fixtureTree": "fcf08848fe7be891fbd77566778da852cf1127a4",
+  "backendTree": "1da57892b110de2c7ec89ccdf814792919ec07d5",
+  "fixtureTree": "64339dd8e34b2a50ab1c2c306cfcda5fd73d85f3",
   "captureScriptSha256": "e31a3d154312a2b5cd902296dfc4812fb28d9ee5feadd41fee4cc16e25f46320",
   "harnessRunnerSha256": "502266c8a1a1b9dcec7238a805a35a44f7d5735077224cf53590970c950e98a4",
   "chromium": "156.0.8078.4",
@@ -15,7 +15,7 @@
       "height": 900,
       "source": "Dos despachos aprovisionados por procedimiento real tras OIDC; metadata propia persistida",
       "target": "page-start",
-      "sha256": "ebe44f1bd96073afabdab14dcc8f8f506470da977c18f0df5a4e09dac79d67b8",
+      "sha256": "4a893967eda73bca68d0af8a7f5914dafbff0945bc8bce63390efd87cc6fb8c1",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -47,7 +47,7 @@
       "height": 844,
       "source": "Dos despachos aprovisionados por procedimiento real tras OIDC; metadata propia persistida",
       "target": "page-start",
-      "sha256": "0141174142c26bdba34a4f5325c994c6b2385bc237e686db07469cc8e5cee1ec",
+      "sha256": "f76519b305e31fc8d573403a7f834a12c060c27aaec6289a1e39b67e42cdd49a",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -79,7 +79,7 @@
       "height": 900,
       "source": "GET settings real; fixture de capacidad owner+MFA exclusivamente local/test",
       "target": "page-start",
-      "sha256": "19062290b577726d702395a10287cbcff944ba6868011d75695a5ef44d97ad04",
+      "sha256": "ecaf9ca307e89bfa9f209922ae2cdd8227d96968c24a5b20457590cb5c56cadc",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -111,7 +111,7 @@
       "height": 800,
       "source": "GET settings real; fixture de capacidad owner+MFA exclusivamente local/test",
       "target": "page-start",
-      "sha256": "819f025e95468544eea988f28421c82d062fbed4bca2b5708ca52e535c7933cb",
+      "sha256": "4c1d6995ce32131ed8052a7d4c3377b581651dc92a11a17102ca33d06a578e41",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -207,7 +207,7 @@
       "height": 900,
       "source": "Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar",
       "target": ".firm-form-actions",
-      "sha256": "98ba80a5943a4cd2209c11dc422bc6d866e5b7f0a051c7fc17e2c0dad7527d37",
+      "sha256": "8952b5057bb0775842e8d6e2a54297f86cc54580d0c53a98d6944ced90cf64db",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -239,7 +239,7 @@
       "height": 844,
       "source": "Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar",
       "target": ".firm-form-actions",
-      "sha256": "f0043a59b1cc3065c436c61a5ad8f06f063dbc39fbebb9e48c564fdb4de0037e",
+      "sha256": "3eb9f40de81f7abfc9bfa03693aec9de52a901088da8796556c01296a2a126c8",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -271,7 +271,7 @@
       "height": 900,
       "source": "Contrato NULL y fallback Lucide; no existe upload ni almacenamiento público",
       "target": "page-start",
-      "sha256": "19062290b577726d702395a10287cbcff944ba6868011d75695a5ef44d97ad04",
+      "sha256": "ecaf9ca307e89bfa9f209922ae2cdd8227d96968c24a5b20457590cb5c56cadc",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -527,7 +527,7 @@
       "height": 900,
       "source": "Nombre persistido extenso; wrapping en contenido y nombre accesible completo del contexto",
       "target": "page-start",
-      "sha256": "ed663f67bd7d87f2dbf4a8fb980dcfd0f195d2c775c0dbb05a1920f6e6c58d15",
+      "sha256": "2971e5414723110e6776f31364c74e7752b5025c51a4017fab41b5a2bc662b4e",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -591,7 +591,7 @@
       "height": 900,
       "source": "Solicitud real retenida en Chromium; no hay datos anteriores visibles",
       "target": "page-start",
-      "sha256": "9d03275b7b2937025eb2e30e349c080f835c95a8bbff9339306f6721c6fbe70c",
+      "sha256": "4b6261b18e95cb66a05a4e8cc530644011f04b313a3f918c9146f94ea9d48156",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {
@@ -655,7 +655,7 @@
       "height": 900,
       "source": "Fallo de transporte inyectado en navegador; no un éxito simulado",
       "target": "page-start",
-      "sha256": "bd41071ce97d5b4ad31be6a40b342c01d88407ba612b836562c6caba05f2dfd7",
+      "sha256": "ccec41505c3f05e9d7850c9fd2ed4660241c7767a0b6c8faaecf83d58a2b9791",
       "axeViolations": 0,
       "horizontalOverflow": false,
       "geometry": {

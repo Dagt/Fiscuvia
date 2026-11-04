@@ -1,6 +1,6 @@
 # Evidencia real de despachos — #31
 
-Chromium **156.0.8078.4**, aplicación React/BFF ejecutándose en HTTPS loopback, PostgreSQL18.6 y Keycloak26.8.1 reales. Fuente de aplicación capturada: **88f9ea34cc5a91ab96c492f6493a39c489e12dbd**. [Manifest con hashes, dimensiones, árboles de fuente y controles](capture-manifest.json). El validador compara UI/backend y fixtures utilizados con el HEAD final; las capturas no se reetiquetan como realizadas en otro commit. Las aserciones de tests/documentación posteriores no alteran los componentes capturados.
+Chromium **156.0.8078.4**, aplicación React/BFF ejecutándose en HTTPS loopback, PostgreSQL18.6 y Keycloak26.8.1 reales. Fuente de aplicación capturada: **59b0c48515646d1056c761c38dd3cfb0f534e11e**. [Manifest con hashes, dimensiones, árboles de fuente y controles](capture-manifest.json). El validador compara UI/backend y fixtures utilizados con el HEAD final; las capturas no se reetiquetan como realizadas en otro commit. Las aserciones de tests/documentación posteriores no alteran los componentes capturados.
 
 **La política positiva de edición es un fixture explícito exclusivamente local/test. Su grant permanente sigue DENY y requiere aprobación expresa del propietario.** No son datos de clientes ni una cuenta de operador SaaS; las identidades OIDC se verifican primero y el procedimiento administrativo real crea los despachos/membresías. Los nombres llevan DEMO y el contacto usa example.invalid. No se captura el IdP, contraseña, OTP, tokens, UUID internos ni consultas privadas. No se utilizan imágenes de IA.
 
