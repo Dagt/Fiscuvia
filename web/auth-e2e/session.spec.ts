@@ -223,9 +223,7 @@ test('selección autorizada, invitaciones y contratos HTTP reales sin datos fisc
     page.getByRole('heading', { name: 'Datos del despacho' }),
   ).toBeVisible()
   await expect(
-    page.getByText(
-      'La carga de logos estará disponible cuando exista almacenamiento privado aprobado. No se aceptan enlaces externos ni archivos en esta entrega.',
-    ),
+    page.getByText('La carga de logos aún no está disponible.'),
   ).toBeVisible()
   await page.screenshot({
     path: resolve(evidence, 'despacho-autorizado-1440.png'),

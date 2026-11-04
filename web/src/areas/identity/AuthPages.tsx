@@ -191,7 +191,7 @@ export function SessionPage() {
   return (
     <AppShell
       authenticated
-      pageTitle={selected ? 'Configuración del despacho' : 'Elige tu despacho'}
+      pageTitle={selected ? 'Tu despacho' : 'Elige tu despacho'}
       tenantContext={
         selected ? (
           <Button
@@ -227,8 +227,15 @@ export function SessionPage() {
           title={selected ? 'Configuración del despacho' : 'Elige tu despacho'}
           description={
             selected
-              ? 'Tu membresía fue verificada por el servidor para este despacho.'
+              ? `${roleLabel[selected.role]} · Datos de contacto e identidad para tu equipo.`
               : 'Sólo aparecen los despachos con una membresía activa para tu identidad.'
+          }
+          secondaryActions={
+            selected ? (
+              <Button variant="secondary" onClick={() => void change()}>
+                Cambiar de despacho
+              </Button>
+            ) : undefined
           }
         />
         {denied && (
@@ -245,12 +252,6 @@ export function SessionPage() {
           <LoadingState />
         ) : selected ? (
           <>
-            <div className="component-actions">
-              <p>{roleLabel[selected.role]}</p>
-              <Button variant="secondary" onClick={() => void change()}>
-                Cambiar de despacho
-              </Button>
-            </div>
             <FirmSettings
               userId={identity.data.userId}
               tenantId={selected.tenantId}

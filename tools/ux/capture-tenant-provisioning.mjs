@@ -108,6 +108,7 @@ try {
   const tenant=memberships.find(m=>m.commercialName==='Despacho Horizonte DEMO').tenantId
   await chooseHorizonte()
   for(const [w,h]of[[1440,900],[1280,800],[768,1024],[390,844]])await shot('formulario',w,h,'GET settings real; fixture de capacidad owner+MFA exclusivamente local/test')
+  await both('formulario-acciones','Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar','.firm-form-actions')
   await both('sin-logo','Contrato NULL y fallback Lucide; no existe upload ni almacenamiento público')
   await page.setViewportSize({width:320,height:900})
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));report.checks.push({id:'reflow-320',passed:true})

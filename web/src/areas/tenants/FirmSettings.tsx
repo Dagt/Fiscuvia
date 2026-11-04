@@ -21,6 +21,17 @@ import { StatusPill } from '../../shared/ui/StatusPill'
 import { useNotification } from '../../shared/presentation/notification-context'
 import './firm-settings.css'
 
+const zoneLabels: Record<Profile['timeZone'], string> = {
+  'America/Mexico_City': 'Ciudad de México',
+  'America/Cancun': 'Cancún',
+  'America/Chihuahua': 'Chihuahua',
+  'America/Ciudad_Juarez': 'Ciudad Juárez',
+  'America/Hermosillo': 'Hermosillo',
+  'America/Mazatlan': 'Mazatlán',
+  'America/Monterrey': 'Monterrey',
+  'America/Tijuana': 'Tijuana',
+}
+
 export function FirmSettings({
   userId,
   tenantId,
@@ -166,7 +177,7 @@ function FirmForm({
           <p className="firm-name">
             {profile.commercialName ?? 'Nombre comercial pendiente'}
           </p>
-          <p>Sin logo · Identidad protegida de Fiscuvia</p>
+          <p>Sin logo</p>
         </div>
         <StatusPill tone="success">Activo</StatusPill>
       </section>
@@ -182,8 +193,8 @@ function FirmForm({
         </div>
         {!profile.canManage && (
           <p className="firm-readonly" role="status">
-            Consulta autorizada. La edición requiere capacidad explícita y
-            verificación MFA reciente.
+            Sólo consulta. Para editar necesitas permiso y una verificación
+            reciente con doble factor.
           </p>
         )}
         <form
@@ -270,7 +281,7 @@ function FirmForm({
                 >
                   {firmTimeZones.map((value) => (
                     <option key={value} value={value}>
-                      {value.replace('America/', '').replaceAll('_', ' ')}
+                      {zoneLabels[value]}
                     </option>
                   ))}
                 </select>
@@ -279,7 +290,7 @@ function FirmForm({
                 label="Idioma y región"
                 value="Español · México"
                 readOnly
-                description="Sin reglas ni plazos fiscales inferidos de la zona horaria."
+                description="Configuración regional de Fiscuvia."
               />
             </div>
           </fieldset>
@@ -334,8 +345,7 @@ function FirmForm({
         </form>
       </section>
       <p className="firm-storage-note">
-        La carga de logos estará disponible cuando exista almacenamiento privado
-        aprobado. No se aceptan enlaces externos ni archivos en esta entrega.
+        La carga de logos aún no está disponible.
       </p>
     </div>
   )
