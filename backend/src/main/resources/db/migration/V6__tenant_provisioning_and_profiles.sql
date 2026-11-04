@@ -64,6 +64,10 @@ REVOKE ALL ON FUNCTION identity_private.authorize_active_membership(uuid,boolean
 CREATE FUNCTION identity.authorize_tenant(p_tenant uuid,p_privileged boolean) RETURNS void
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,pg_temp AS $$
 BEGIN
+ IF identity.current_actor_id() IS NULL OR p_tenant IS NULL
+ OR NOT EXISTS(SELECT 1 FROM identity.memberships WHERE tenant_id=p_tenant AND user_id=identity.current_actor_id() AND status='ACTIVE')
+ OR EXISTS(SELECT 1 FROM identity_private.actor_context WHERE transaction_id=pg_current_xact_id_if_assigned() AND tenant_id IS NOT NULL AND tenant_id<>p_tenant)
+ THEN RAISE EXCEPTION USING ERRCODE='42501',MESSAGE='ACCESS_DENIED'; END IF;
  PERFORM 1 FROM tenant_private.profiles WHERE tenant_id=p_tenant AND status='ACTIVE' FOR SHARE;
  IF NOT FOUND THEN RAISE EXCEPTION USING ERRCODE='42501',MESSAGE='ACCESS_DENIED'; END IF;
  PERFORM identity_private.authorize_active_membership(p_tenant,p_privileged);
@@ -226,6 +230,23 @@ CREATE OR REPLACE FUNCTION access_control.authorize_operation(p_tenant uuid,p_ca
 RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,pg_temp AS $$
 DECLARE actor uuid:=identity.current_actor_id(); member uuid; mfa bigint; needs_mfa boolean; tx xid8:=pg_current_xact_id(); resources uuid[];
 BEGIN
+    -- Non-locking rejection before touching a requested root. These checks grant no authority:
+    -- membership, policy, MFA and assignments are rechecked/frozen under locks below.
+    IF actor IS NULL OR p_tenant IS NULL OR p_capability IS NULL OR p_kind IS NULL THEN RETURN 'CONTEXT_REJECTED'; END IF;
+    IF EXISTS(SELECT 1 FROM identity_private.actor_context WHERE transaction_id=tx AND tenant_id IS NOT NULL AND tenant_id<>p_tenant)
+      OR EXISTS(SELECT 1 FROM access_control_private.operation_context c WHERE c.transaction_id=tx AND
+        ROW(c.actor_id,c.tenant_id,c.capability,c.resource_kind,c.resource_id) IS DISTINCT FROM ROW(actor,p_tenant,p_capability,p_kind,p_resource))
+      OR (p_kind='TENANT' AND p_resource IS NOT NULL) THEN RETURN 'CONTEXT_REJECTED'; END IF;
+    SELECT id INTO member FROM identity.memberships WHERE tenant_id=p_tenant AND user_id=actor AND status='ACTIVE';
+    IF member IS NULL THEN RETURN 'MEMBERSHIP_INACTIVE'; END IF;
+    SELECT p.requires_mfa INTO needs_mfa FROM identity.membership_roles r
+      JOIN access_control_private.role_capabilities p ON p.role_code=r.role_code
+      WHERE r.tenant_id=p_tenant AND r.membership_id=member AND p.capability=p_capability AND p.resource_kind=p_kind
+      ORDER BY p.requires_mfa,r.role_code LIMIT 1;
+    IF NOT FOUND THEN RETURN 'CAPABILITY_UNCONFIGURED'; END IF;
+    SELECT mfa_at INTO mfa FROM identity_private.actor_context WHERE transaction_id=tx;
+    IF needs_mfa AND mfa NOT BETWEEN extract(epoch FROM clock_timestamp())::bigint-600 AND extract(epoch FROM clock_timestamp())::bigint+30
+      THEN RETURN 'MFA_REQUIRED'; END IF;
     -- Lock root metadata before membership/policy locks. Settings commands take UPDATE up front:
     -- two concurrent read-to-write upgrades on the same root must not deadlock.
     IF p_capability='TENANT_SETTINGS_MANAGE' THEN

@@ -6,7 +6,7 @@ Base main879faee5b2872c1783859b998bf09119257f2472; rama issue-31-secure-tenant-p
 
 Sin paquetes nuevos. Java25.0.3, Boot4.1.2, Modulith2.1.2, MavenWrapper3.9.16, Flyway12.4, Testcontainers2.0.5; PostgreSQL18.6-alpine3.24 y Keycloak26.8.1 con digest existente. Node24.13.1/npm11.8.0, React19.3.1/TS5.9.3, Vitest5.0.5, Playwright1.64.1/Chromium156.0.8078.4. Windows11Pro local y Ubuntu del runner remoto son evidencias distintas. Presupuesto $0 sin cambios.
 
-Requerido: **330 Java (302 Surefire+28 Failsafe),85 Vitest,33 Playwright de fundación/catálogo,13 OIDC y18 tools/ci**, cero omitidas/fallos/reintentos. `reports.mjs` conserva cada mínimo anterior y añade las suites de provisioning. Artifacts sólo summary, JUnit depurado y matriz #30; no cuerpos HTTP, logs, screenshots de proveedor, certificados, handoff, SBOM, JAR o credenciales.
+Requerido: **332 Java (304 Surefire+28 Failsafe),85 Vitest,33 Playwright de fundación/catálogo,13 OIDC y18 tools/ci**, cero omitidas/fallos/reintentos. `reports.mjs` conserva cada mínimo anterior y añade las suites de provisioning. Artifacts sólo summary, JUnit depurado y matriz #30; no cuerpos HTTP, logs, screenshots de proveedor, certificados, handoff, SBOM, JAR o credenciales.
 
 Desde raíz, comandos POSIX (PowerShell: usar backend/mvnw.cmd y entrecomillar argumentos -D que contengan puntos/comas):
 
@@ -48,6 +48,8 @@ Oráculos adicionales: GRANT SELECT indebido, pérdida de FORCE y EXECUTE admini
 ProvisioningMigrationIT conserva checksums V1–V5, aplica V6 una vez, incorpora una raíz V5 anterior sin inventar su nombre y prueba DDL transaccional fallido/reintento. No se edita ninguna migración histórica.
 
 La regresión detectó un deadlock real entre upgrades FOR SHARE→FOR UPDATE de dos ediciones; se corrigió tomando el bloqueo exclusivo de raíz desde el inicio, antes de membresía/política. La prueba exige un 200 y un409, nunca un500. Las pruebas OIDC de navegador inicialmente reutilizaban el OTP de una misma identidad en el mismo intervalo; Keycloak lo rechazó correctamente. Se aislaron las identidades por escenario y se espera el callback antes de consultar /me. No se relajó OTP, state, PKCE, nonce ni MFA; no se añadió un sleep para ocultar el fallo.
+
+La revisión final añadió prevalidación de identidad/membresía/capacidad/MFA y rechazo de cambio de contexto antes de adquirir locks de raíz. La versión inicial podía retener un lock de perfil con una llamada SQL runtime rechazada; no exponía ni modificaba filas, pero abría una frontera de disponibilidad innecesaria. NOWAIT demuestra que las denegaciones no bloquean el perfil; dos lectores demuestran que cambiar de capacidad se rechaza sin upgrade de lock/deadlock. La prevalidación se repite con locks antes de permitir trabajo, conservando la protección contra revocaciones concurrentes. El oráculo #30 de supresión de membresía retira/restaura también esta defensa redundante, sin reducir pruebas.
 
 Los E2E validan schemas de perfiles/respuestas y errores sobre HTTP real, cambio de despacho, guardar/cancelar/confirmar, conflicto, error recuperable, reflow, revocación durante lectura y suspensión. Los unitarios sólo prueban presentación/decodificación/cache; no sustituyen seguridad real. Las capturas incluyen desktop/móvil y estados verificados, según manifest.
 

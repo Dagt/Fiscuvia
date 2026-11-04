@@ -427,10 +427,11 @@ class CrossTenantRegressionTests {
         f.admin(f.a,s->s.update("UPDATE identity.memberships SET status='SUSPENDED' WHERE id=?",f.members.get("a")));
         assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
         String authorization=f.function("access_control.authorize_operation(uuid,text,text,uuid)"),tenant=f.function("identity_private.authorize_active_membership(uuid,boolean)");
+        String lifecycle=f.function("identity.authorize_tenant(uuid,boolean)");
         try {
-            f.definition(authorization.replace("AND status='ACTIVE'",""));f.definition(tenant.replace("AND status='ACTIVE'",""));
+            f.definition(authorization.replace("AND status='ACTIVE'",""));f.definition(tenant.replace("AND status='ACTIVE'",""));f.definition(lifecycle.replace("AND status='ACTIVE'",""));
             assertThatThrownBy(()->assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404)).isInstanceOf(AssertionError.class);
-        }finally{f.definition(authorization);f.definition(tenant);}
+        }finally{f.definition(authorization);f.definition(tenant);f.definition(lifecycle);}
         assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
     }
     @Test void relaxingMfaPolicyIsCaughtByTheHttpOracle() throws Exception {

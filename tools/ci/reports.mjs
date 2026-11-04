@@ -35,7 +35,7 @@ const baseline = {
   'com.fiscuvia.AuditJournalTests': 44,
   'com.fiscuvia.JournalMigrationIT': 3,
   'com.fiscuvia.CrossTenantRegressionTests': 45,
-  'com.fiscuvia.TenantProvisioningTests': 32,
+  'com.fiscuvia.TenantProvisioningTests': 34,
   'com.fiscuvia.ProvisioningMigrationIT': 3,
 }
 

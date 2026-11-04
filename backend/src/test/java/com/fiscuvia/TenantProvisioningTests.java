@@ -310,4 +310,47 @@ class TenantProvisioningTests {
             assertThat(s.queryForList("SELECT payload::text FROM journal.outbox",String.class)).allSatisfy(payload->assertThat(payload).doesNotContain(name,email,phone));});
         assertThat(other.get(path(tenant)).body()).doesNotContain(name,email,phone);
     }
+    Connection runtime() throws SQLException {return DriverManager.getConnection(DATABASE.getJdbcUrl(),PostgresTestDatabase.RUNTIME_USER,DATABASE.runtimePassword);}
+    JdbcTemplate bindRuntime(Connection connection,OidcBrowser verified,long mfa) throws Exception {
+        connection.setAutoCommit(false);var sql=new JdbcTemplate(new SingleConnectionDataSource(connection,true));sql.setQueryTimeout(3);
+        String tx=sql.queryForObject("SELECT pg_current_xact_id()::text",String.class);
+        var mac=javax.crypto.Mac.getInstance("HmacSHA256");mac.init(new javax.crypto.spec.SecretKeySpec(HexFormat.of().parseHex(DATABASE.actorKey),"HmacSHA256"));
+        String payload=OIDC.issuer()+"\n"+KeycloakTestProvider.subject(verified.username)+"\n"+tx+"\n"+mfa;
+        sql.queryForList("SELECT * FROM identity.bind_actor(?,?,?,?)",OIDC.issuer(),KeycloakTestProvider.subject(verified.username).toString(),mfa,HexFormat.of().formatHex(mac.doFinal(payload.getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+        return sql;
+    }
+    void assertRootNotLocked(UUID tenant) throws Exception {
+        admin(sql->assertThat(sql.queryForObject("SELECT tenant_id FROM tenant_private.profiles WHERE tenant_id=? FOR UPDATE NOWAIT",UUID.class,tenant)).isEqualTo(tenant));
+    }
+    @Test void rejectedIdentityMembershipAndCapabilityCannotLockARequestedRoot() throws Exception {
+        UUID foreign=provision(UUID.randomUUID(),otherId,"Ajeno sin bloqueo DEMO"),own=firm(),member=UUID.randomUUID();
+        try(var connection=runtime()) {
+            connection.setAutoCommit(false);var sql=new JdbcTemplate(new SingleConnectionDataSource(connection,true));
+            assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,foreign)).isEqualTo("CONTEXT_REJECTED");
+            assertRootNotLocked(foreign);connection.rollback();
+            sql=bindRuntime(connection,owner,java.time.Instant.now().getEpochSecond());
+            assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,foreign)).isEqualTo("MEMBERSHIP_INACTIVE");
+            assertRootNotLocked(foreign);connection.rollback();
+            admin(s->{s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,own);
+                s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",own,member,otherId);
+                s.update("INSERT INTO identity.membership_roles VALUES(?,?,'ACCOUNTANT')",own,member);});
+            sql=bindRuntime(connection,other,java.time.Instant.now().getEpochSecond());
+            assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,own)).isEqualTo("CAPABILITY_UNCONFIGURED");
+            assertRootNotLocked(own);connection.rollback();
+        }
+    }
+    @Test void rejectedCapabilitySwitchCannotUpgradeConcurrentReadLocks() throws Exception {
+        UUID tenant=firm();try(var first=runtime();var second=runtime();var workers=Executors.newFixedThreadPool(2)) {
+            var one=bindRuntime(first,owner,java.time.Instant.now().getEpochSecond());var two=bindRuntime(second,owner,java.time.Instant.now().getEpochSecond());
+            for(var sql:List.of(one,two)) {
+                assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_READ','TENANT',NULL)",String.class,tenant)).isEqualTo("AUTHORIZED");
+                sql.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);
+            }
+            var start=new CyclicBarrier(2);
+            java.util.function.Function<JdbcTemplate,Callable<String>> attempt=sql->()->{start.await(5,TimeUnit.SECONDS);return sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,tenant);};
+            var a=workers.submit(attempt.apply(one));var b=workers.submit(attempt.apply(two));
+            assertThat(a.get(10,TimeUnit.SECONDS)).isEqualTo("CONTEXT_REJECTED");assertThat(b.get(10,TimeUnit.SECONDS)).isEqualTo("CONTEXT_REJECTED");
+            first.rollback();second.rollback();
+        }
+    }
 }
