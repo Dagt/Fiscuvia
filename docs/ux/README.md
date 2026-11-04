@@ -1,6 +1,7 @@
 # UX por rol y flujos Fiscuvia (Proposed)
 
 ## Documentos
+- [Configuración de despachos #31: capturas reales, comparación y límites](evidence/issue-31/README.md)
 - [Biblioteca visual #19 aprobada por opción B OQ-021](reference-library/README.md)
 - [Componentes y AppShell implementados #52](DESIGN-SYSTEM-52.md)
 - [Evidencia y validación #52](evidence/issue-52/README.md)
