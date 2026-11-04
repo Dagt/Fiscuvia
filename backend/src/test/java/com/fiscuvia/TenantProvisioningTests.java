@@ -37,6 +37,7 @@ class TenantProvisioningTests {
         ownerId=UUID.fromString(owner.login("alice").path("userId").asText());
         otherId=UUID.fromString(other.login("bob").path("userId").asText());
         unassignedId=UUID.fromString(unassigned.login("carol").path("userId").asText());
+        admin(s->assertThat(s.queryForObject("SELECT count(*) FROM access_control_private.role_capabilities WHERE capability='TENANT_SETTINGS_MANAGE'",Integer.class)).isZero());
         // Synthetic policy exercise only until #31's permanent owner policy is explicitly approved.
         admin(s->s.update("INSERT INTO access_control_private.role_capabilities VALUES('FIRM_OWNER_ADMIN','TENANT_SETTINGS_MANAGE','TENANT',true,'SYNTHETIC TEST #31') ON CONFLICT DO NOTHING"));
     }

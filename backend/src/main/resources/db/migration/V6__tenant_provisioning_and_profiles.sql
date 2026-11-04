@@ -28,12 +28,14 @@ CREATE POLICY tenant_fence ON app.tenants AS RESTRICTIVE FOR ALL TO fiscuvia_run
 CREATE TABLE tenant_private.admin_commands (
  command_id uuid PRIMARY KEY, operation text NOT NULL CHECK(operation IN ('PROVISION','SUSPEND','REACTIVATE')),
  tenant_id uuid NOT NULL REFERENCES app.tenants(tenant_id), fingerprint bytea NOT NULL CHECK(octet_length(fingerprint)=32),
- approval_reference uuid NOT NULL, result_version bigint NOT NULL, created_at timestamptz NOT NULL DEFAULT clock_timestamp()
+ approval_reference uuid NOT NULL, result_version bigint NOT NULL, created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+ FOREIGN KEY(tenant_id,command_id) REFERENCES journal.events(tenant_id,command_id) ON DELETE RESTRICT
 );
 CREATE TABLE tenant_private.profile_commands (
  tenant_id uuid NOT NULL REFERENCES app.tenants(tenant_id), command_id uuid NOT NULL,
  actor_id uuid NOT NULL REFERENCES identity_private.users(id), fingerprint bytea NOT NULL CHECK(octet_length(fingerprint)=32),
- result_version bigint NOT NULL, created_at timestamptz NOT NULL DEFAULT clock_timestamp(), PRIMARY KEY(tenant_id,command_id)
+ result_version bigint NOT NULL, created_at timestamptz NOT NULL DEFAULT clock_timestamp(), PRIMARY KEY(tenant_id,command_id),
+ FOREIGN KEY(tenant_id,command_id) REFERENCES journal.events(tenant_id,command_id) ON DELETE RESTRICT
 );
 REVOKE ALL ON ALL TABLES IN SCHEMA tenant_private FROM PUBLIC,fiscuvia_runtime,fiscuvia_sessions;
 -- Root directory/administrative receipts, not a business-data RLS exception. Only narrow functions
