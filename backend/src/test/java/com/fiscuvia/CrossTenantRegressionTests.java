@@ -426,7 +426,7 @@ class CrossTenantRegressionTests {
     @Test void skippingMembershipChecksIsCaughtByTheHttpOracle() throws Exception {
         f.admin(f.a,s->s.update("UPDATE identity.memberships SET status='SUSPENDED' WHERE id=?",f.members.get("a")));
         assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
-        String authorization=f.function("access_control.authorize_operation(uuid,text,text,uuid)"),tenant=f.function("identity.authorize_tenant(uuid,boolean)");
+        String authorization=f.function("access_control.authorize_operation(uuid,text,text,uuid)"),tenant=f.function("identity_private.authorize_active_membership(uuid,boolean)");
         try {
             f.definition(authorization.replace("AND status='ACTIVE'",""));f.definition(tenant.replace("AND status='ACTIVE'",""));
             assertThatThrownBy(()->assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404)).isInstanceOf(AssertionError.class);

@@ -1,5 +1,11 @@
 # Estrategia de pruebas
 
+## Despachos #31
+
+Se conservan las 295 pruebas Java anteriores y se exigen 32 de TenantProvisioningTests y tres de ProvisioningMigrationIT: **330 (302 Surefire +28 Failsafe)**. OIDC/PG reales, roles runtime/migrador/sesiones, primer owner verificado, replay de alta, mismo nombre en A/B, GET/POST cruzados, validación/CSRF/versiones, MFA/roles, suspensión/reactivación, recibos y ambos sinks fallidos. Locks observables y barreras para concurrencia; no sleeps como evidencia. Mutaciones de FORCE/grants/filtro de directorio disparan la guarda y se restauran en finally; RLS de membresía sigue siendo defensa independiente del filtro explícito. Upgrade V5 incluye una raíz anterior sin nombre, checksum inalterado y rollback de DDL. La política owner de edición usada en tests es sintética mientras no se apruebe su grant permanente; no declarar aprobada OQ-015.
+
+Web exige **85 Vitest**, conserva **33 Playwright de fundación/catálogo** y añade flujos reales de settings sobre las seis OIDC previas. Comprueba nombres actuales, cache/selección/suspensión, formularios compartidos, confirmación, cancelación, conflicto y éxito backend, no sólo notificaciones locales. Tools/ci aumenta a **18** con schemas cerrados de configuración. Los mínimos se actualizan al número efectivo de nuevos E2E antes de publicar. OpenAPI compara respuestas HTTP reales de identidad y perfiles en Playwright; no publica cuerpos crudos. [Diseño y diagnóstico](../architecture/TENANT-PROVISIONING.md). Evidencia de ejecución final y cinco checks en el PR; los resultados preliminares no acreditan ese SHA.
+
 ## Regresión visual funcional #52
 
 Se preserva backend295 y tools/ci16. Web aumenta a **70 Vitest,33 Playwright de fundación/catálogo y6 OIDC**: contratos de Field/Button/StatCard/tabla/filtros/notificación, confirmación async sin doble envío, paneles y foco; cancelación/limpieza de cache y respuestas tardías, cambio de identidad/revocación durante selección; catálogos125 DEMO con búsqueda/orden/paginación y retirada de filas/conteos en estados no disponibles. E2E real Keycloak/BFF comprueba shell, dos despachos autorizados, navegación móvil, MFA y ausencia de storage, conservando las pruebas de autenticación anteriores. Los mocks unitarios verifican presentación, nunca sustituyen OIDC/PostgreSQL reales.

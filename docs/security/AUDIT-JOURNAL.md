@@ -1,5 +1,9 @@
 # Journal persistente — #29
 
+## Productores efectivos #31
+
+V6 amplía la allowlist con TENANT_CREATED, TENANT_PROFILE_UPDATED, TENANT_SUSPENDED y TENANT_REACTIVATED. Alta inicial conserva OWNER_BOOTSTRAPPED y enlaza causalmente TENANT_CREATED. Administración interna usa DATABASE_ADMIN + aprobación, sin suplantar al owner; edición usa actor de sesión y correlación servidor. No incluye nombres, correo, teléfono o snapshots. Todos los hechos, sus outbox y recibos confirman en la misma transacción; fallo del journal o outbox revierte el cambio. No se amplía AUDIT_VIEW ni se habilita un lector administrativo HTTP. [Modelo y autoridad](../architecture/TENANT-PROVISIONING.md).
+
 Base integrada: main `1f09a26fc0afbcc3498b825e1b3f676cda79d2f0` (#84/#28). Infraestructura autorizada por la solicitud de #29; ADR-008 sigue Proposed para operación/consumidores futuros. FR-007, NFR-009/020. No se acepta el modelo fiscal #74 ni AUDIT_VIEW/OQ-015.
 
 ## Catálogo efectivo y procedencia

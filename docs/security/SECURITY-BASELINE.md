@@ -1,4 +1,8 @@
 # Seguridad y privacidad: criterios de liberación
+
+## Provisioning/configuración #31
+
+[Frontera administrativa y SQL](../architecture/TENANT-PROVISIONING.md): alta/estado sólo mediante credencial migradora custodiada y aprobación independiente de identidad ya OIDC-verificada; no hay operador HTTP ni autoservicio. Runtime no lee/modifica metadatos globales directamente. Toda configuración exige sesión/usuario/membresía/estado/capacidad y MFA; la política permanente de edición permanece DENY pendiente de aprobación expresa. Raíz con bloqueo hasta commit, versión e idempotencia; journal/outbox atómicos y sin contacto/nombre en payload. Directorio sólo propio; suspensión no destruye historial ni concede facultades de facturación. No se admite URL/SVG/path de logo; fallback sin almacenamiento improvisado. Guardas y mutaciones desechables comprueban FORCE, grants y el filtro de actor del directorio.
 ## Clasificación
 Público / operación interna / confidencial de despacho / fiscal sensible / credenciales criptográficas (prohibidas en MVP).
 ## Controles

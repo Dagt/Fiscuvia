@@ -1,0 +1,122 @@
+.firm-settings {
+  display: grid;
+  gap: var(--space-24);
+}
+.firm-brand,
+.firm-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  padding: var(--space-24);
+  min-width: 0;
+}
+.firm-brand {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.firm-brand > div {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+.firm-brand h2,
+.firm-card h2 {
+  font-size: 18px;
+  font-weight: 650;
+}
+.firm-brand p,
+.firm-card p,
+.firm-storage-note {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.firm-brand .firm-name {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  margin-top: var(--space-4);
+}
+.firm-monogram {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-control);
+  background: var(--teal-light);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.firm-section-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+.firm-section-heading > svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.firm-fields {
+  display: grid;
+  gap: var(--space-24);
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.firm-field-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-24);
+}
+.firm-readonly {
+  background: var(--teal-light);
+  padding: var(--space-16);
+  border-radius: var(--radius-control);
+  margin-bottom: var(--space-24);
+}
+.firm-form-actions {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-24);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--line);
+}
+.firm-form-actions p {
+  flex: 1 1 200px;
+}
+.firm-error {
+  color: var(--danger);
+  margin-top: var(--space-16);
+}
+.firm-error p {
+  color: inherit;
+}
+.firm-context-name {
+  display: block;
+  max-width: min(32vw, 360px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-membership strong {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 699px) {
+  .firm-field-pair {
+    grid-template-columns: 1fr;
+  }
+  .firm-brand,
+  .firm-card {
+    padding: var(--space-16);
+  }
+  .firm-context-name {
+    max-width: 36vw;
+  }
+  .firm-form-actions > button {
+    flex: 1 1 100%;
+  }
+}

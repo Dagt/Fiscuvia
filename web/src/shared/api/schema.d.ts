@@ -223,6 +223,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tenants/{tenantId}/settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Candidato; cada operación verifica sesión, membresía, capacidad y estado. Un UUID no concede acceso. */
+        tenantId: string
+      }
+      cookie?: never
+    }
+    /** Consultar configuración del despacho autorizado */
+    get: operations['getFirmSettings']
+    put?: never
+    /**
+     * Actualizar configuración con capacidad explícita y MFA reciente
+     * @description Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable. Sin política aprobada permanece DENY. No permite cambiar owner, estado, logo, rol ni tenant. Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada, incluso si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
+     */
+    post: operations['updateFirmSettings']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -256,6 +280,38 @@ export interface components {
       field: string
       message: string
     }
+    FirmSettings: {
+      canManage: boolean
+      commercialName: string | null
+      /** Format: email */
+      contactEmail: string | null
+      /** Format: date-time */
+      createdAt: string
+      /** @constant */
+      locale: 'es-MX'
+      /** @description Sin almacenamiento privado aprobado; no admite uploads, URLs ni paths. Fallback visual por nombre. */
+      logoReference: null
+      phone: string | null
+      /** @enum {string} */
+      status: 'ACTIVE' | 'SUSPENDED'
+      timeZone: components['schemas']['FirmTimeZone']
+      /** Format: date-time */
+      updatedAt: string
+      version: number
+    }
+    FirmSettingsUpdated: {
+      version: number
+    }
+    /** @enum {string} */
+    FirmTimeZone:
+      | 'America/Mexico_City'
+      | 'America/Cancun'
+      | 'America/Chihuahua'
+      | 'America/Ciudad_Juarez'
+      | 'America/Hermosillo'
+      | 'America/Mazatlan'
+      | 'America/Monterrey'
+      | 'America/Tijuana'
     Invitation: {
       /** Format: date-time */
       expiresAt: string
@@ -271,11 +327,15 @@ export interface components {
       tenantId: string
     }
     Membership: {
+      /** @description Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre inventado. */
+      commercialName?: string | null
       /** Format: uuid */
       membershipId: string
       role: components['schemas']['MembershipRole']
       /** Format: uuid */
       tenantId: string
+      /** @enum {string} */
+      tenantStatus?: 'ACTIVE' | 'SUSPENDED'
     }
     /** @enum {string} */
     MembershipRole:
@@ -360,6 +420,16 @@ export interface components {
     TenantRequest: {
       /** Format: uuid */
       tenantId: string
+    }
+    UpdateFirmSettings: {
+      commercialName: string
+      /** Format: email */
+      contactEmail?: string | null
+      expectedVersion: number
+      /** @constant */
+      locale: 'es-MX'
+      phone?: string | null
+      timeZone: components['schemas']['FirmTimeZone']
     }
   }
   responses: {
@@ -826,6 +896,72 @@ export interface operations {
         }
       }
       406: components['responses']['NotAcceptable']
+      500: components['responses']['InternalError']
+    }
+  }
+  getFirmSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Candidato; cada operación verifica sesión, membresía, capacidad y estado. Un UUID no concede acceso. */
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Configuración propia; canManage es presentación, nunca una autorización reutilizable. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['FirmSettings']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  updateFirmSettings: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        'X-CSRF-TOKEN': string
+      }
+      path: {
+        /** @description Candidato; cada operación verifica sesión, membresía, capacidad y estado. Un UUID no concede acceso. */
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateFirmSettings']
+      }
+    }
+    responses: {
+      /** @description Versión aplicada; cambio, journal, outbox y recibo confirmados atómicamente. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['FirmSettingsUpdated']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
       500: components['responses']['InternalError']
     }
   }

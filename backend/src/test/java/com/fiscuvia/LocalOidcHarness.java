@@ -34,6 +34,15 @@ public final class LocalOidcHarness {
         // Explicit fixture approvals, not an application registration/bootstrap endpoint. Only test identities may be approved here.
         var approvals=new LinkedHashMap<String,List<UUID>>();
         approvals.put("alice-1",List.of(UUID.randomUUID(),UUID.randomUUID())); approvals.put("bob-1",List.of(UUID.randomUUID()));
+        approvals.put("alice-2",List.of(UUID.randomUUID(),UUID.randomUUID()));
+        approvals.put("bob-3",List.of(UUID.randomUUID()));
+        for(int i=3;i<=8;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
+        approvals.put("bob-2",List.of(UUID.randomUUID()));
+        // Explicit synthetic permission exercise, never a production grant or application account.
+        try(var connection=DriverManager.getConnection(database.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,database.migrationPassword)) {
+            new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection,true))
+                .update("INSERT INTO access_control_private.role_capabilities VALUES('FIRM_OWNER_ADMIN','TENANT_SETTINGS_MANAGE','TENANT',true,'SYNTHETIC LOCAL HARNESS ONLY #31') ON CONFLICT DO NOTHING");
+        }
         while(!Thread.currentThread().isInterrupted()) {
             if(System.in.available()>0 && new String(System.in.readNBytes(System.in.available()),java.nio.charset.StandardCharsets.UTF_8).contains("stop")) {
                 System.exit(0); // Shutdown hook closes the context and both owned containers before the JVM exits.
@@ -44,11 +53,17 @@ public final class LocalOidcHarness {
                     var sql=new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection,true));
                     var users=sql.queryForList("SELECT user_id FROM identity_private.external_identities WHERE issuer=? AND subject=?",UUID.class,idp.issuer(),KeycloakTestProvider.subject(approval.getKey()).toString());
                     if(users.size()!=1) continue;
-                    for(UUID tenant:approval.getValue()) {
+                    int position=0;
+                    for(UUID command:approval.getValue()) {
                         connection.setAutoCommit(false);
-                        sql.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);
-                        sql.update("INSERT INTO app.tenants(tenant_id) VALUES(?)",tenant);
-                        sql.queryForObject("SELECT identity_private.bootstrap_owner(?,?,?)",Object.class,tenant,users.getFirst(),UUID.randomUUID()); connection.commit();
+                        String name=List.of("alice-1","alice-8").contains(approval.getKey()) ? (position==0?"Despacho Norte DEMO":"Despacho Sur DEMO")
+                            : approval.getKey().startsWith("alice-") ? (position==0?"Despacho Horizonte DEMO":"Despacho de Servicios Profesionales y Asesoria Integral para Equipos Contables de Prueba DEMO")
+                            : approval.getKey().equals("bob-3") ? "Despacho suspendido DEMO" : "Despacho Centro DEMO";
+                        UUID tenant=sql.queryForObject("SELECT tenant_private.provision(?,?,?,?,'contacto@example.invalid',NULL,'America/Mexico_City','es-MX')",UUID.class,
+                            command,users.getFirst(),command,name); connection.commit();position++;
+                        if(approval.getKey().equals("bob-3")) {
+                            sql.queryForObject("SELECT tenant_private.change_status(?,?,?,0,'SUSPENDED')",Long.class,tenant,UUID.randomUUID(),UUID.randomUUID());connection.commit();
+                        }
                     }
                     iterator.remove();
                 }

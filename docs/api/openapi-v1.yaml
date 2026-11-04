@@ -428,6 +428,85 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "500":
           $ref: "#/components/responses/InternalError"
+  /tenants/{tenantId}/settings:
+    parameters:
+      - in: path
+        name: tenantId
+        required: true
+        description: Candidato; cada operación verifica sesión, membresía, capacidad y estado. Un UUID no concede acceso.
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getFirmSettings
+      summary: Consultar configuración del despacho autorizado
+      x-implementation-status: implemented
+      security:
+        - SessionCookie: []
+      responses:
+        "200":
+          description: Configuración propia; canManage es presentación, nunca una autorización reutilizable.
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirmSettings"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      operationId: updateFirmSettings
+      summary: Actualizar configuración con capacidad explícita y MFA reciente
+      description: >
+        Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable.
+        Sin política aprobada permanece DENY. No permite cambiar owner, estado, logo, rol ni tenant.
+        Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada,
+        incluso si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
+      x-implementation-status: implemented
+      security:
+        - SessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - in: header
+          name: X-CSRF-TOKEN
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFirmSettings"
+      responses:
+        "200":
+          description: Versión aplicada; cambio, journal, outbox y recibo confirmados atómicamente.
+          headers:
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirmSettingsUpdated"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
 components:
   headers:
     CorrelationId:
@@ -643,6 +722,89 @@ components:
         membershipId: *a1
         role:
           $ref: "#/components/schemas/MembershipRole"
+        commercialName:
+          description: Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre inventado.
+          type: [string, "null"]
+          maxLength: 160
+        tenantStatus:
+          type: string
+          enum: [ACTIVE, SUSPENDED]
+    FirmSettings:
+      type: object
+      additionalProperties: false
+      required: [commercialName, contactEmail, phone, timeZone, locale, status, version, createdAt, updatedAt, canManage, logoReference]
+      properties:
+        commercialName:
+          type: [string, "null"]
+          maxLength: 160
+        contactEmail:
+          type: [string, "null"]
+          maxLength: 254
+          format: email
+        phone:
+          type: [string, "null"]
+          maxLength: 30
+        timeZone:
+          $ref: "#/components/schemas/FirmTimeZone"
+        locale:
+          type: string
+          const: es-MX
+        status:
+          type: string
+          enum: [ACTIVE, SUSPENDED]
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        canManage:
+          type: boolean
+        logoReference:
+          description: Sin almacenamiento privado aprobado; no admite uploads, URLs ni paths. Fallback visual por nombre.
+          type: "null"
+    FirmTimeZone:
+      type: string
+      enum: [America/Mexico_City, America/Cancun, America/Chihuahua, America/Ciudad_Juarez, America/Hermosillo, America/Mazatlan, America/Monterrey, America/Tijuana]
+    UpdateFirmSettings:
+      type: object
+      additionalProperties: false
+      required: [expectedVersion, commercialName, timeZone, locale]
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        commercialName:
+          type: string
+          minLength: 1
+          maxLength: 160
+          pattern: '^[^\u0000-\u001f\u007f]+$'
+        contactEmail:
+          type: [string, "null"]
+          maxLength: 254
+          format: email
+        phone:
+          type: [string, "null"]
+          pattern: '^[+0-9 ()-]{7,30}$'
+        timeZone:
+          $ref: "#/components/schemas/FirmTimeZone"
+        locale:
+          type: string
+          const: es-MX
+    FirmSettingsUpdated:
+      type: object
+      additionalProperties: false
+      required: [version]
+      properties:
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
     CurrentIdentity:
       type: object
       additionalProperties: false

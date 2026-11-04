@@ -1,5 +1,9 @@
 # Catálogo de endpoints — estado explícito
 
+## Implementado en #31
+
+GET y POST `/api/v1/tenants/{tenantId}/settings`, con sesión, capacidad, lifecycle y RLS; POST añade MFA, CSRF, Idempotency-Key y expectedVersion. La política permanente de edición continúa DENY hasta aprobar la propuesta mínima. `/me` y selección entregan nombres/estados de membresías propias. Provisioning/suspensión/reactivación se ejecutan por procedimiento administrativo privado, **sin rutas HTTP de operador**. [Autoridad, datos y límites](../architecture/TENANT-PROVISIONING.md), [OpenAPI implementado](openapi-v1.yaml). Las rutas de negocio restantes son propuestas.
+
 ## Implementado en #24 (para revisión)
 
 | Método | Ruta | Alcance |
@@ -18,8 +22,7 @@ Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas
 | Método | Ruta | Capacidad / notas |
 |---|---|---|
 
-| GET | T/settings | TENANT_READ |
-| PATCH | T/settings | TENANT_SETTINGS_MANAGE y expectedVersion |
+| PATCH | T/settings | No implementado; #31 utiliza comando POST con capacidad, MFA, versión e idempotencia |
 | GET | T/memberships | MEMBERSHIP_VIEW |
 | POST | T/invitations | MEMBERSHIP_INVITE, token hash/expiry |
 | POST | /api/v1/invitations/accept | invitación de un solo uso |

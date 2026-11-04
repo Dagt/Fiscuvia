@@ -31,7 +31,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Service
 class IdentityStore implements AuthorizedTenantOperations {
     record Actor(UUID id,long version) {}
-    record Membership(UUID tenantId,UUID membershipId,String role) {}
+    record Membership(UUID tenantId,UUID membershipId,String role,String commercialName,String tenantStatus) {}
     record Me(UUID userId,List<Membership> memberships,boolean privilegedMfaVerified) {}
     record Invitation(UUID invitationId,String token,Instant expiresAt) {
         @Override public String toString() { return "Invitation[private]"; }
@@ -93,10 +93,8 @@ class IdentityStore implements AuthorizedTenantOperations {
         return transaction(()->{
             var principal=principal(); var actor=validate(principal);
             var members=jdbc.query("""
-                    SELECT m.tenant_id,m.id,r.role_code FROM identity.memberships m
-                    JOIN identity.membership_roles r ON r.tenant_id=m.tenant_id AND r.membership_id=m.id
-                    WHERE m.user_id=? AND m.status='ACTIVE' ORDER BY m.tenant_id,r.role_code
-                    """,(row,n)->new Membership(row.getObject(1,UUID.class),row.getObject(2,UUID.class),row.getString(3)),actor.id());
+                    SELECT * FROM identity.own_firms()
+                    """,(row,n)->new Membership(row.getObject(1,UUID.class),row.getObject(2,UUID.class),row.getString(3),row.getString(4),row.getString(5)));
             return new Me(actor.id(),members,principal.mfaAt()>=Instant.now().getEpochSecond()-600 && principal.mfaAt()>0);
         });
     }
@@ -180,10 +178,8 @@ class IdentityStore implements AuthorizedTenantOperations {
     }
     Membership select(UUID tenant) {
         return execute(tenant,Capability.TENANT_READ,ResourceTarget.tenant(),access->jdbc.queryForObject("""
-                SELECT m.tenant_id,m.id,r.role_code FROM identity.memberships m JOIN identity.membership_roles r
-                ON r.tenant_id=m.tenant_id AND r.membership_id=m.id WHERE m.user_id=identity.current_actor_id()
-                AND m.tenant_id=? AND m.status='ACTIVE' ORDER BY r.role_code LIMIT 1
-                """,(row,n)->new Membership(row.getObject(1,UUID.class),row.getObject(2,UUID.class),row.getString(3)),tenant));
+                SELECT * FROM identity.own_firms() WHERE tenant_id=? ORDER BY role_code LIMIT 1
+                """,(row,n)->new Membership(row.getObject(1,UUID.class),row.getObject(2,UUID.class),row.getString(3),row.getString(4),row.getString(5)),tenant));
     }
     Invitation invite(UUID tenant,String subject,String role) {
         return execute(tenant,Capability.MEMBERSHIP_INVITE,ResourceTarget.tenant(),access->{

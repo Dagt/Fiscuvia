@@ -66,9 +66,9 @@ test('AppShell autenticado, selector y navegación móvil con OIDC real', async 
     await page.setViewportSize({ width, height })
     await expect(page.locator('main')).toHaveCount(1)
     await expect(page.locator('h1')).toHaveCount(1)
-    await page.getByRole('button', { name: /Despacho 1/ }).click()
+    await page.getByRole('button', { name: /Despacho Norte DEMO/ }).click()
     await expect(
-      page.getByRole('heading', { name: 'Despacho autorizado' }),
+      page.getByRole('heading', { name: 'Datos del despacho' }),
     ).toBeVisible()
     expect(
       (
@@ -97,15 +97,18 @@ test('AppShell autenticado, selector y navegación móvil con OIDC real', async 
       await expect(trigger).toBeFocused()
     }
     await page
-      .getByRole('button', { name: 'Contexto actual: Despacho 1', exact: true })
+      .getByRole('button', {
+        name: 'Contexto actual: Despacho Norte DEMO',
+        exact: true,
+      })
       .click()
     await expect(
       page.getByRole('heading', { name: 'Elige tu despacho' }),
     ).toBeVisible()
-    await page.getByRole('button', { name: /Despacho 2/ }).click()
+    await page.getByRole('button', { name: /Despacho Sur DEMO/ }).click()
     await expect(
       page.getByRole('button', {
-        name: 'Contexto actual: Despacho 2',
+        name: 'Contexto actual: Despacho Sur DEMO',
         exact: true,
       }),
     ).toBeVisible()
@@ -206,7 +209,7 @@ test('selección autorizada, invitaciones y contratos HTTP reales sin datos fisc
   context,
   browser,
 }) => {
-  await login(page, 'alice-1')
+  await login(page, 'alice-8')
   await expect
     .poll(
       async () =>
@@ -215,25 +218,29 @@ test('selección autorizada, invitaciones y contratos HTTP reales sin datos fisc
     )
     .toBe(2)
   await page.reload()
-  await page.getByRole('button', { name: /Despacho 1/ }).click()
+  await page.getByRole('button', { name: /Despacho Norte DEMO/ }).click()
   await expect(
-    page.getByRole('heading', { name: 'Despacho autorizado' }),
+    page.getByRole('heading', { name: 'Datos del despacho' }),
   ).toBeVisible()
   await expect(
-    page.getByText('Las áreas fiscales se incorporarán en próximas entregas.'),
+    page.getByText(
+      'La carga de logos estará disponible cuando exista almacenamiento privado aprobado. No se aceptan enlaces externos ni archivos en esta entrega.',
+    ),
   ).toBeVisible()
   await page.screenshot({
     path: resolve(evidence, 'despacho-autorizado-1440.png'),
     animations: 'disabled',
   })
   await page.getByRole('button', { name: 'Cambiar de despacho' }).click()
-  await page.getByRole('button', { name: /Despacho 2/ }).click()
+  await page.getByRole('button', { name: /Despacho Sur DEMO/ }).click()
   await expect(
-    page.getByRole('heading', { name: 'Despacho autorizado' }),
+    page.getByRole('heading', { name: 'Datos del despacho' }),
   ).toBeVisible()
   const second = await context.newPage()
   await second.goto('/app')
-  await expect(second.getByRole('button', { name: /Despacho 1/ })).toBeVisible()
+  await expect(
+    second.getByRole('button', { name: /Despacho Norte DEMO/ }),
+  ).toBeVisible()
   await second.close()
   const me = await (await context.request.get('/api/v1/me')).json()
   conforms('CurrentIdentity', me)
@@ -402,7 +409,9 @@ test('CSRF inválido y UUID de otro despacho no otorgan acceso', async ({
         })
       ).status(),
     ).toBe(403)
-    await expect(page.getByRole('button', { name: /Despacho 1/ })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: /Despacho Centro DEMO/ }),
+    ).toBeVisible()
   } finally {
     await other.close()
   }

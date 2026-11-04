@@ -1,4 +1,18 @@
 # Modelo inicial de amenazas
+
+## Amenazas de despachos #31
+
+| Ataque | Control efectivo | Verificación / límite |
+|---|---|---|
+| Registrar un owner por UUID/correo desde HTTP | No hay API de alta; migrador separado, identidad OIDC previa y aprobación administrativa independiente | TenantProvisioningTests; custodia humana del migrador pendiente de operación productiva |
+| Leer/editar perfil de otro tenant | AuthorizedTenantOperations + operación SQL/xid/actor + grants privados | HTTP real A/B, SQL runtime, directorio propio y oráculo de retirada de filtro |
+| Convertir rol de UI en TENANT_SETTINGS_MANAGE | Backend y política explícita; owner y MFA recientes comprobados de nuevo en SQL | Roles no owner, body extra, MFA ausente/vencido; política permanente DENY hasta aprobación |
+| Editar tras suspensión o revocación | Bloqueos de raíz/membresía hasta commit; suspensión deniega la operación siguiente | Concurrencia con locks observados; no se promete cancelación retroactiva |
+| Replay/actualización perdida | Huella y recibo por tenant/actor/comando; versión; bloqueo de escritura temprano | Un alta por replay concurrente; dos versiones iguales producen un éxito y un 409 |
+| Cambio sin evidencia o éxito falso | Mutación, journal/outbox y recibo en la misma transacción | Fallos de ambos sinks y rollback PostgreSQL |
+| SSRF/contenido activo/exposición de logo | No upload ni URL/path aceptados; contrato logoReference NULL | Schemas cerrados, UI fallback; almacenamiento privado futuro todavía no implementado |
+
+Detalles y riesgos residuales: [provisioning](../architecture/TENANT-PROVISIONING.md). No se acepta proveedor productivo, matriz completa OQ-015, baja OQ-016 ni esquema fiscal #74.
 **Activos:** datos fiscales, contribuyentes, honorarios, documentos, sesiones, llaves futuras, backups. **Actores:** usuario tenant malicioso, empleado comprometido, soporte interno, bot, dependencia comprometida, XML/PDF/ZIP malicioso.
 | Amenaza | Mitigación | Evidencia |
 |---|---|---|

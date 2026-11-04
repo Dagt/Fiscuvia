@@ -35,6 +35,8 @@ const baseline = {
   'com.fiscuvia.AuditJournalTests': 44,
   'com.fiscuvia.JournalMigrationIT': 3,
   'com.fiscuvia.CrossTenantRegressionTests': 45,
+  'com.fiscuvia.TenantProvisioningTests': 32,
+  'com.fiscuvia.ProvisioningMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {
@@ -92,8 +94,8 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
 }
 
 export function completeWebReports(unit, foundation, identity) {
-  const base = webReports(unit, foundation, 33, 70)
-  const auth = webReports(unit, identity, 6, 70)
+  const base = webReports(unit, foundation, 33, 85)
+  const auth = webReports(unit, identity, 13, 85)
   return { ...base, oidcPlaywright: auth.playwright }
 }
 

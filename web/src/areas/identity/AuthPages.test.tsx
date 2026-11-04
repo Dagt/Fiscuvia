@@ -94,7 +94,7 @@ describe('acceso real sin datos fiscales simulados', () => {
     )
     view('/app')
     await userEvent.click(
-      await screen.findByRole('button', { name: /Despacho 1/ }),
+      await screen.findByRole('button', { name: /Nombre comercial pendiente/ }),
     )
     expect(
       await screen.findByText('Necesitas permisos para continuar'),

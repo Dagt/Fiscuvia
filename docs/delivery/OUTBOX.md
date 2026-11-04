@@ -1,5 +1,9 @@
 # Outbox transaccional y protocolo de entrega — #29
 
+## Productores de despachos #31
+
+Alta, edición autorizada y estado administrativos generan sus notificaciones de auditoría mediante el mismo append transaccional #29. El payload continúa cerrado a auditEventId; no transporta nombre, contacto, sesión, autoridad de negocio o archivos. No se instala worker ni se amplían scopes de transporte. Reintentos idempotentes de provisioning/configuración no duplican el evento confirmado. Fallo de outbox revierte raíz/membresía/perfil/journal/recibo según la operación. [Diseño V6 y pruebas](../architecture/TENANT-PROVISIONING.md).
+
 ADR-008 continúa Proposed. Esta entrega instala persistencia y protocolo PostgreSQL; **no** instala scheduler, polling, broker, handler de negocio o cuenta de worker. No hay Kafka/Rabbit/Redis, servicios externos ni autoridad de sistema para trabajar expedientes. [Journal y atomicidad](../security/AUDIT-JOURNAL.md).
 
 ## Contrato implementado

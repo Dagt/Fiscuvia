@@ -9,7 +9,8 @@ public final class SafeRoutes {
             "/actuator/metrics/{requiredMetricName}", "/error", "/api/v1/me", "/api/v1/auth/status",
             "/api/v1/auth/csrf", "/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/tenant",
             "/api/v1/auth/authorize/local", "/api/v1/auth/callback/local", "/api/v1/auth/invitations",
-            "/api/v1/auth/invitations/accept", "/api/v1/auth/invitations/revoke", "/api/v1/auth/memberships/status");
+            "/api/v1/auth/invitations/accept", "/api/v1/auth/invitations/revoke", "/api/v1/auth/memberships/status",
+            "/api/v1/tenants/{tenantId}/settings");
     private static final Set<String> METHODS = Set.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE");
     private SafeRoutes() {}
     public static String route(String template) { return ROUTES.contains(template == null ? "" : template) ? template : "UNMAPPED"; }

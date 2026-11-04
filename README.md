@@ -1,5 +1,7 @@
 # Fiscuvia
 
+**Despachos #31:** [provisioning interno, configuración y límites de autoridad](docs/architecture/TENANT-PROVISIONING.md). Nuevo módulo tenants, perfiles privados, lifecycle administrativo no destructivo, configuración autorizada y nombres reales en AppShell. Sin operador HTTP, alta pública, cobros o almacenamiento de logos. La habilitación permanente de TENANT_SETTINGS_MANAGE requiere aprobación expresa de la política mínima documentada; permanece DENY mientras esté pendiente. No se adelantan #32/#33 ni el gate fiscal #74.
+
 **Base visual #52:** [design system y AppShell implementados](docs/ux/DESIGN-SYSTEM-52.md), catálogo `/desarrollo/componentes` y [evidencia real](docs/ux/evidence/issue-52/README.md). Referencia escrita aprobada por Dagt el 2026-11-03 (opción B OQ-021); el collage continúa ausente. No implementa provisioning #31 ni pixel-diff #56.
 
 **Todo tu despacho, una sola vía.**

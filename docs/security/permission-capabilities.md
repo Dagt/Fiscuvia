@@ -1,5 +1,9 @@
 # Catálogo de capacidades (propuesto)
 
+## Propuesta mínima pendiente #31
+
+`TENANT_READ` conserva sus grants aprobados #27. Se propone `TENANT_SETTINGS_MANAGE` sólo para FIRM_OWNER_ADMIN, en su despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable ≤10 minutos. Campos: nombre comercial, contacto opcional, zona horaria y locale es-MX. No permite estado/owner/roles/logo/expedientes; supervisor/contador/auxiliar DENY. **No está concedida permanentemente sin aprobación expresa del propietario.** V6 no instala ese grant; las pruebas lo ejercitan sólo como política sintética desechable. Alta/suspensión/reactivación usan exclusivamente el procedimiento migrador interno aprobado en el encargo, sin OPERATOR_TENANT_PROVISION HTTP ni privilegios fiscales. [Autoridad, fronteras y pruebas](../architecture/TENANT-PROVISIONING.md). No resuelve toda OQ-015.
+
 Implementar comprobación centralizada por capacidad y resource scope; no dispersar `if role === ...` ni confiar en listas de permisos proporcionadas por el frontend. Estado: Proposed hasta aprobación.
 
 ## Identidad / tenant

@@ -1,5 +1,11 @@
 # CI reproducible — issue #23
 
+## Gate de despachos #31
+
+Se preservan los cinco jobs, permisos mínimos, presupuesto y suites previas. Nuevos mínimos: **330 Java (302+28),85 Vitest,33 Playwright de fundación/catálogo,13 OIDC y18 tools/ci**. El harness OIDC aprovisiona los despachos mediante el procedimiento real, después de identidad verificada, con nombres/política de edición exclusivamente sintéticos y sin entrada al JAR. OpenAPI/generación conserva comandos #24 y añade schemas cerrados de settings; el navegador valida respuestas HTTP reales. No se publican handoff, logs, claves, OTP, JAR, SBOM o capturas dentro de artifacts; la allowlist anterior permanece intacta. Las capturas revisables se versionan aparte con procedencia.
+
+Comandos locales completos de abajo, más suites nuevas detectadas automáticamente; no usar flags skip. La cuenta pudo ejecutar #88: no copiar el antiguo bloqueo #79 como estado del PR nuevo. Registrar cinco SUCCESS del SHA final real, o el fallo comprobado. [Modelo, autoridad y riesgos](../architecture/TENANT-PROVISIONING.md). La evidencia #52 es histórica y su validador queda ligado al merge aceptado879faee5; la UI actual requiere capturas #31, no reetiquetar las antiguas.
+
 ## Gate visual #52
 
 Mínimos web efectivos: **70 Vitest,33 Playwright fundación/catálogo y6 OIDC**, conservando cada prueba anterior. `reports.mjs` y sus oráculos rechazan reducción, omisiones, reintentos/flaky o fallos. Tools/ci conserva16 y backend295 (270+25). No cambia el workflow ni sus cinco checks/permisos/presupuesto. Los screenshots de suites se generan en `.ci-work` privado, sin sobrescribir #21/#27 ni ampliar artifacts. [Referencia aprobada, contratos y comandos](../ux/DESIGN-SYSTEM-52.md), [evidencia real](../ux/evidence/issue-52/README.md). Ejecutar los cinco checks sobre el head final; no reutilizar resultados históricos.
