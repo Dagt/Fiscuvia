@@ -45,12 +45,12 @@ test('Web: rechaza omitidos, flaky, reintentos y resultados faltantes', () => {
   const retry = structuredClone(e2e)
   retry.suites[0].specs[0].tests[0].results.push({ status: 'passed' })
   assert.throws(() => webReports(unit, retry, 1))
-  const completeUnit = { ...unit, numTotalTests: 70, numPassedTests: 70 }
+  const completeUnit = { ...unit, numTotalTests: 85, numPassedTests: 85 }
   const suite = n => ({ ...e2e, suites: [{ specs: [{ tests: Array.from({length:n}, () => structuredClone(e2e.suites[0].specs[0].tests[0])) }] }], stats: {...e2e.stats, expected:n} })
-  assert.equal(completeWebReports(completeUnit, suite(33), suite(6)).oidcPlaywright, 6)
-  assert.throws(() => completeWebReports(completeUnit, suite(33), suite(5)))
-  assert.throws(() => completeWebReports(completeUnit, suite(32), suite(6)))
-  assert.throws(() => completeWebReports({...completeUnit,numTotalTests:69,numPassedTests:69}, suite(33), suite(6)))
+  assert.equal(completeWebReports(completeUnit, suite(33), suite(13)).oidcPlaywright, 13)
+  assert.throws(() => completeWebReports(completeUnit, suite(33), suite(12)))
+  assert.throws(() => completeWebReports(completeUnit, suite(32), suite(13)))
+  assert.throws(() => completeWebReports({...completeUnit,numTotalTests:84,numPassedTests:84}, suite(33), suite(13)))
 })
 
 test('OpenAPI: documento actual válido; fixtures inválidos deben fallar', () => {

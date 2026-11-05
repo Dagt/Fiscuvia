@@ -47,7 +47,8 @@ try {
   const serve = process.argv.includes('--serve')
   const referenceAudit = process.argv.includes('--reference-audit')
   const designAudit = process.argv.includes('--design-system-audit')
+  const tenantAudit = process.argv.includes('--tenant-provisioning-audit')
   if (serve) console.log('Entorno local real: https://127.0.0.1:4174. Credenciales sintéticas privadas en .ci-work/27-browser.json; no compartir ese archivo. Ctrl+C limpia los recursos.')
-  browser = run(process.execPath, serve ? ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '4174', '--strictPort'] : designAudit ? [resolve(root, 'tools/ux/capture-design-system.mjs')] : referenceAudit ? [resolve(root, 'tools/ux/capture-reference.mjs')] : ['node_modules/@playwright/test/cli.js', 'test', '--config', 'playwright.auth.config.ts', '--reporter=line,json'], { cwd: resolve(root, 'web'), env: { ...process.env, FISCUVIA_AUTH_HARNESS_FILE: config, PLAYWRIGHT_JSON_OUTPUT_FILE: resolve(work, 'playwright-auth.json') }, stdio: 'inherit' })
+  browser = run(process.execPath, serve ? ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '4174', '--strictPort'] : tenantAudit ? [resolve(root,'tools/ux/capture-tenant-provisioning.mjs')] : designAudit ? [resolve(root, 'tools/ux/capture-design-system.mjs')] : referenceAudit ? [resolve(root, 'tools/ux/capture-reference.mjs')] : ['node_modules/@playwright/test/cli.js', 'test', '--config', 'playwright.auth.config.ts', '--reporter=line,json'], { cwd: resolve(root, 'web'), env: { ...process.env, FISCUVIA_AUTH_HARNESS_FILE: config, PLAYWRIGHT_JSON_OUTPUT_FILE: resolve(work, 'playwright-auth.json') }, stdio: 'inherit' })
   await wait(browser)
 } finally { await cleanup() }

@@ -23,17 +23,23 @@ export function AuthorizedTenantContext({
     )
   return (
     <div className="auth-memberships">
-      {memberships.map((member, index) => (
+      {memberships.map((member) => (
         <button
-          key={member.membershipId}
+          key={`${member.tenantId}:${member.membershipId}:${member.role}`}
           className="auth-membership"
-          disabled={pending}
+          disabled={pending || member.tenantStatus === 'SUSPENDED'}
           onClick={() => onChoose(member.tenantId)}
         >
           <Building2 aria-hidden="true" />
           <span>
-            <strong>Despacho {index + 1}</strong>
-            <small>{roleLabel[member.role]}</small>
+            <strong>
+              {member.commercialName || 'Nombre comercial pendiente'}
+            </strong>
+            <small>
+              {member.tenantStatus === 'SUSPENDED'
+                ? 'Suspendido · Sin acceso operativo'
+                : roleLabel[member.role]}
+            </small>
           </span>
           <ArrowRight size={18} aria-hidden="true" />
         </button>

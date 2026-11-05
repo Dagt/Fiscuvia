@@ -1,5 +1,9 @@
 # Catálogo de capacidades (propuesto)
 
+## Propuesta mínima pendiente #31
+
+`TENANT_READ` conserva sus grants aprobados #27. `TENANT_SETTINGS_MANAGE` cuenta con [aprobación expresa limitada del propietario](https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209): sólo FIRM_OWNER_ADMIN, en su despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable ≤10 minutos. Campos: nombre comercial, contacto opcional, zona horaria permitida y locale es-MX. No permite estado/owner/roles/logo/expedientes; supervisor/contador/auxiliar DENY. **V7 instala permanentemente esa única política con requires_mfa=true y referencia de aprobación; V1–V6 no cambian.** Las pruebas OIDC/SQL y navegador usan la política migrada, sin grant sintético de edición. Alta/suspensión/reactivación usan exclusivamente el procedimiento migrador interno aprobado, sin OPERATOR_TENANT_PROVISION HTTP ni privilegios fiscales. [Autoridad, fronteras y pruebas](../architecture/TENANT-PROVISIONING.md). No resuelve toda OQ-015 ni aprueba proveedor/MFA productivo.
+
 Implementar comprobación centralizada por capacidad y resource scope; no dispersar `if role === ...` ni confiar en listas de permisos proporcionadas por el frontend. Estado: Proposed hasta aprobación.
 
 ## Identidad / tenant

@@ -10,10 +10,13 @@ const dir = resolve(root, 'docs/ux/evidence/issue-52')
 const manifest = JSON.parse(readFileSync(resolve(dir, 'capture-manifest.json'), 'utf8'))
 const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
 const hash = file => createHash('sha256').update(readFileSync(file)).digest('hex')
-assert.equal(manifest.applicationTree, git(['rev-parse', 'HEAD:web']), 'Capture UI differs from final HEAD')
+// #52 is an accepted historical baseline; #31 has its own capture manifest. Never relabel old
+// screenshots as current UI or change their recorded application/script provenance.
+const accepted = '879faee5b2872c1783859b998bf09119257f2472'
+assert.equal(manifest.applicationTree, git(['rev-parse', `${accepted}:web`]), 'Capture UI differs from accepted #52')
 assert.equal(manifest.applicationTree, git(['rev-parse', `${manifest.captureSourceCommit}:web`]))
 assert.equal(manifest.captureScriptSha256, hash(resolve(root, 'tools/ux/capture-design-system.mjs')))
-assert.equal(manifest.harnessRunnerSha256, hash(resolve(root, 'tools/ci/auth-browser.mjs')))
+assert.equal(manifest.harnessRunnerSha256, createHash('sha256').update(execFileSync('git',['show',`${accepted}:tools/ci/auth-browser.mjs`],{cwd:root})).digest('hex'))
 assert(manifest.checks.length >= 3 && manifest.checks.every(check => check.passed))
 assert(manifest.screenshots.length >= 35)
 assert.equal(new Set(manifest.screenshots.map(shot => shot.file)).size, manifest.screenshots.length)
@@ -50,5 +53,5 @@ for (const relative of ['docs/ux/DESIGN-SYSTEM-52.md', 'docs/ux/evidence/issue-5
 const oq = readFileSync(resolve(root, 'docs/product/open-questions.md'), 'utf8').split('\n').find(line => line.startsWith('- **OQ-021'))
 assert(oq.includes('Resolved') && oq.includes('6598264416') && oq.includes('2026-11-03'))
 console.log(JSON.stringify({ testedHead: git(['rev-parse','HEAD']), captureSource: manifest.captureSourceCommit, sameApplicationTree: true,
-  screenshots: manifest.screenshots.length, validLocalLinks: links, dimensionsHashesAxeOverflow: 'PASS', chromium: manifest.chromium,
+  historicalAcceptedCommit: accepted, screenshots: manifest.screenshots.length, validLocalLinks: links, dimensionsHashesAxeOverflow: 'PASS', chromium: manifest.chromium,
   limitation: 'Real UI evidence; no pixel-diff or complete WCAG certification; production identity/permissions/fiscal gates unchanged' }))

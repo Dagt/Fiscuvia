@@ -1,5 +1,11 @@
 # Fiscuvia web — design system y AppShell #52
 
+## Configuración de despacho #31
+
+`/app` consume nombres/estados propios de `/api/v1/me` y configura el despacho seleccionado mediante GET/POST `/api/v1/tenants/{tenantId}/settings`. Reutiliza el kit #52; sin operador inventado, alta pública ni datos DEMO en la vista operativa. Logo sin almacenamiento aprobado: referencia NULL y fallback Lucide. Formularios con versión/idempotencia/CSRF, confirmación, cancelar, carga/error y éxito sólo tras respuesta real. `canManage` es presentación, nunca seguridad; V7 instala la política de edición aprobada sólo para owner del propio despacho con MFA confiable reciente. Otros roles permanecen DENY. [Autoridad y configuración](../docs/architecture/TENANT-PROVISIONING.md).
+
+Nuevo código en `areas/tenants` y cliente tipado `shared/api/firm-client.ts`. Queries incluyen usuario/tenant y AbortSignal; cambio, revocación y suspensión retiran contexto y datos anteriores. El harness local/test aprovisiona identidades y despachos sintéticos mediante el procedimiento real, fuera del JAR; la capacidad de edición procede exclusivamente de Flyway V7, igual que en una instalación normal. Ejecutar los comandos completos existentes y `node tools/ci/auth-browser.mjs` desde raíz; las pruebas OIDC verifican settings reales, no mocks de seguridad.
+
 ## Estado actual #52
 
 [Referencia aprobada por Dagt](https://github.com/Dagt/Fiscuvia/issues/52#issuecomment-6598264416): opción B OQ-021, 2026-11-03. [Biblioteca implementada, props y tokens](../docs/ux/DESIGN-SYSTEM-52.md), [capturas](../docs/ux/evidence/issue-52/README.md). React19/TypeScript estricto/Vite/Tailwind, Inter local/Lucide/Radix/Query; ninguna dependencia nueva ni cambio de contratos backend.

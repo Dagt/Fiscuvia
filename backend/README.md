@@ -1,5 +1,11 @@
 # Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–29
 
+## Despachos #31
+
+[Guía implementada de provisioning, SQL, configuración y operación local](../docs/architecture/TENANT-PROVISIONING.md). V6 añade perfiles/recibos privados, procedimientos administrativos específicos y GET/POST de settings bajo AuthorizedTenantOperations. V7 instala la política limitada de edición owner+MFA expresamente aprobada; V1–V6 permanecen intactas. Tests/harness consumen esa política real sin sembrar grants de edición. `/me` entrega nombres/estados propios; suspensión bloquea acceso operativo. No hay endpoint de operador, logo upload o capacidades fiscales. No se añaden dependencias ni proveedores.
+
+Pruebas específicas: `./mvnw -B -ntp -Dtest=TenantProvisioningTests -Dit.test=ProvisioningMigrationIT verify` (PowerShell: `./mvnw.cmd -B -ntp '-Dtest=TenantProvisioningTests' '-Dit.test=ProvisioningMigrationIT' verify`). No reemplaza `clean verify` completo. PostgreSQL18.6, Keycloak real y Docker son obligatorios; no hay skip sin Docker. El verificador CI preserva 295 pruebas anteriores y exige las suites nuevas. Guardas comprueban privilegios/FORCE del directorio; las mutaciones sólo ocurren en contenedores desechables.
+
 Backend ejecutable local/test con PostgreSQL real y Flyway. Base #20–26 integrada con raíz mínima de despachos y RLS. Sin tablas fiscales ni endpoints de negocio. Gate #74 y matriz funcional/OQ-015 siguen pendientes. #27 está integrado; #28 añade [capacidad/recurso y transacciones autorizadas](../docs/security/RESOURCE-AUTHORIZATION.md), V4 y pruebas negativas. No se otorgan permisos fiscales todavía.
 
 PR #82/#26 está integrado en main `05b5b18b157cd88d8f76967f9d2d3b179960f7aa`. #27 añade Spring Security 7.1.2, Spring Session JDBC 4.1.1, V3 y Keycloak 26.8.1 exclusivamente local/test. [Guía efectiva de autenticación, configuración, SQL y límites](../docs/security/AUTHENTICATION.md); [validación local](VALIDATION-27.md). La propuesta inicial se conserva como antecedente; no se aprueba proveedor de producción.

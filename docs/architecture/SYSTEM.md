@@ -1,4 +1,8 @@
 # Arquitectura de Fiscuvia (propuesta v0.1)
+
+## Implementación de despachos #31
+
+El módulo real `tenants` incorpora perfiles privados de raíz, provisioning/estado administrativos internos y configuración bajo autorización #28. [Modelo, autoridad, concurrencia y límites](TENANT-PROVISIONING.md). Reutiliza OIDC/sesiones, RLS y journal/outbox; identity mantiene un directorio estrecho de metadata de membresías propias, sin dependencia Java circular. No hay operador SaaS HTTP, alta autoservicio, planes, worker ni almacenamiento de logos. V7 instala la capacidad limitada de edición owner+MFA según la aprobación expresa registrada en el PR #89; no se acepta toda OQ-015 o ADR-015. Los módulos fiscales siguientes siguen siendo propuesta y gate #74.
 ## Stack
 Backend Java 25 LTS (Java 21 LTS si compatibilidad lo exige), Spring Boot estable compatible y Spring Modulith. Frontend React 19, TypeScript, Vite, Tailwind y shadcn/ui. PostgreSQL con Flyway y RLS; almacenamiento S3/R2 privado; identidad OIDC; OpenAPI; GitHub Actions; OpenTelemetry/Sentry.
 ## Arquitectura

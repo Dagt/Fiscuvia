@@ -32,14 +32,20 @@ export function useAuthorizedSession() {
   useEffect(() => {
     identityRef.current = identity.data
   }, [identity.data])
+  const freshMember = identity.data?.memberships.find(
+    (m) =>
+      selection &&
+      sameMembership(m, selection.member) &&
+      m.tenantStatus !== 'SUSPENDED',
+  )
   const selected =
     selection &&
     !identity.isFetching &&
     !identity.isError &&
     !busy &&
     selection.userId === identity.data?.userId &&
-    identity.data?.memberships.some((m) => sameMembership(m, selection.member))
-      ? selection.member
+    freshMember
+      ? freshMember
       : null
   async function clearContext() {
     const filters = {
@@ -52,6 +58,33 @@ export function useAuthorizedSession() {
     await client.cancelQueries(filters)
     client.removeQueries(filters)
   }
+  useEffect(() => {
+    if (
+      selection &&
+      !identity.isFetching &&
+      (identity.isError ||
+        selection.userId !== identity.data?.userId ||
+        !freshMember)
+    ) {
+      epoch.current++
+      const filters = {
+        predicate: (query: { queryKey: readonly unknown[] }) =>
+          !['current-identity', 'auth-status', 'login-csrf'].includes(
+            String(query.queryKey[0]),
+          ),
+      }
+      void client
+        .cancelQueries(filters)
+        .then(() => client.removeQueries(filters))
+    }
+  }, [
+    selection,
+    identity.isFetching,
+    identity.isError,
+    identity.data?.userId,
+    freshMember,
+    client,
+  ])
   useEffect(() => {
     if (
       identity.error instanceof ApiClientError &&
@@ -70,7 +103,12 @@ export function useAuthorizedSession() {
   )
   async function choose(tenantId: string) {
     const before = identityRef.current
-    if (busy || !before?.memberships.some((m) => m.tenantId === tenantId))
+    if (
+      busy ||
+      !before?.memberships.some(
+        (m) => m.tenantId === tenantId && m.tenantStatus !== 'SUSPENDED',
+      )
+    )
       return
     const ticket = ++epoch.current
     setSelection(null)
@@ -85,7 +123,9 @@ export function useAuthorizedSession() {
       client.setQueryData(['current-identity'], fresh)
       if (
         fresh.userId !== before.userId ||
-        !fresh.memberships.some((m) => sameMembership(m, member))
+        !fresh.memberships.some(
+          (m) => sameMembership(m, member) && m.tenantStatus !== 'SUSPENDED',
+        )
       ) {
         setDenied(true)
       } else setSelection({ userId: fresh.userId, member })
@@ -131,7 +171,27 @@ export function useAuthorizedSession() {
       setBusy(false)
     }
   }
-  return { identity, selected, busy, denied, failed, choose, change, exit }
+  async function unavailable(status: number) {
+    epoch.current++
+    setSelection(null)
+    setDenied(status === 403)
+    await clearContext()
+    if (status === 401) {
+      client.clear()
+      await navigate('/login?estado=expirada', { replace: true })
+    } else await identity.refetch()
+  }
+  return {
+    identity,
+    selected,
+    busy,
+    denied,
+    failed,
+    choose,
+    change,
+    exit,
+    unavailable,
+  }
 }
 function sameMembership(a: Membership, b: Membership) {
   return (

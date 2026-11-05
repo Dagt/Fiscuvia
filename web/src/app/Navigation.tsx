@@ -34,7 +34,7 @@ export function Navigation({
       {authenticated && (
         <NavLink to="/app" className="nav-link" onClick={onNavigate}>
           <Home size={19} aria-hidden="true" />
-          Tu acceso
+          Tu despacho
         </NavLink>
       )}
       <NavLink end to="/desarrollo" className="nav-link" onClick={onNavigate}>

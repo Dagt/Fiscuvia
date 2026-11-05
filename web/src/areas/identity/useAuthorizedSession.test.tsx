@@ -47,6 +47,55 @@ async function setup() {
   return { ...hook, client }
 }
 describe('contexto visual autorizado y cache', () => {
+  it('muestra el nombre fresco del servidor sin conservar el nombre previo', async () => {
+    vi.mocked(api.authorizeTenant).mockResolvedValue({
+      ...first,
+      commercialName: 'Anterior DEMO',
+    })
+    const { result, client } = await setup()
+    vi.mocked(api.currentIdentity).mockResolvedValue({
+      ...identity,
+      memberships: [{ ...first, commercialName: 'Actual DEMO' }],
+    })
+    await act(async () => {
+      await result.current.choose(first.tenantId)
+    })
+    expect(result.current.selected?.commercialName).toBe('Actual DEMO')
+    client.setQueryData(['firm-settings', identity.userId, first.tenantId], {
+      commercialName: 'Actual DEMO',
+    })
+    await act(async () => {
+      client.setQueryData(['current-identity'], {
+        ...identity,
+        memberships: [second],
+      })
+    })
+    await waitFor(() => expect(result.current.selected).toBeNull())
+    await waitFor(() =>
+      expect(
+        client.getQueryData(['firm-settings', identity.userId, first.tenantId]),
+      ).toBeUndefined(),
+    )
+  })
+  it('un despacho suspendido nunca obtiene contexto operativo', async () => {
+    const { result, client } = await setup()
+    await act(async () => {
+      client.setQueryData(['current-identity'], {
+        ...identity,
+        memberships: [{ ...first, tenantStatus: 'SUSPENDED' }],
+      })
+    })
+    await waitFor(() =>
+      expect(result.current.identity.data?.memberships[0]?.tenantStatus).toBe(
+        'SUSPENDED',
+      ),
+    )
+    await act(async () => {
+      await result.current.choose(first.tenantId)
+    })
+    expect(api.authorizeTenant).not.toHaveBeenCalled()
+    expect(result.current.selected).toBeNull()
+  })
   it('no selecciona una membresía sin la respuesta del servidor', async () => {
     let resolve!: (member: api.Membership) => void
     vi.mocked(api.authorizeTenant).mockImplementation(

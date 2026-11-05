@@ -17,7 +17,14 @@ function membership(value: unknown): value is Membership {
     typeof value.membershipId === 'string' &&
     uuid.test(value.membershipId) &&
     typeof value.role === 'string' &&
-    roles.includes(value.role)
+    roles.includes(value.role) &&
+    (value.commercialName === undefined ||
+      value.commercialName === null ||
+      (typeof value.commercialName === 'string' &&
+        value.commercialName.length <= 160)) &&
+    (value.tenantStatus === undefined ||
+      value.tenantStatus === 'ACTIVE' ||
+      value.tenantStatus === 'SUSPENDED')
   )
 }
 /** Cookie-bearing calls can never be redirected to a configurable external API/IdP. */
@@ -36,12 +43,18 @@ export function bffBase(
     throw new ApiClientError('INVALID_RESPONSE')
   return '/api/v1'
 }
-async function request(path: string, body?: unknown): Promise<unknown> {
+export async function sessionRequest(
+  path: string,
+  body?: unknown,
+  options: { signal?: AbortSignal | undefined; idempotencyKey?: string } = {},
+): Promise<unknown> {
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (body !== undefined) {
     headers['Content-Type'] = 'application/json'
     headers['X-CSRF-TOKEN'] = (await getCsrf()).token
   }
+  if (options.idempotencyKey)
+    headers['Idempotency-Key'] = options.idempotencyKey
   let response: Response
   try {
     response = await fetch(`${bffBase()}${path}`, {
@@ -50,6 +63,7 @@ async function request(path: string, body?: unknown): Promise<unknown> {
       redirect: 'error',
       cache: 'no-store',
       referrerPolicy: 'no-referrer',
+      signal: options.signal ?? null,
       headers,
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     })
@@ -81,6 +95,7 @@ async function request(path: string, body?: unknown): Promise<unknown> {
     throw new ApiClientError('INVALID_RESPONSE')
   }
 }
+const request = sessionRequest
 export async function getCsrf(): Promise<Csrf> {
   const value = await request('/auth/csrf')
   if (

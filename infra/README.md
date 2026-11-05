@@ -1,5 +1,9 @@
 # PostgreSQL local — issue #22
 
+## Administración interna de despachos #31
+
+[Procedimiento, verificación de owner y comandos Windows/POSIX](../docs/architecture/TENANT-PROVISIONING.md). `postgres/provision-firm.sql` crea raíz/perfil/primer propietario con journal/outbox y recibo idempotente; `change-firm-status.sql` suspende/reactiva con versión/aprobación. Sólo migrador custodiado, nunca runtime/sesiones/HTTP ni un operador fiscal ficticio. Contraseñas por prompt/almacén privado, sin argumentos ni archivos versionados. V6 admite instalación nueva y upgrade desde V5 sin borrar volumen; conservar clave HMAC. No hay alta pública, cobros, borrado irreversible o almacenamiento de logos.
+
 Entorno exclusivamente de desarrollo, con PostgreSQL oficial **18.6-alpine3.24** fijado por tag y digest multi-arquitectura:
 
 ```text

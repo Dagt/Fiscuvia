@@ -1,4 +1,8 @@
 # Aislamiento multi-tenant: especificación obligatoria
+
+## Raíz administrativa y perfiles #31
+
+[Provisioning y modelo V6](TENANT-PROVISIONING.md) conserva `app.tenants` y su cerca. Los metadatos globales de raíz están en tenant_private, sin grants runtime/sesiones, con FORCE y funciones específicas. El directorio previo al contexto devuelve únicamente nombres/estados de membresías propias ACTIVE; no permite enumerar empresas. Suspensión bloquea autorización operativa y aceptación de invitaciones, preservando historial y sesión global para logout. Las operaciones autorizadas bloquean el estado hasta commit; una suspensión confirmada antes de autorizar deniega el acceso siguiente. No cambia el HMAC/xid ni se permite utilizar un UUID/GUC como autoridad. Perfiles no son tablas fiscales ni una excepción de acceso a expedientes.
 **Tenant = despacho. Taxpayer = contribuyente gestionado por ese despacho.**
 
 Estado actual: #26–29 integrados; raíz mínima tenants, identidad/membresías, autorización por recurso y journal/outbox. [Infraestructura física](../data-model/tenant-foundation-26.md). #30 incorpora [regresión transversal y contratos futuros](../security/CROSS-TENANT-REGRESSION.md). Los puntos de archivos/cache/negocio siguientes son objetivos y no acreditan módulos productivos inexistentes.

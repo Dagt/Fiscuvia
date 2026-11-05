@@ -18,6 +18,7 @@ import { roleLabel } from './role-labels'
 import { useAuthorizedSession } from './useAuthorizedSession'
 import { authStatus, bffBase, getCsrf } from '../../shared/api/session-client'
 import './auth.css'
+import { FirmSettings } from '../tenants/FirmSettings'
 
 function AuthFrame({ children }: PropsWithChildren) {
   return (
@@ -154,8 +155,17 @@ export function LoginPage() {
   )
 }
 export function SessionPage() {
-  const { identity, selected, busy, denied, failed, choose, change, exit } =
-    useAuthorizedSession()
+  const {
+    identity,
+    selected,
+    busy,
+    denied,
+    failed,
+    choose,
+    change,
+    exit,
+    unavailable,
+  } = useAuthorizedSession()
   useEffect(() => {
     if (selected) document.getElementById('contenido')?.focus()
   }, [selected])
@@ -178,22 +188,22 @@ export function SessionPage() {
         )}
       </AuthFrame>
     )
-  const selectedIndex = identity.data.memberships.findIndex(
-    (m) => m.membershipId === selected?.membershipId,
-  )
   return (
     <AppShell
       authenticated
-      pageTitle={selected ? 'Tu acceso está listo' : 'Elige tu despacho'}
+      pageTitle={selected ? 'Tu despacho' : 'Elige tu despacho'}
       tenantContext={
         selected ? (
           <Button
             variant="ghost"
-            aria-label={`Contexto actual: Despacho ${selectedIndex + 1}`}
+            aria-label={`Contexto actual: ${selected.commercialName || 'Nombre comercial pendiente'}`}
+            title={selected.commercialName || 'Nombre comercial pendiente'}
             onClick={() => void change()}
           >
             <Building2 size={18} aria-hidden="true" />
-            Despacho {selectedIndex + 1}
+            <span className="firm-context-name">
+              {selected.commercialName || 'Nombre comercial pendiente'}
+            </span>
           </Button>
         ) : (
           <span className="context-label">Sin despacho seleccionado</span>
@@ -214,11 +224,18 @@ export function SessionPage() {
       <div className="page-container session-page">
         <PageHeader
           eyebrow="IDENTIDAD VERIFICADA"
-          title={selected ? 'Tu acceso está listo' : 'Elige tu despacho'}
+          title={selected ? 'Configuración del despacho' : 'Elige tu despacho'}
           description={
             selected
-              ? 'Tu membresía fue verificada por el servidor para este despacho.'
+              ? `${roleLabel[selected.role]} · Datos de contacto e identidad para tu equipo.`
               : 'Sólo aparecen los despachos con una membresía activa para tu identidad.'
+          }
+          secondaryActions={
+            selected ? (
+              <Button variant="secondary" onClick={() => void change()}>
+                Cambiar de despacho
+              </Button>
+            ) : undefined
           }
         />
         {denied && (
@@ -234,15 +251,13 @@ export function SessionPage() {
         {busy ? (
           <LoadingState />
         ) : selected ? (
-          <section className="auth-authorized">
-            <Building2 size={32} aria-hidden="true" />
-            <h2>Despacho autorizado</h2>
-            <p>{roleLabel[selected.role]}</p>
-            <p>Las áreas fiscales se incorporarán en próximas entregas.</p>
-            <Button variant="secondary" onClick={() => void change()}>
-              Cambiar de despacho
-            </Button>
-          </section>
+          <>
+            <FirmSettings
+              userId={identity.data.userId}
+              tenantId={selected.tenantId}
+              onUnavailable={(status) => void unavailable(status)}
+            />
+          </>
         ) : (
           <AuthorizedTenantContext
             memberships={identity.data.memberships}

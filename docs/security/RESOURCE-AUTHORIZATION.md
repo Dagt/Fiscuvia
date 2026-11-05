@@ -1,5 +1,9 @@
 # Autorización por recurso — infraestructura #28
 
+## Consumidor efectivo #31
+
+El módulo tenants consume `AuthorizedTenantOperations`, nunca `TenantTransactions`. TENANT_READ conserva sus cuatro roles aprobados; V7 instala TENANT_SETTINGS_MANAGE exclusivamente para owner del propio despacho con MFA confiable reciente, según aprobación parcial expresa. El resto de la matriz sigue DENY cuando no esté aprobado. No hay capacidad del operador ni roles comerciales nuevos. V6 ordena bloqueo de raíz antes de membresía/política y toma FOR UPDATE temprano para configuración; conserva el conjunto de recursos/locks de V4. La suspensión administrativa bloquea nuevas autorizaciones protegidas sin destruir asignaciones. [Contratos, autorización registrada y pruebas](../architecture/TENANT-PROVISIONING.md).
+
 Base: main `06707ffcd221c55f6b4e1a6437a82c8571823bee` (#27 integrado). FR-004/006/072/074, BR-003/013/050/082 y ADR-005/007 describen trazabilidad; no se convierten sus propuestas completas en decisiones Accepted. #74 sigue bloqueando tablas fiscales; OQ-015 y la matriz funcional están pendientes.
 
 ## Autoridad y permisos efectivos

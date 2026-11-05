@@ -1,0 +1,940 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-11-05T04:35:58.514Z",
+  "captureSourceCommit": "029fd8faf2bc736ce84c4ae21ef041796ee68711",
+  "settingsPolicy": {
+    "migration": "7",
+    "approvalReference": "https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209",
+    "harnessGrant": false
+  },
+  "applicationTree": "1401f4111d359052ec79ddffeba70ef94cb5ee3c",
+  "backendTree": "cd7e310969db8e45dbcd9a56d6912d2999b64937",
+  "fixtureTree": "6a011fec192d5ab7c59a19d0e16cfb7adeaf2ef6",
+  "captureScriptSha256": "1ca7bd8f2ac2f3770e9aae38e11e2e57c135e1289b414b4aa21f1a009d2abb4e",
+  "harnessRunnerSha256": "502266c8a1a1b9dcec7238a805a35a44f7d5735077224cf53590970c950e98a4",
+  "chromium": "156.0.8078.4",
+  "screenshots": [
+    {
+      "file": "selector-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Dos despachos aprovisionados por procedimiento real tras OIDC; metadata propia persistida",
+      "target": "page-start",
+      "sha256": "4a893967eda73bca68d0af8a7f5914dafbff0945bc8bce63390efd87cc6fb8c1",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 382.484375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "selector-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Dos despachos aprovisionados por procedimiento real tras OIDC; metadata propia persistida",
+      "target": "page-start",
+      "sha256": "f76519b305e31fc8d573403a7f834a12c060c27aaec6289a1e39b67e42cdd49a",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 427.65625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "GET settings real; política permanente owner+MFA aprobada e instalada por Flyway V7",
+      "target": "page-start",
+      "sha256": "ecaf9ca307e89bfa9f209922ae2cdd8227d96968c24a5b20457590cb5c56cadc",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-1280.png",
+      "width": 1280,
+      "height": 800,
+      "source": "GET settings real; política permanente owner+MFA aprobada e instalada por Flyway V7",
+      "target": "page-start",
+      "sha256": "4c1d6995ce32131ed8052a7d4c3377b581651dc92a11a17102ca33d06a578e41",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 800,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1040,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1040,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-768.png",
+      "width": 768,
+      "height": 1024,
+      "source": "GET settings real; política permanente owner+MFA aprobada e instalada por Flyway V7",
+      "target": "page-start",
+      "sha256": "891fea1597cc01d621e6e2a527cf18f302393f34d4fc80ce27a8b55a557035b7",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 768,
+          "height": 66,
+          "padding": "8px 24px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 768,
+          "height": 904.109375,
+          "padding": "24px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "GET settings real; política permanente owner+MFA aprobada e instalada por Flyway V7",
+      "target": "page-start",
+      "sha256": "ad75002950eb537a80a065543e04cd595923310b1a20ebdf1a92345340489f54",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1312.453125,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-acciones-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar",
+      "target": ".firm-form-actions",
+      "sha256": "8952b5057bb0775842e8d6e2a54297f86cc54580d0c53a98d6944ced90cf64db",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "formulario-acciones-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar",
+      "target": ".firm-form-actions",
+      "sha256": "3eb9f40de81f7abfc9bfa03693aec9de52a901088da8796556c01296a2a126c8",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1312.453125,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "sin-logo-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Contrato NULL y fallback Lucide; no existe upload ni almacenamiento público",
+      "target": "page-start",
+      "sha256": "ecaf9ca307e89bfa9f209922ae2cdd8227d96968c24a5b20457590cb5c56cadc",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "sin-logo-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Contrato NULL y fallback Lucide; no existe upload ni almacenamiento público",
+      "target": "page-start",
+      "sha256": "ad75002950eb537a80a065543e04cd595923310b1a20ebdf1a92345340489f54",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1312.453125,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "validacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Constraint nativo y mensaje Field asociado; sin mutación",
+      "target": "page-start",
+      "sha256": "6efb4dab3710d975d72f6e82c796f545fba743000ac7b0f6465e249b4594d7c8",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 950.5,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "validacion-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Constraint nativo y mensaje Field asociado; sin mutación",
+      "target": "page-start",
+      "sha256": "ae40ed8a1b53645f4868ae234014a9055477ac6b0767758d3a7113b3ebba86f4",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1342.84375,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "confirmacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Radix compartido #52; foco inicial en cancelar, sin guardar todavía",
+      "target": "page-start",
+      "sha256": "bee9e431722cde136e19f548d19112ceb159389b1b1c1fdd22bed9b44ca6bdc7",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "confirmacion-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Radix compartido #52; foco inicial en cancelar, sin guardar todavía",
+      "target": "page-start",
+      "sha256": "b6e5047e1a869c6376dac50d12bccfd1ad9e115e47b4a51ce8519e0240d7d79b",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1312.453125,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "guardado-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "POST real confirmado, GET verifica persistencia y /me actualiza nombre del shell",
+      "target": "page-start",
+      "sha256": "b8bdfecbd12dc1b1393fa0eab9454f007d6d9554ade8e7d21c0ae1172e61d9d4",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "guardado-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "POST real confirmado, GET verifica persistencia y /me actualiza nombre del shell",
+      "target": "page-start",
+      "sha256": "8f6298d53fd031229ace9d56495de1e283fdded922a28f0de99a2ad046902aad",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1334.84375,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "nombre-largo-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Nombre persistido extenso; wrapping en contenido y nombre accesible completo del contexto",
+      "target": "page-start",
+      "sha256": "2971e5414723110e6776f31364c74e7752b5025c51a4017fab41b5a2bc662b4e",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 920.109375,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "nombre-largo-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Nombre persistido extenso; wrapping en contenido y nombre accesible completo del contexto",
+      "target": "page-start",
+      "sha256": "1a68261bc351277f2c7db345d015f8cc33454eebb424e0f56c1113d8be98eb8c",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1357.234375,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "loading-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Solicitud real retenida en Chromium; no hay datos anteriores visibles",
+      "target": "page-start",
+      "sha256": "4b6261b18e95cb66a05a4e8cc530644011f04b313a3f918c9146f94ea9d48156",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 521.78125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "loading-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Solicitud real retenida en Chromium; no hay datos anteriores visibles",
+      "target": "page-start",
+      "sha256": "57ef6ff02df9bb713a7b3ac9a5a3d696cf3a46ebbea9bdd25722604cf65774db",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 570.171875,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "error-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Fallo de transporte inyectado en navegador; no un éxito simulado",
+      "target": "page-start",
+      "sha256": "ccec41505c3f05e9d7850c9fd2ed4660241c7767a0b6c8faaecf83d58a2b9791",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 521.78125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "error-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Fallo de transporte inyectado en navegador; no un éxito simulado",
+      "target": "page-start",
+      "sha256": "6f1f5e9a9b4b94140e5e76faf69dd91d6b687c28894f6f90b2bf9f0ecf98f8d6",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 570.171875,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "solo-lectura-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Membresía ACCOUNTANT real; sin capacidad de edición, inputs readonly",
+      "target": "page-start",
+      "sha256": "652288b67cb0e3e2e128f0d0e36199d5211a4165b8eb48fec4d28aaf4de1064e",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 901.5,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "solo-lectura-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Membresía ACCOUNTANT real; sin capacidad de edición, inputs readonly",
+      "target": "page-start",
+      "sha256": "9c1ac06873c97058dcd1df2379f4120a3cf874d8111c5ced1cfa42c750cbaafa",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 1244.234375,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "denegado-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "403 real después de revocación confirmada; metadata y contexto retirados, identidad global conservada",
+      "target": "page-start",
+      "sha256": "14f842ee9aad93dae83d7f6cc8f8b2c49581b85ad49c71f63dcbc2d45022567d",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 670.46875,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "denegado-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "403 real después de revocación confirmada; metadata y contexto retirados, identidad global conservada",
+      "target": "page-start",
+      "sha256": "26b419848c745ffdec0005903dbab0c5b7c1b6391075325435009ed06f63c2df",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 715.640625,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "suspendido-1440.png",
+      "width": 1440,
+      "height": 900,
+      "source": "Estado persistido por procedimiento administrativo real; selector propio visible, acceso operativo denegado",
+      "target": "page-start",
+      "sha256": "9b78d31fb192c93b0b4780433b07c775d7824b13cba0a4668cf496f40a4490fe",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 240,
+          "height": 900,
+          "padding": "32px 16px 24px",
+          "display": "flex"
+        },
+        ".topbar": {
+          "width": 1200,
+          "height": 66,
+          "padding": "8px 32px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 1200,
+          "height": 269.78125,
+          "padding": "32px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    },
+    {
+      "file": "suspendido-390.png",
+      "width": 390,
+      "height": 844,
+      "source": "Estado persistido por procedimiento administrativo real; selector propio visible, acceso operativo denegado",
+      "target": "page-start",
+      "sha256": "e110626f1c2491ec903c38c461ef3ffc242cb2ea5f3c69a31fb8b4b40d4cd461",
+      "axeViolations": 0,
+      "horizontalOverflow": false,
+      "geometry": {
+        ".desktop-sidebar": {
+          "width": 0,
+          "height": 0,
+          "padding": "32px 16px 24px",
+          "display": "none"
+        },
+        ".topbar": {
+          "width": 390,
+          "height": 65,
+          "padding": "8px 12px",
+          "display": "flex"
+        },
+        ".page-container": {
+          "width": 390,
+          "height": 270.171875,
+          "padding": "24px 16px",
+          "display": "block"
+        },
+        ".auth-brand-panel": null,
+        ".auth-content": null
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "reflow-320",
+      "passed": true
+    },
+    {
+      "id": "zoom-200-percent",
+      "passed": true
+    },
+    {
+      "id": "confirmation-escape-focus-restore",
+      "passed": true
+    },
+    {
+      "id": "recoverable-error-real-retry",
+      "passed": true
+    },
+    {
+      "id": "revocation-real-403-context-cleared",
+      "passed": true
+    },
+    {
+      "id": "suspended-firm-disabled",
+      "passed": true
+    }
+  ]
+}

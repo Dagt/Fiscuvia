@@ -1,5 +1,7 @@
 # Contratos API — Fiscuvia
 
+**Actualización #31:** el contrato implementado añade configuración del despacho y nombres/estados propios, sin provisioning HTTP de operador. [Modelo, autorización y procedimiento interno](../architecture/TENANT-PROVISIONING.md). El grant permanente de edición está pendiente, DENY por defecto. CI remota ya ejecutó #88; el aviso histórico #79 al final no describe el estado del PR actual. Cada entrega debe aportar sus cinco checks del SHA final.
+
 [openapi-v1.yaml](openapi-v1.yaml) es la fuente implementada OpenAPI 3.1 / versión 1.0.0 para infraestructura #24 e identidad local/test #27. Incluye info pública, /me, CSRF, login/logout, validación de membresía e invitaciones mínimas. [Autenticación y límites](../security/AUTHENTICATION.md). No habilita módulos fiscales ni proveedor de producción.
 
 - [Convenciones y ejemplos seguros](conventions.md).
