@@ -86,9 +86,9 @@ class PostgresFoundationTests {
                         "journal_private.delivery_scopes","journal_private.denials",
                         "tenant_private.profiles","tenant_private.admin_commands","tenant_private.profile_commands");
             }
-            try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2','3','4','5','6')")) {
+            try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2','3','4','5','6','7')")) {
                 assertThat(result.next()).isTrue();
-                assertThat(result.getInt(1)).isEqualTo(6);
+                assertThat(result.getInt(1)).isEqualTo(7);
                 assertThat(result.getBoolean(2)).isTrue();
             }
             try (var result = statement.executeQuery("SELECT pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname='app'")) {

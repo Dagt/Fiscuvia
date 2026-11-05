@@ -2,7 +2,7 @@
 
 ## Despachos #31
 
-[Guía implementada de provisioning, SQL, configuración y operación local](../docs/architecture/TENANT-PROVISIONING.md). V6 conserva V1–V5; añade perfiles/recibos privados, procedimientos administrativos específicos y GET/POST de settings bajo AuthorizedTenantOperations. `/me` entrega nombres/estados propios; suspensión bloquea acceso operativo. No hay endpoint de operador, logo upload o capacidades fiscales. Edición permanente DENY hasta aprobar la política owner+MFA indicada en la guía; tests/harness usan política sintética aislada. No se añaden dependencias ni proveedores.
+[Guía implementada de provisioning, SQL, configuración y operación local](../docs/architecture/TENANT-PROVISIONING.md). V6 añade perfiles/recibos privados, procedimientos administrativos específicos y GET/POST de settings bajo AuthorizedTenantOperations. V7 instala la política limitada de edición owner+MFA expresamente aprobada; V1–V6 permanecen intactas. Tests/harness consumen esa política real sin sembrar grants de edición. `/me` entrega nombres/estados propios; suspensión bloquea acceso operativo. No hay endpoint de operador, logo upload o capacidades fiscales. No se añaden dependencias ni proveedores.
 
 Pruebas específicas: `./mvnw -B -ntp -Dtest=TenantProvisioningTests -Dit.test=ProvisioningMigrationIT verify` (PowerShell: `./mvnw.cmd -B -ntp '-Dtest=TenantProvisioningTests' '-Dit.test=ProvisioningMigrationIT' verify`). No reemplaza `clean verify` completo. PostgreSQL18.6, Keycloak real y Docker son obligatorios; no hay skip sin Docker. El verificador CI preserva 295 pruebas anteriores y exige las suites nuevas. Guardas comprueban privilegios/FORCE del directorio; las mutaciones sólo ocurren en contenedores desechables.
 

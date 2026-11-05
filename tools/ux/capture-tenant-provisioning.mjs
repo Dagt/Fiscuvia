@@ -31,6 +31,7 @@ try {
   }
 } catch (error) { server.kill(); throw error }
 const report = { schemaVersion: 1, capturedAt: new Date().toISOString(), captureSourceCommit: git(['rev-parse', 'HEAD']),
+  settingsPolicy: { migration: '7', approvalReference: 'https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209', harnessGrant: false },
   applicationTree: git(['rev-parse', 'HEAD:web']), backendTree: git(['rev-parse','HEAD:backend/src/main']), fixtureTree: git(['rev-parse','HEAD:backend/src/test']),
   captureScriptSha256: createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex'),
   harnessRunnerSha256: createHash('sha256').update(readFileSync(resolve(root, 'tools/ci/auth-browser.mjs'))).digest('hex'),
@@ -107,7 +108,7 @@ try {
   const memberships=(await(await page.request.get('/api/v1/me')).json()).memberships
   const tenant=memberships.find(m=>m.commercialName==='Despacho Horizonte DEMO').tenantId
   await chooseHorizonte()
-  for(const [w,h]of[[1440,900],[1280,800],[768,1024],[390,844]])await shot('formulario',w,h,'GET settings real; fixture de capacidad owner+MFA exclusivamente local/test')
+  for(const [w,h]of[[1440,900],[1280,800],[768,1024],[390,844]])await shot('formulario',w,h,'GET settings real; política permanente owner+MFA aprobada e instalada por Flyway V7')
   await both('formulario-acciones','Formulario real completo; guardar deshabilitado hasta modificar datos, sin acciones fuera del viewport al desplazar','.firm-form-actions')
   await both('sin-logo','Contrato NULL y fallback Lucide; no existe upload ni almacenamiento público')
   await page.setViewportSize({width:320,height:900})

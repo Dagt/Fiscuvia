@@ -38,11 +38,8 @@ public final class LocalOidcHarness {
         approvals.put("bob-3",List.of(UUID.randomUUID()));
         for(int i=3;i<=8;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
         approvals.put("bob-2",List.of(UUID.randomUUID()));
-        // Explicit synthetic permission exercise, never a production grant or application account.
-        try(var connection=DriverManager.getConnection(database.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,database.migrationPassword)) {
-            new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection,true))
-                .update("INSERT INTO access_control_private.role_capabilities VALUES('FIRM_OWNER_ADMIN','TENANT_SETTINGS_MANAGE','TENANT',true,'SYNTHETIC LOCAL HARNESS ONLY #31') ON CONFLICT DO NOTHING");
-        }
+        // Settings permission comes exclusively from the real approved V7 migration.
+        // Fixtures provision synthetic firms/identities, never role-capability grants.
         while(!Thread.currentThread().isInterrupted()) {
             if(System.in.available()>0 && new String(System.in.readNBytes(System.in.available()),java.nio.charset.StandardCharsets.UTF_8).contains("stop")) {
                 System.exit(0); // Shutdown hook closes the context and both owned containers before the JVM exits.

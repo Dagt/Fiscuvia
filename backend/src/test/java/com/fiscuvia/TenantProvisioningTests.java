@@ -37,9 +37,6 @@ class TenantProvisioningTests {
         ownerId=UUID.fromString(owner.login("alice").path("userId").asText());
         otherId=UUID.fromString(other.login("bob").path("userId").asText());
         unassignedId=UUID.fromString(unassigned.login("carol").path("userId").asText());
-        admin(s->assertThat(s.queryForObject("SELECT count(*) FROM access_control_private.role_capabilities WHERE capability='TENANT_SETTINGS_MANAGE'",Integer.class)).isZero());
-        // Synthetic policy exercise only until #31's permanent owner policy is explicitly approved.
-        admin(s->s.update("INSERT INTO access_control_private.role_capabilities VALUES('FIRM_OWNER_ADMIN','TENANT_SETTINGS_MANAGE','TENANT',true,'SYNTHETIC TEST #31') ON CONFLICT DO NOTHING"));
     }
     @AfterAll static void close(){if(owner!=null)owner.close();if(other!=null)other.close();if(unassigned!=null)unassigned.close();}
     Connection migration() throws SQLException{return DriverManager.getConnection(DATABASE.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,DATABASE.migrationPassword);}
@@ -76,6 +73,38 @@ class TenantProvisioningTests {
         admin(s->{s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);
             assertThat(s.queryForObject("SELECT count(*) FROM journal.outbox",Integer.class)).isEqualTo(2);
             assertThat(s.queryForObject("SELECT user_id FROM identity.memberships WHERE tenant_id=?",UUID.class,tenant)).isEqualTo(ownerId);});
+    }
+    @Test void migratedPolicyGrantsOnlyTheApprovedOwnerCapabilityWithMandatoryMfa() throws Exception {
+        admin(s->assertThat(s.queryForList("SELECT role_code,resource_kind,requires_mfa,approval_reference FROM access_control_private.role_capabilities WHERE capability='TENANT_SETTINGS_MANAGE'"))
+            .containsExactly(Map.of("role_code","FIRM_OWNER_ADMIN","resource_kind","TENANT","requires_mfa",true,
+                "approval_reference","https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209")));
+        UUID tenant=firm();assertThat(OidcBrowser.json(owner.get(path(tenant))).path("canManage").asBoolean()).isTrue();
+        assertThat(update(owner,tenant,UUID.randomUUID(),body(0,"Política permanente aprobada")).statusCode()).isEqualTo(200);
+        assertThat(version(tenant)).isEqualTo(1);
+    }
+    @Test void disabledGlobalOwnerCannotUseThePermanentSettingsGrant() throws Exception {
+        try(var browser=new OidcBrowser(TLS,OIDC)) {
+            UUID user=UUID.fromString(browser.login("alice").path("userId").asText());
+            UUID tenant=provision(UUID.randomUUID(),user,"Identidad desactivada DEMO");
+            String csrf=browser.csrf();
+            admin(s->s.update("UPDATE identity_private.users SET status='DISABLED' WHERE id=?",user));
+            try {
+                var response=browser.client.send(HttpRequest.newBuilder(URI.create(TLS.origin()+path(tenant)))
+                    .header("Content-Type","application/json").header("Idempotency-Key",UUID.randomUUID().toString()).header("X-CSRF-TOKEN",csrf)
+                    .POST(HttpRequest.BodyPublishers.ofString(body(0,"No permitido"))).build(),HttpResponse.BodyHandlers.ofString());
+                assertThat(response.statusCode()).isEqualTo(401);
+                admin(s->assertThat(s.queryForObject("SELECT version FROM tenant_private.profiles WHERE tenant_id=?",Long.class,tenant)).isZero());
+            } finally {admin(s->s.update("UPDATE identity_private.users SET status='ACTIVE' WHERE id=?",user));}
+        }
+    }
+    @Test void suspendedOrRevokedOwnerMembershipCannotUseThePermanentSettingsGrant() throws Exception {
+        for(String state:List.of("SUSPENDED","REVOKED")) {
+            UUID tenant=firm();admin(s->{s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);
+                s.update("UPDATE identity.memberships SET status=? WHERE tenant_id=? AND user_id=?",state,tenant,ownerId);});
+            assertThat(update(owner,tenant,UUID.randomUUID(),body(0,"No permitido")).statusCode()).isEqualTo(403);
+            admin(s->assertThat(s.queryForObject("SELECT version FROM tenant_private.profiles WHERE tenant_id=?",Long.class,tenant)).isZero());
+            assertThat(events(tenant)).noneMatch(row->row.get("event_code").equals("TENANT_PROFILE_UPDATED"));
+        }
     }
     @Test void ownerMustHaveAnExistingVerifiedOidcIdentity() throws Exception {
         assertThatThrownBy(()->provision(UUID.randomUUID(),UUID.randomUUID(),"No permitido")).isInstanceOf(org.springframework.dao.DataAccessException.class);

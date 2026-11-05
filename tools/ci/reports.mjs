@@ -35,8 +35,9 @@ const baseline = {
   'com.fiscuvia.AuditJournalTests': 44,
   'com.fiscuvia.JournalMigrationIT': 3,
   'com.fiscuvia.CrossTenantRegressionTests': 45,
-  'com.fiscuvia.TenantProvisioningTests': 34,
+  'com.fiscuvia.TenantProvisioningTests': 37,
   'com.fiscuvia.ProvisioningMigrationIT': 3,
+  'com.fiscuvia.TenantSettingsPolicyMigrationIT': 4,
 }
 
 export function backendReports(xmls, expected = baseline) {

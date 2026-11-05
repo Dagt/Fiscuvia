@@ -93,6 +93,11 @@ test('configuración real, nombres autorizados, fallback y reflow accesible', as
   page,
 }) => {
   await login(page, 'alice-2')
+  // No harness grant: the actual V7 policy must authorize this verified owner.
+  const tenant = await own(page)
+  const profile = await page.request.get(`/api/v1/tenants/${tenant}/settings`)
+  expect(profile.status()).toBe(200)
+  expect((await profile.json()).canManage).toBe(true)
   expect(
     await page.getByRole('button', { name: /Crear despacho/ }).count(),
   ).toBe(0)

@@ -238,7 +238,7 @@ export interface paths {
     put?: never
     /**
      * Actualizar configuración con capacidad explícita y MFA reciente
-     * @description Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable. Sin política aprobada permanece DENY. No permite cambiar owner, estado, logo, rol ni tenant. Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada, incluso si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
+     * @description Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable. Política limitada aprobada e instalada por V7 sólo para FIRM_OWNER_ADMIN del propio despacho; MFA confiable de los últimos diez minutos. Otros roles permanecen DENY. No permite cambiar owner, estado, logo, rol ni tenant. Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada, incluso si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
      */
     post: operations['updateFirmSettings']
     delete?: never

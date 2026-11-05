@@ -10,6 +10,7 @@ const dir=resolve(root,'docs/ux/evidence/issue-31')
 const manifest=JSON.parse(readFileSync(resolve(dir,'capture-manifest.json'),'utf8'))
 const git=args=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim()
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex')
+assert.deepEqual(manifest.settingsPolicy,{migration:'7',approvalReference:'https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209',harnessGrant:false})
 for(const [field,path]of[['applicationTree','web'],['backendTree','backend/src/main']]){
  assert.equal(manifest[field],git(['rev-parse',`${manifest.captureSourceCommit}:${path}`]))
  assert.equal(manifest[field],git(['rev-parse',`HEAD:${path}`]),'Current implementation differs from capture source')
@@ -38,4 +39,4 @@ for(const path of ['docs/architecture/TENANT-PROVISIONING.md','docs/ux/evidence/
  }
 }
 console.log(JSON.stringify({testedHead:git(['rev-parse','HEAD']),captureSource:manifest.captureSourceCommit,sameUiAndBackend:true,
- screenshots:28,checks:6,validLocalLinks:links,chromium:manifest.chromium,limitation:'Synthetic local policy; not approval of permanent permissions, production OIDC, logo storage or full WCAG certification'}))
+ screenshots:28,checks:6,validLocalLinks:links,chromium:manifest.chromium,settingsPolicy:'Owner approval #6649647209, real Flyway V7; no harness grant',limitation:'Production OIDC/MFA, full role matrix, logo storage and full WCAG certification remain pending'}))
