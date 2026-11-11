@@ -59,6 +59,7 @@ class IdentitySecurityConfiguration {
                         "/api/v1/auth/authorize/local","/api/v1/auth/callback/local").permitAll()
                 .requestMatchers("/api/v1/me","/api/v1/auth/tenant","/api/v1/auth/invitations/**","/api/v1/auth/memberships/**").authenticated()
                 .requestMatchers("/api/v1/tenants/*/settings").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/entitlements").authenticated()
                 .anyRequest().denyAll())
             .csrf(config->config.csrfTokenRepository(csrf))
             .requestCache(cache->cache.disable())
@@ -66,7 +67,7 @@ class IdentitySecurityConfiguration {
             .exceptionHandling(errors->errors
                 .authenticationEntryPoint((request,response,error)->problems.write(
                         request.getRequestURI().equals("/api/v1/me") || request.getRequestURI().startsWith("/api/v1/auth/")
-                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/settings")
+                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/(settings|entitlements)")
                                 ? ApiErrorCode.AUTHENTICATION_REQUIRED : ApiErrorCode.NOT_FOUND,request,response))
                 .accessDeniedHandler((request,response,error)->problems.write(ApiErrorCode.ACCESS_DENIED,request,response)))
             .sessionManagement(session->session.sessionFixation(fixation->fixation.changeSessionId()))

@@ -73,3 +73,7 @@ V4 restringe además la lectura SQL runtime de memberships a las propias, aun co
 [Journal durable](AUDIT-JOURNAL.md) recibe cambios reales de identidad en la misma transacción, sin convertir ACCESS_DECISION en historial. Rechazos privilegiados atribuibles registran una sincronización y persisten sólo después del rollback, mediante revalidación y prueba específica global, sin tenant/recurso solicitado. Un fallo de persistencia no concede acceso y no se presenta como evento durable.
 
 AuditJournal.execute permite un comando interno idempotente después de esta autorización fresca; un replay no evita la membresía/capacidad actual. El recibo no es un AuthorizedAccess reutilizable ni una respuesta HTTP cacheada. La cuenta de transporte de outbox no usa este puerto ni adquiere autoridad de negocio; futuros trabajos deben definir autoridad/revalidación aprobada. AUDIT_VIEW sigue DENY, sin lector público. Las referencias a #29 anteriores son el estado histórico previo a esta integración.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.

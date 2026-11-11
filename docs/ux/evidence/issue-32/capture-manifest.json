@@ -1,0 +1,660 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-11T12:54:31.198Z",
+  "chromium": "156.0.8078.4",
+  "captureCommand": "FISCUVIA_CAPTURE=1 npx playwright test e2e/plan-usage.spec.ts --project=desktop --project=mobile",
+  "fixture": "web/e2e/plan-usage.spec.ts",
+  "securityEvidence": "Separate real OIDC/PostgreSQL suites; these screenshots do not prove authorization",
+  "applicationSources": [
+    {
+      "sha256": "bb0c257d701f96c0b017949bcef08481209cba2d2600735ae168054c84ccf834",
+      "path": "backend/src/main/java/com/fiscuvia/FiscuviaApplication.java"
+    },
+    {
+      "sha256": "d84afcf49aac6ce0dce156e4a5c1cd6e4cf401a626268c3b2067a7d673898c0a",
+      "path": "backend/src/main/java/com/fiscuvia/audit/AuditJournal.java"
+    },
+    {
+      "sha256": "fa2a4ea494c1f424cc7f1e146d0076cd32aa947db412f0245b25205ea0f5be50",
+      "path": "backend/src/main/java/com/fiscuvia/audit/OutboxProtocol.java"
+    },
+    {
+      "sha256": "64af478988f3e25cab46b5e2f05ad2dd6472407a41ca2f5e3762a8121532931d",
+      "path": "backend/src/main/java/com/fiscuvia/audit/OutboxProtocols.java"
+    },
+    {
+      "sha256": "dae26a31f1d96a22d867b8910ae5e0a67f9d3547e3e673e67e86502a4db9c469",
+      "path": "backend/src/main/java/com/fiscuvia/audit/internal/JdbcAuditJournal.java"
+    },
+    {
+      "sha256": "21154fa670b6171c0e070c2e34b9f0963cdb450a0657e43a09c200fae83df14a",
+      "path": "backend/src/main/java/com/fiscuvia/audit/internal/JournalGuards.java"
+    },
+    {
+      "sha256": "06937d38242d20369cf5fadb55ff6b3e7561e8ba791cba7fc0437a0d953351f8",
+      "path": "backend/src/main/java/com/fiscuvia/audit/internal/PostgresOutboxProtocol.java"
+    },
+    {
+      "sha256": "b60284a0bad2ba56e652484facaf40eafd172c1471cc73c0bf31027ae1dd6ff2",
+      "path": "backend/src/main/java/com/fiscuvia/audit/package-info.java"
+    },
+    {
+      "sha256": "4de6cd612dbe8ca6564626fe29ba95a1165306a3a67d72a9fc9127016096fcc4",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/Capacity.java"
+    },
+    {
+      "sha256": "4d8f7f37c2903add3176150e925fac58685b0753f21e54bb757cb236111714cc",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/Resource.java"
+    },
+    {
+      "sha256": "b664f398460a484962498f2a996c090008a2510872be999841ac39ad7382339b",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/internal/EntitlementController.java"
+    },
+    {
+      "sha256": "3de153010525589fae7284c5a74c53a938d0761f7a1344910aaa9bd14adabdee",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/internal/EntitlementGuards.java"
+    },
+    {
+      "sha256": "d975692ac0ae8dbe9e891c7fa84470c1006eb9103f5bedf87af93ed28848edfd",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/internal/JdbcCapacity.java"
+    },
+    {
+      "sha256": "ce72d792f2dcdd4b3ad3a6851a22c48a3befcfeabd1ef5b2a4457ed0a78f4273",
+      "path": "backend/src/main/java/com/fiscuvia/entitlements/package-info.java"
+    },
+    {
+      "sha256": "3a0700d4837f234efd3d2b1b051171fe942b881ad6fefaa5740e0df2a431654d",
+      "path": "backend/src/main/java/com/fiscuvia/identity/AuthorizedAccess.java"
+    },
+    {
+      "sha256": "1f2715dc1144e521c61ac529ee5acd1e0901a411f8e02cbb38b4791ca9e88c15",
+      "path": "backend/src/main/java/com/fiscuvia/identity/AuthorizedTenantOperations.java"
+    },
+    {
+      "sha256": "59ed909703a697213c8cb04db83cd2ebd25b6064f8a56eab9da01aa41bd974a0",
+      "path": "backend/src/main/java/com/fiscuvia/identity/Capability.java"
+    },
+    {
+      "sha256": "c950d0ef37596cbcf845e5e4035eb335f72c449676494447f735f1bd9fe22064",
+      "path": "backend/src/main/java/com/fiscuvia/identity/ResourceTarget.java"
+    },
+    {
+      "sha256": "02d023f1e62b2a26815473fca8e07eb3b26ce97ab5cda01a2db14049b5650126",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/AppPrincipal.java"
+    },
+    {
+      "sha256": "8bf2316d05b58b1dcf219be1f2ac34bbd1a05c7061032088d5420f3e197ea44f",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentityController.java"
+    },
+    {
+      "sha256": "6100f642ed390ade551786e4278326192d9d5f9779fae751537d8f4a9456d92d",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentitySecurityConfiguration.java"
+    },
+    {
+      "sha256": "8e5b772063141f847485a7074f840fd4751e8bc3acb8c0fd8ef9f66077f06fa2",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentitySettings.java"
+    },
+    {
+      "sha256": "4ef6b2e4e938b19a0e231cf33848d1206719508713db8ab09a4eace3ee337907",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentityStore.java"
+    },
+    {
+      "sha256": "28c72fcf111e5deaa1d723b719ef8745a0ef492fc4421724965aec4dadcb2d12",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/LoginRequestResolver.java"
+    },
+    {
+      "sha256": "5fa10c52f0ea586f6f19ad77956a06dd4911ef7101219ddcebeacd6fca0d1be5",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/NoStoredAuthorizedClients.java"
+    },
+    {
+      "sha256": "e758546c13bcd6b6c7da902076a53fddc106e56964dd341466552d7408b12f71",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/SessionStorageConfiguration.java"
+    },
+    {
+      "sha256": "70da1a0e9752729e047e4810a1a4ae38ed13377333c4831b8b102caa1857a2b3",
+      "path": "backend/src/main/java/com/fiscuvia/identity/internal/SessionValidityFilter.java"
+    },
+    {
+      "sha256": "8e037a29503a5c3587bf09a5f5948c2c82f913ba01c58699b2017b7f94313e37",
+      "path": "backend/src/main/java/com/fiscuvia/identity/package-info.java"
+    },
+    {
+      "sha256": "a7c56fe7dc9c411ef30dac15aebdaff0c51ba575d2b3337b82d04e8e38b243c2",
+      "path": "backend/src/main/java/com/fiscuvia/platform/AccessDecisionEvent.java"
+    },
+    {
+      "sha256": "7e6e53944b076de68aa20fc410b69d034c7e6469fbf5333bb582503418156a3f",
+      "path": "backend/src/main/java/com/fiscuvia/platform/ApiErrorCode.java"
+    },
+    {
+      "sha256": "f779ff8a85e37eb7fdf12ef7eb0a345f6a06b03b6faa59d924cbe89eeb56943d",
+      "path": "backend/src/main/java/com/fiscuvia/platform/ApiFailure.java"
+    },
+    {
+      "sha256": "08cc2d5209adddf054e895aa29c47568516fb9bcc5e16f783ee49435be618258",
+      "path": "backend/src/main/java/com/fiscuvia/platform/ApiIdentifiers.java"
+    },
+    {
+      "sha256": "313e1832bd217ce5bc58c6a309f4683853403716ae7a01c70157eb05bb15ebf5",
+      "path": "backend/src/main/java/com/fiscuvia/platform/ExpectedVersion.java"
+    },
+    {
+      "sha256": "579a8a83128b03fa4bdc309b52b4a98c79bf90c3100429f66a17c01564e049d2",
+      "path": "backend/src/main/java/com/fiscuvia/platform/HttpProblemResponder.java"
+    },
+    {
+      "sha256": "2c179804a118aedebf3ab827767bca4e42ac3155c18c7083fac1684198f2746a",
+      "path": "backend/src/main/java/com/fiscuvia/platform/PageQuery.java"
+    },
+    {
+      "sha256": "27ffdad8a45653c6d975edef3dea1e564a06fe319c47156d1326ca3517538e14",
+      "path": "backend/src/main/java/com/fiscuvia/platform/PageResponse.java"
+    },
+    {
+      "sha256": "3b82924e48a64772c27c037daf92dacca98abfde2b5a4b5c7e1436171e8020f1",
+      "path": "backend/src/main/java/com/fiscuvia/platform/RequestCorrelation.java"
+    },
+    {
+      "sha256": "e56148a5a0488740108724bae3f9e0703fd0300829367a0050b4d53fc0d16fed",
+      "path": "backend/src/main/java/com/fiscuvia/platform/StartupGuardFailure.java"
+    },
+    {
+      "sha256": "8ac10b1d81dcee96dd41d4f9600b89576260b418decb31772155f57f628251ef",
+      "path": "backend/src/main/java/com/fiscuvia/platform/TenantTransactions.java"
+    },
+    {
+      "sha256": "7f928bb19951595b16657c9e683c153dcc9b03d0895e5582d1d827a8c439d0d6",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/DatabaseRuntimeConfiguration.java"
+    },
+    {
+      "sha256": "c7ba8d124f166d05be0a8e315cdf0ed1c1cf18ec8cf7b297c08c73ddb59eda0e",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/RuntimeDataSourceConfiguration.java"
+    },
+    {
+      "sha256": "7c2d6df7d674eb8100504b0074bc5c4982af5eff35a5aa642abe7d4da24b0338",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/ScaffoldRuntimeConfiguration.java"
+    },
+    {
+      "sha256": "d99db7117c3766a4b9c4b2ee76ba54a9baf7b32926c47acf4cf4c0c983f81ddd",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/ApiExceptionHandler.java"
+    },
+    {
+      "sha256": "4afe4249da504005f59cef5f41e3cf75e8318f1a611e688352cca82a19865a5a",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/ApiWebConfiguration.java"
+    },
+    {
+      "sha256": "11aa50135c8eb06930fab35cb418c93435b6613063d312606926351434adf138",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/CorrelationFilter.java"
+    },
+    {
+      "sha256": "e132ef85e8709b63621c851c1e6b5a9aad5edda62d169d2948dec66666384e21",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/FilterProblemResponder.java"
+    },
+    {
+      "sha256": "b5b7656fd48897426c81c24b242e44b7c9fd18261305a59c9b314341adad55c4",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/PlatformInfoController.java"
+    },
+    {
+      "sha256": "474a887bf4073f37aae5eff091dc49569e1bc6a6fe1a4574f4794766715ae5e1",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/SafeErrorController.java"
+    },
+    {
+      "sha256": "9e6a5404eeb11ba894efa0c87b021017d28597b81fc2f2e11a01eebd93a4e6e0",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/http/SafeProblems.java"
+    },
+    {
+      "sha256": "889a5efd89320dee0a5609af0964a0e063c1b0e004cae7b001d311bf1dba162c",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/AllowlistLogFormatter.java"
+    },
+    {
+      "sha256": "4eeab6dbb0125a0108a2c3fbb5a0ade878bf8a72511e02f1d332e80c4a8dbae8",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/DatabaseHealthMetrics.java"
+    },
+    {
+      "sha256": "c1f1842af695b390dfb25dcae9dc29fb3b5f894ae21188000d50066b25615ed3",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/HttpTelemetry.java"
+    },
+    {
+      "sha256": "e7da4cd0993cf2b42d0ec67325cdc826f48fe14a1545775ce99b5d1c5502d1cf",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/LifecycleDiagnostics.java"
+    },
+    {
+      "sha256": "eb6e67f381afcd702ef7df5fe602304bab993f23cda0b7c8156f24574a729f0f",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/LocalTracingCustomizer.java"
+    },
+    {
+      "sha256": "495a55cb584887455a0f14ca1cf401cbccf2bd2e56d6f14038da7bca52b0dc6e",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/ObservabilityConfiguration.java"
+    },
+    {
+      "sha256": "be9e8fea1900073ab707a67dd2e9d97bcf209efd68e008df470400c4d074ee4e",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/ObservabilityGuard.java"
+    },
+    {
+      "sha256": "cce29ef27167879ec9e6b38ede3c65363d892f216a86bf0080698764875dbb26",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/OperationalEvent.java"
+    },
+    {
+      "sha256": "cc2810e84455c70412500cc996496afca41940fd8043be4de9959b2d6f806edf",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/PrivateMeterPolicy.java"
+    },
+    {
+      "sha256": "572df31e0a3bffc596938756200941705a10352d9031c33f700a730782d9f101",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/SafeDiagnostics.java"
+    },
+    {
+      "sha256": "58e2fb79a57b0e6d2a21229da62d83dba94a57f238cc35e19085f9283d6fc400",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/SafeLogContext.java"
+    },
+    {
+      "sha256": "71bdc2af03f15b558834da02f4928831904be2f186c721512afb85c8318db3f6",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/observability/SafeRoutes.java"
+    },
+    {
+      "sha256": "2017d89edbaaf2afc92809a5b211c63960eee625bd9edf48247631fea0f5ce27",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/tenancy/JdbcTenantTransactions.java"
+    },
+    {
+      "sha256": "f574464591f8c271e00871d5bc71e828afca1ff6992336e3ef82ba037d383b2d",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/tenancy/TenantContextRejected.java"
+    },
+    {
+      "sha256": "842aade759f620db964084d6c3b7b06a2bfaf38960f9f0482c72831bc8b157d1",
+      "path": "backend/src/main/java/com/fiscuvia/platform/internal/tenancy/TenantTransactionConfiguration.java"
+    },
+    {
+      "sha256": "29a86174ee24d7b114b6f63851801e0637b927a9b478edf877cff8bd921041f1",
+      "path": "backend/src/main/java/com/fiscuvia/platform/package-info.java"
+    },
+    {
+      "sha256": "523464cf3af19710906c8ae5f03720153ecdd637f20e763356a388e56f11cc2a",
+      "path": "backend/src/main/java/com/fiscuvia/tenants/internal/ProfileGuards.java"
+    },
+    {
+      "sha256": "f22921fe391b4412ac31cf68011a432e159ec8f603017b323fcf1fe713e3966f",
+      "path": "backend/src/main/java/com/fiscuvia/tenants/internal/TenantController.java"
+    },
+    {
+      "sha256": "bf9386e9dbd1859511a6831b6d7bdae6e216a6ce6cdf3f438ffe470a7d4b2642",
+      "path": "backend/src/main/java/com/fiscuvia/tenants/package-info.java"
+    },
+    {
+      "sha256": "b05695199442550df39f8dcf07efd1551769c75d6080a92bdbdfa021a9a5afae",
+      "path": "backend/src/main/resources/META-INF/spring.factories"
+    },
+    {
+      "sha256": "64679d356514486c03e4955af4de228cab1627b736645bdc8a540c6be2fff0f7",
+      "path": "backend/src/main/resources/application-local.yml"
+    },
+    {
+      "sha256": "4737a97532be4743b601d374c41b11e80bc1360ef1588ef2e05dba302bb703c1",
+      "path": "backend/src/main/resources/application.yml"
+    },
+    {
+      "sha256": "5a92b1748ee461e0a1276f013e61be3a677c2133185a048551debfb6402a8f87",
+      "path": "backend/src/main/resources/db/migration/V1__initialize_infrastructure.sql"
+    },
+    {
+      "sha256": "e1c4289346a8b6894f80b840fe7af15a2d64723793d526a67f5dcebf80436822",
+      "path": "backend/src/main/resources/db/migration/V2__tenant_isolation_foundation.sql"
+    },
+    {
+      "sha256": "51e79153ba48b2eb3e980c1130f3b416d69da134a2f8f365ab803d9183ebe8b7",
+      "path": "backend/src/main/resources/db/migration/V3__identity_memberships_and_sessions.sql"
+    },
+    {
+      "sha256": "964b7a05d7576d8002ea94599a6260335747794b270458cce52b298caae37a68",
+      "path": "backend/src/main/resources/db/migration/V4__resource_authorization_foundation.sql"
+    },
+    {
+      "sha256": "06bc83a1566cbdae8fcc8fa1c536e0662b7f6b2895fce2d590370d235286e1c3",
+      "path": "backend/src/main/resources/db/migration/V5__audit_journal_and_outbox.sql"
+    },
+    {
+      "sha256": "d2dbe29ccac6d7c3e4cdbea37747099bac78551787702b22fb99adfdb085d1a6",
+      "path": "backend/src/main/resources/db/migration/V6__tenant_provisioning_and_profiles.sql"
+    },
+    {
+      "sha256": "3defa70d555c6964315aa80db3742944b627dea68b4ed830181acd36bb44adf6",
+      "path": "backend/src/main/resources/db/migration/V7__approve_limited_tenant_settings_policy.sql"
+    },
+    {
+      "sha256": "31ba746bac3b6b090b014fc1004c6f2505ecf553bbc68f914d279ed92c34c179",
+      "path": "backend/src/main/resources/db/migration/V8__tenant_entitlements.sql"
+    },
+    {
+      "sha256": "ef471ed270f446f9fd48463d74362cd496c8f18e747fee87be5eb2f2fc228d9e",
+      "path": "web/e2e/plan-usage.spec.ts"
+    },
+    {
+      "sha256": "58770af5afc9cbda41439ca4b592095888e9ccf5cc08ebd7a8b47960781cbf99",
+      "path": "web/src/app/App.test.tsx"
+    },
+    {
+      "sha256": "15aa5cda46c14cd46a6ea24f78466ea3e61ea589dfcaf2b4ed1d6e93816661c7",
+      "path": "web/src/app/App.tsx"
+    },
+    {
+      "sha256": "abd796785f71e20bcf250a2f3e4051925eb09cc136517496e9dfd8038e755d02",
+      "path": "web/src/app/AppProviders.tsx"
+    },
+    {
+      "sha256": "9626312fbe144f6ea42fde232d483c61980708a36491e6ff9376b39e1a5d470b",
+      "path": "web/src/app/AppShell.tsx"
+    },
+    {
+      "sha256": "78ba42b7407b0b3cd5fd1d9f28d392468ff1006355f5e6c0538fe85fcc2d6aaa",
+      "path": "web/src/app/Navigation.tsx"
+    },
+    {
+      "sha256": "57a00e2c04d217ce752fe6cacb9874a2551a06d4051fdc049a48f9b2b020e280",
+      "path": "web/src/areas/component-catalog/CatalogControls.tsx"
+    },
+    {
+      "sha256": "2bffd3e038a5f21e18dae654fe62d8c02ac02e8231f9295699074cb25076601f",
+      "path": "web/src/areas/component-catalog/CatalogData.tsx"
+    },
+    {
+      "sha256": "6ba89cacb7a76d7da3a6fbc9bbaf5c6d0d906d57e5d5a52b4bda032d5e4853df",
+      "path": "web/src/areas/component-catalog/CatalogPage.tsx"
+    },
+    {
+      "sha256": "baa5576f5ceb27734a7ba3616f8f52fd600d9c7d3dc9f19b59964065644ee6c5",
+      "path": "web/src/areas/component-catalog/catalog.css"
+    },
+    {
+      "sha256": "08e0beefad96047fa228c81299b8f0c6892d188cc93d79597587146509dd8cc5",
+      "path": "web/src/areas/entitlements/PlanUsage.test.tsx"
+    },
+    {
+      "sha256": "a9448c4c5d610b97a22c50a051e31e1cd1b787e4876929a944d9789d03eda502",
+      "path": "web/src/areas/entitlements/PlanUsage.tsx"
+    },
+    {
+      "sha256": "04180a702f8563cb2676149594f66ca862a64ba0f7ae9c3d93988de9f5b3205a",
+      "path": "web/src/areas/entitlements/plan-usage.css"
+    },
+    {
+      "sha256": "c8dd9fb6fa83f832ab7f13c6135d0844ab85ea4e3d013bdd45ea955d4a3d0bde",
+      "path": "web/src/areas/identity/AuthPages.test.tsx"
+    },
+    {
+      "sha256": "6984feb41b59449e252db7775bd1935ec43b40d1473e05817b38320223536149",
+      "path": "web/src/areas/identity/AuthPages.tsx"
+    },
+    {
+      "sha256": "e68134617d96f9b846f936f43ff8ebb2da20e1c255f902b548bab729653b1175",
+      "path": "web/src/areas/identity/AuthorizedTenantContext.tsx"
+    },
+    {
+      "sha256": "1bcf95f1cfc20f9fc5936a8ee398ecb04c69fa89854ffc765e805eb29f28aea5",
+      "path": "web/src/areas/identity/auth.css"
+    },
+    {
+      "sha256": "0ff3ea066110d5ed3c0bfbdfee05e15533b0ac58c8acec7046608dde20b91e36",
+      "path": "web/src/areas/identity/role-labels.ts"
+    },
+    {
+      "sha256": "23f9789d0a4641bf256ffe1528236496b5e37316f844c87e564e82ce2af35469",
+      "path": "web/src/areas/identity/useAuthorizedSession.test.tsx"
+    },
+    {
+      "sha256": "24be5c1fc8f2bcdb16883e8c7395b1c40eeb228252397a6b24b6167476745c03",
+      "path": "web/src/areas/identity/useAuthorizedSession.ts"
+    },
+    {
+      "sha256": "9f575cb2b90ac7a9a6a61cb93e9b6a6c167d649d8a82c6aa5411ff1c1ea45dd1",
+      "path": "web/src/areas/interface-demo/StatesPage.tsx"
+    },
+    {
+      "sha256": "32e3ab7c8e03ce8b761e790bb1c454104bad3deb418b2716d20f83737461bdeb",
+      "path": "web/src/areas/tenants/FirmSettings.test.tsx"
+    },
+    {
+      "sha256": "08e9fc175cce1aa98ea310b50c3de96748169e613363a9ac28cdcea5c1731d2e",
+      "path": "web/src/areas/tenants/FirmSettings.tsx"
+    },
+    {
+      "sha256": "90f12e21b686562ccb069a505be42418510eca5f5b7e0399bb328a3760fdeaae",
+      "path": "web/src/areas/tenants/FirmWorkspace.tsx"
+    },
+    {
+      "sha256": "35097b58b3f7a6251ae48454623111d2da069b1bf8388f5eb445e9f1f115b105",
+      "path": "web/src/areas/tenants/firm-settings.css"
+    },
+    {
+      "sha256": "ee08969e2fe55d1051214e9ba140dab124e8d81f271c5b45406eb16fef58c1be",
+      "path": "web/src/areas/welcome/WelcomePage.tsx"
+    },
+    {
+      "sha256": "194c744da4b01a2126786577907a6ba842e009a7a7c79722ff5879a559f4c066",
+      "path": "web/src/main.tsx"
+    },
+    {
+      "sha256": "b8d5e19272fbad1b9d6680ba5b06ee725837716d0bd8086433c243fd01ec9b47",
+      "path": "web/src/shared/api/README.md"
+    },
+    {
+      "sha256": "668640ee2c11dc5921a56040eabad5e21a0fb177e17d6cb093a43a7a5cea6ccb",
+      "path": "web/src/shared/api/client.test.ts"
+    },
+    {
+      "sha256": "d605b76e2ba40e5cef68bc0b3c6cc1a720b4e6e3043486f5a7179d6d8cbd76d9",
+      "path": "web/src/shared/api/client.ts"
+    },
+    {
+      "sha256": "bc8e378d1709ab6e8b22a774aac6cad8ede105dc33be5a587b10c498f6676d5d",
+      "path": "web/src/shared/api/contract-metadata.ts"
+    },
+    {
+      "sha256": "f5e0fc7020f0b868313ee4596dcfda1e8fe1b37ec9ee711c316d54f841bcc747",
+      "path": "web/src/shared/api/entitlement-client.ts"
+    },
+    {
+      "sha256": "2a339b1c36b7f4164a63c287fd8efd4c397a1b20dcb551f33db8f49d74a7b297",
+      "path": "web/src/shared/api/firm-client.test.ts"
+    },
+    {
+      "sha256": "a159568311ed2fdd5e5ff0672d27bec772543cd94608d3d61c6aed27eaf7d51d",
+      "path": "web/src/shared/api/firm-client.ts"
+    },
+    {
+      "sha256": "0f5085aada6647c71c7f04ac5413f147b32d7f60a776cc464ecb4c85c15e8879",
+      "path": "web/src/shared/api/schema.d.ts"
+    },
+    {
+      "sha256": "0ff0934c40b68871ee01a71cdc699bdba0ef99484685dab2e709d2863f3a4bbe",
+      "path": "web/src/shared/api/session-client.test.ts"
+    },
+    {
+      "sha256": "cbefa6dae8e1e879ace580a81ec2208bcb9d5911b06ead8a5af93905cab982aa",
+      "path": "web/src/shared/api/session-client.ts"
+    },
+    {
+      "sha256": "e46429536f43f5910f5b2b0c50bb2769b510a4558bb4b5d20a3b0a9091dbf7c3",
+      "path": "web/src/shared/lib/cn.ts"
+    },
+    {
+      "sha256": "3bc07e427aa7d82aef759e8b5b6b05aae14ebdb4edece9e177aec3fa2a4c0ed2",
+      "path": "web/src/shared/presentation/NotificationProvider.tsx"
+    },
+    {
+      "sha256": "458d400669748590eb1714d996270fad3b1e4cf2212e8ead1de20764489bda67",
+      "path": "web/src/shared/presentation/notification-context.ts"
+    },
+    {
+      "sha256": "41d58c7d98f128cd5d01bb890a2ac30268744782c9db202e58e5dbf7127d7780",
+      "path": "web/src/shared/ui/Brand.tsx"
+    },
+    {
+      "sha256": "eae2ffe506b46072cc6934e78dee322af6543d75111341316f3b7242644ee8cf",
+      "path": "web/src/shared/ui/Components.test.tsx"
+    },
+    {
+      "sha256": "af206e2751e125e1f9a2573a52c28066b35feb9a3676a0e59b58047b110915b1",
+      "path": "web/src/shared/ui/DataTable.tsx"
+    },
+    {
+      "sha256": "ff49d0f5e9750b9a42c8eb5ee4c38e229c284dd740568c745148a809381a9117",
+      "path": "web/src/shared/ui/Field.tsx"
+    },
+    {
+      "sha256": "7fa682f177ec8e05ad5244ef106df4f3fec2fa3a7bb538eb0b3452f6d4ea540c",
+      "path": "web/src/shared/ui/FilterBar.tsx"
+    },
+    {
+      "sha256": "06b6c8848190be6fe1df5e12b5defbc81e73f86dfe194e8826fa55968e7a5e82",
+      "path": "web/src/shared/ui/PageHeader.tsx"
+    },
+    {
+      "sha256": "2ff89094820ea11922f8758ae85d1a78ea8db5310ae43e207254c6a82abfb31a",
+      "path": "web/src/shared/ui/Panels.tsx"
+    },
+    {
+      "sha256": "e6052cb8d1c76b4d4c2a657343e4a1bee10e00122d92428c56ed3e28dabc0920",
+      "path": "web/src/shared/ui/StatCard.tsx"
+    },
+    {
+      "sha256": "982249624562f02fe49045b5708ffa50c0c88bf7997f3816ec787bbb6b276674",
+      "path": "web/src/shared/ui/States.tsx"
+    },
+    {
+      "sha256": "c56f6e8b9fad8de3991556da53d0ce115c99e2df35900d4f7a482870d0924043",
+      "path": "web/src/shared/ui/StatusPill.tsx"
+    },
+    {
+      "sha256": "25fdd9c4ca9cc34d88badb26f6f59754491a152aefb0de86126c534a55d41d5a",
+      "path": "web/src/shared/ui/button.tsx"
+    },
+    {
+      "sha256": "2b0ec59bba9a1bf15737b0782cb6b7b85b93273c5bfa6d3c7d5d8672f47d144f",
+      "path": "web/src/shared/ui/useCompactLayout.ts"
+    },
+    {
+      "sha256": "26c3e4045141b8555aee3860fe84c77fad10fb2db6d0c7ebf7c036b293147063",
+      "path": "web/src/styles/components.css"
+    },
+    {
+      "sha256": "74ffc0b79842bec8bd410db4b33a929fcc5bb155d73c0e53b6f1e45b82fdee56",
+      "path": "web/src/styles/index.css"
+    },
+    {
+      "sha256": "1acb09a50ff843773d435f65b74875d8da77bceb948f9ba71842ff423978eb08",
+      "path": "web/src/styles/tokens.css"
+    },
+    {
+      "sha256": "e20f6c79ce7842f29f0dd93957e8230a5cbb3b5f6ee691fef96d4f393b964cb3",
+      "path": "web/src/test/setup.ts"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "cambio-despacho-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "7581ee851a58e852569ce24315fdaa440c60a83033ecfd758315fc3923ef92a7",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "cambio-despacho-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "cd85ccf7994886f8710cf782bb699d6b21127dc59ed7c2611918a98b2fc60863",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "denied-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "f1c42daa7a87cfd90ab8a0432868f8343c4c469ea2b49d9294fdeb61d95d56ae",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "denied-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ff410384fde11421dcf50de8d41f8318355b1e48e7a5e1d904e15138cf6e3066",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "error-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "9097dc751e330e8e54ca8635603342a360c7a75041e64087c13c26962d44870f",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "error-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ba190f4c53646a887cd189cf0c1867c6d23a8b15c8df07c6a84f6deaeac58899",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "full-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "14e07f7cae994fb29efe1b8a4c02bef22bbfc1c0ad258dbb0ccc25b5a409d7c0",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "full-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "6de2401f26eed500f9bdcb046107d8399f24d39894b6dc812a7ef8078321fa3a",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "over-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "50756cc911043c1c075c6e6d6c6db7244fae878babd1289882ffbaaa4413904c",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "over-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "7b34b468c2d3b7f42a26e5a93977d9d83a46478e5388ea371b54495ffbfcabc6",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "ready-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "9d89c7f942b321eb04acd9bf7b0275c50174b9e99c9659fcb3445bf523e4a635",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "ready-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "f335c724a29d3924071fd9fa6d3571248a220f331c81ba770e2e377dc9977b4c",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "sin-consumo-medido-desktop.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "3ff950f494d209d35c9faad1ba91a47c46fcf070efa365c24998e467a92f108f",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    },
+    {
+      "file": "sin-consumo-medido-mobile.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "8616fc6162025c28bb0e66b76ed2023d7254a44899c831feffbd7b077f32c32d",
+      "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
+    }
+  ],
+  "checks": [
+    "axe WCAG A/AA passed in capture scenarios",
+    "document horizontal overflow absent",
+    "tenant switch removes previous usage",
+    "expired session removes usage"
+  ],
+  "limitations": [
+    "TENANT_PLAN_VIEW remains DENY without approved policy",
+    "no WCAG certification or pixel-diff baseline"
+  ]
+}

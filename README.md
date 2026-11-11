@@ -1,3 +1,5 @@
+**Entitlements técnicos #32:** [modelo y fronteras de aprobación](docs/architecture/TENANT-ENTITLEMENTS.md). V8 incorpora límites versionados, reservas, medición real de membresías y consulta condicionada a TENANT_PLAN_VIEW; sin grants implícitos, precios ni cobros. El hook de invitaciones permanece preparado hasta aprobación de la política limitada.
+
 # Fiscuvia
 
 **Despachos #31:** [provisioning interno, configuración y límites de autoridad](docs/architecture/TENANT-PROVISIONING.md). Nuevo módulo tenants, perfiles privados, lifecycle administrativo no destructivo, configuración autorizada y nombres reales en AppShell. Sin operador HTTP, alta pública, cobros o almacenamiento de logos. La habilitación permanente de TENANT_SETTINGS_MANAGE requiere aprobación expresa de la política mínima documentada; permanece DENY mientras esté pendiente. No se adelantan #32/#33 ni el gate fiscal #74.

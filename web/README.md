@@ -151,3 +151,7 @@ Los JSON temporales se escriben en `../.ci-work/`; sólo se publica un resumen d
 `session-client.ts` restringe base a `/api/v1` same-origin, `credentials: same-origin`, no-store y CSRF obtenido antes de cada mutación. Login es un formulario POST que redirige al IdP; no se usa fetch para seguir OAuth. La sesión, identidad y roles vienen del backend. Seleccionar un despacho exige respuesta autorizada, no se guarda tenant en localStorage. Logout invalida sesión real; 401 conduce a sesión expirada. Los nombres de despacho aún no existen en el modelo mínimo: la UI muestra un ordinal de las membresías reales, sin inventar nombres fiscales.
 
 37 Vitest (21 anteriores + 16 nuevos) y 13 Playwright de fundación más 5 OIDC reales son los mínimos. [Capturas #27](../docs/ux/evidence/issue-27/README.md) y [resultados](../backend/VALIDATION-27.md). No hay proveedor de producción aprobado ni funcionalidades fiscales operativas.
+
+## Plan y uso #32
+
+FirmWorkspace permite elegir Datos del despacho o Plan y uso dentro de la selección autorizada. La consulta usa claves actor/tenant y AbortSignal, sin persistencia de selección ni tokens. StatCard/StatusPill y estados #52 distinguen ausencia de configuración, medición, reserva, disponible, sobrecupo y recursos no integrados. Sin precios ni botones comerciales; TENANT_PLAN_VIEW permanece denegado sin aprobación explícita. Fixtures de presentación sólo en pruebas; [evidencia](../docs/ux/evidence/issue-32/README.md), [modelo y pendientes](../docs/architecture/TENANT-ENTITLEMENTS.md).

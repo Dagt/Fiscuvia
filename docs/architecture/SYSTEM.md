@@ -21,3 +21,7 @@ No hay lector AUDIT_VIEW, worker automático, broker externo ni autoridad de neg
 ## Hardening transversal #30
 
 Base actual #20–29 integrada desde f40a4980c1eaf268c16fcc39b2855dbcc71378a6 (#85). [Harness/matriz](../security/CROSS-TENANT-REGRESSION.md) combina identidad → autorización → contexto RLS → efecto/journal/outbox con oráculos negativos y gate por método/SHA. No cambia módulos ni puertos productivos, V1–V5 o dominio fiscal. Los adaptadores HTTP/SQL/emisor y claves adversariales son sólo test-classes y se inspecciona su ausencia en el JAR. Cache, archivos y autoridad de negocio de jobs tienen contratos futuros explícitos, sin simulación productiva.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.

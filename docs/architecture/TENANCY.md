@@ -27,3 +27,7 @@ Las pruebas históricas #26 usan un adaptador interno de fixtures con pruebas HM
 El puerto público de identity ahora exige Capability y ResourceTarget; se elimina la variante pública de membresía+boolean privilegiado que podía confundirse con autorización completa. [Guía, SQL y límites](../security/RESOURCE-AUTHORIZATION.md). Sesión/usuario/membresía, política aprobada, rol, MFA y asignaciones se comprueban antes de TenantTransactions y se mantienen con bloqueos transaccionales. El contexto de operación no puede cambiarse/reutilizarse entre callbacks, actores, conexiones o tenants.
 
 Cada tabla de recurso futura requiere además cerca RESTRICTIVE resource_allowed, con USING/WITH CHECK y políticas de comando explícitas. La demostración HTTP/SQL omite filtros de tenant/asignación y PostgreSQL sólo devuelve la cartera permitida; un oráculo detecta eliminar esa protección. No hay tablas fiscales productivas ni aprobación de la matriz de roles Proposed; #74 sigue pendiente. Journal/outbox #29 preservan esa frontera y transporte no concede autoridad de negocio. #30 prueba carteras, multidespacho, pool físico, threads y revocaciones con locks; [límites y mutaciones](../security/NEGATIVE-TESTING.md).
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.

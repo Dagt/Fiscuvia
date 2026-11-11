@@ -18,7 +18,7 @@ import { roleLabel } from './role-labels'
 import { useAuthorizedSession } from './useAuthorizedSession'
 import { authStatus, bffBase, getCsrf } from '../../shared/api/session-client'
 import './auth.css'
-import { FirmSettings } from '../tenants/FirmSettings'
+import { FirmWorkspace } from '../tenants/FirmWorkspace'
 
 function AuthFrame({ children }: PropsWithChildren) {
   return (
@@ -252,7 +252,8 @@ export function SessionPage() {
           <LoadingState />
         ) : selected ? (
           <>
-            <FirmSettings
+            <FirmWorkspace
+              key={`${identity.data.userId}:${selected.tenantId}`}
               userId={identity.data.userId}
               tenantId={selected.tenantId}
               onUnavailable={(status) => void unavailable(status)}

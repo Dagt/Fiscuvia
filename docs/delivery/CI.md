@@ -145,3 +145,9 @@ El propietario decidió presupuesto Actions $0: no modificar facturación ni int
 El [primer run de #29](https://github.com/Dagt/Fiscuvia/actions/runs/41255185037), head 224a554, sí inició Ubuntu/Temurin sin cambios de facturación. Security falló porque mkdtemp usa 0700: el contenedor con cap-drop=ALL no puede leer el bind mount del runner y Gitleaks muestra un error de configuración secundario. El snapshot allowlisted ahora recibe 0755; no se amplían permisos de logs/handoff/credenciales ni se otorgan capabilities. Prueba de regresión POSIX añadida: **nueve tests tools/ci**, sin reducir los ocho anteriores. Resultado del SHA final y de cada job en el PR; no declarar verde ni billing por anticipado. Se conservan los cinco checks y el presupuesto $0.
 
 El run 41255643316 confirmó esa corrección y detectó caché Trivy no escribible por root sin DAC_OVERRIDE. Para los dos scans Trivy se usa UID/GID efectivo del runner en POSIX, con caché propia; se conservan cap-drop=ALL, no-new-privileges y mounts fuente/BOM read-only. No chmod 777, usuario privilegiado ni omisión de DB de vulnerabilidades. El caso se reprodujo en un volumen Linux efímero con propietario distinto de root.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.
+
+La entrega #32 conserva los cinco checks y eleva los mínimos a 363 Java, 91 Vitest, 61 Playwright de fundación/presentación, 13 OIDC y 19 tools/ci. Resultados y SHA final en [Draft #90](https://github.com/Dagt/Fiscuvia/pull/90); [validación local, repetición por puerto rootless y límites](../../backend/VALIDATION-32.md).

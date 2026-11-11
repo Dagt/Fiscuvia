@@ -223,6 +223,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tenants/{tenantId}/entitlements': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Consultar límites y uso del despacho con TENANT_PLAN_VIEW explícito
+     * @description Sin grants implícitos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros no publican consumo.
+     */
+    get: operations['getTenantEntitlements']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/tenants/{tenantId}/settings': {
     parameters: {
       query?: never
@@ -271,6 +291,28 @@ export interface components {
       privilegedMfaVerified: boolean
       /** Format: uuid */
       userId: string
+    }
+    EntitlementUsage: {
+      available: number | null
+      /** @enum {string} */
+      integration: 'MEASURED' | 'NOT_INTEGRATED'
+      limit: number | null
+      measured: number | null
+      overLimit: boolean | null
+      reserved: number | null
+      /** @enum {string} */
+      resource:
+        | 'USERS'
+        | 'TAXPAYERS'
+        | 'STORAGE_BYTES'
+        | 'JOBS_RUNNING'
+        | 'JOBS_PENDING'
+        | 'JOBS_PER_PERIOD'
+      /** Format: date-time */
+      validFrom: string | null
+      /** Format: date-time */
+      validUntil: string | null
+      version: number | null
     }
     /** @description Versión exacta para Java long y JavaScript; una versión obsoleta produce 409 STALE_VERSION */
     ExpectedVersion: number
@@ -896,6 +938,34 @@ export interface operations {
         }
       }
       406: components['responses']['NotAcceptable']
+      500: components['responses']['InternalError']
+    }
+  }
+  getTenantEntitlements: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Límites técnicos y medición autorizada */
+      200: {
+        headers: {
+          'Cache-Control'?: 'no-store'
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['EntitlementUsage'][]
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
       500: components['responses']['InternalError']
     }
   }

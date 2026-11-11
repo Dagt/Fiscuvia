@@ -16,3 +16,7 @@
 | R13 | branding/dominio no registrados | media | verificación IMPI y dominio antes de marca pública |
 | R14 | dependencia de un solo desarrollador | alta | ADR, docs, pruebas y runbooks |
 Todos los riesgos críticos abiertos bloquean lanzamiento con información real. Asignar dueño, probabilidad y fecha de revisión en planeación.
+
+## #32 — entitlements técnicos
+
+Pendientes explícitos: aprobación limitada de TENANT_PLAN_VIEW y política de membresías/invitaciones antes de activar el hook preparado; sin esa aprobación no se afirma enforcement productivo de aceptaciones. Reservas duraderas requieren liberación explícita: no existe un worker de expiración ni una promesa de retención/limpieza aprobada. Reducciones pueden impedir confirmar reservas previas, conservando datos. Cuotas de almacenamiento/contribuyentes/jobs permanecen sin medición hasta sus módulos reales; períodos de jobs sin definición no se usan para enforcement. Custodia/atribución administrativa y verificación externa de aprobación heredan el gate de provisioning #31. OQ-007/014/015, ADR-015 y #74 permanecen abiertos. [Diseño y dependencias](../architecture/TENANT-ENTITLEMENTS.md).
