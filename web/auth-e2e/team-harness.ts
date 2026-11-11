@@ -74,6 +74,13 @@ export async function api(
   })
 }
 export async function take(page: Page, state: string, secret?: string) {
+  if (state === 'equipo-vacio' || state === 'equipo-error-recuperable') {
+    const close = page.getByRole('button', {
+      name: 'Cerrar notificación',
+      exact: true,
+    })
+    if (await close.count()) await close.click()
+  }
   chromiumVersion = page.context().browser()!.version()
   for (const [width, height] of [
     [1440, 900],
