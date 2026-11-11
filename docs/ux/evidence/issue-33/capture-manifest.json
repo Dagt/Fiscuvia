@@ -1,0 +1,91 @@
+{
+  "sourceSha": "c5375cfa35939373ac1b9509f0f321ecba8bf1d4",
+  "applicationTree": "970d08b0d36b2ee33be6c02311c4d73e5b6049cd",
+  "backendTree": "dc8b0660dd1deacb987cbd08b859a32b5a909f33",
+  "fixtureTree": "25982c8bff17f978da011614f0b46573a49a176f",
+  "chromium": "156.0.8078.4",
+  "capturedAt": "2026-11-11T20:57:20.192Z",
+  "scope": "Email invitations local/test only; no general team administration or external email delivery",
+  "screenshots": [
+    {
+      "file": "cargando-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "ab6a087c345daf4b7e5db77fdf3e18eea4f2200fa081e95499a89ef43738e52d",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "cargando-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "c85bbb180b61b863eeccc1224f8e642a151b9a60959736403d0aa6e88a2e341f",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "formulario-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "1f4f4d6bb1bef8f5a0f24d71cf6321a3fa8e7305f81a1b95a267c05a141a4175",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "formulario-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "c85bbb180b61b863eeccc1224f8e642a151b9a60959736403d0aa6e88a2e341f",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "creada-entrega-manual-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "5b840cffbec36e5185c9c7a3d7723ca2bb1b42646ce70e30f23ec7ac47147610",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "creada-entrega-manual-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "3db788f271dff3cd10ef2278ddd3f2824a4871cb5f65a039bc399d7cbb8f8052",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "sin-permiso-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "5a60469c44c5dda9991591adad5f484a925c949c0f8547c7b8d53ece2eb55d03",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "sin-permiso-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "675bf46363acd9d4e3ad2ed746795ef963ab2fcde7e095cf53e19c133a51e7ca",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "error-destinatario-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "02f5ab9e0770c5ccbc11864cd4791d142e88595b98e2de7b56d4914e333f7cfb",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "error-destinatario-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "30fd362ec7a1bf360b541600fd79bcbd8b51b9629bf25b2e1198df8857e332e6",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    }
+  ]
+}
