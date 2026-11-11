@@ -2,7 +2,7 @@
 
 # Fiscuvia
 
-**#33, corte autorizado de invitaciones:** [correo verificado sólo con Keycloak local/test](docs/security/LOCAL-EMAIL-INVITATIONS-33.md), token de un uso para entrega manual, issuer/subject exactos, CSRF/idempotencia/RLS y journal/outbox. V10 conserva V1–V9 y los permisos existentes. El directorio general de equipo, cambios de rol/reactivación y cartera siguen pendientes de autorización/modelo; no se presentan como implementados.
+**Equipo #33:** [administración aprobada owner+MFA](docs/security/TEAM-ADMINISTRATION-33.md): directorio e invitaciones paginados, cambios de rol operativo, suspensión/revocación y reactivación con cuotas, versiones, idempotencia y auditoría/outbox. V11 conserva V1–V10. [Correo B](docs/security/LOCAL-EMAIL-INVITATIONS-33.md) sólo Keycloak local/test, token de un uso y entrega manual. Cartera permanece #74; producción/correo/matriz fiscal conservan pendientes.
 
 **Despachos #31:** [provisioning interno, configuración y límites de autoridad](docs/architecture/TENANT-PROVISIONING.md). Nuevo módulo tenants, perfiles privados, lifecycle administrativo no destructivo, configuración autorizada y nombres reales en AppShell. Sin operador HTTP, alta pública, cobros o almacenamiento de logos. La habilitación permanente de TENANT_SETTINGS_MANAGE requiere aprobación expresa de la política mínima documentada; permanece DENY mientras esté pendiente. No se adelantan #32/#33 ni el gate fiscal #74.
 

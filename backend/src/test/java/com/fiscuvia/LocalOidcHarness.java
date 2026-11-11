@@ -37,7 +37,7 @@ public final class LocalOidcHarness {
         approvals.put("alice-1",List.of(UUID.randomUUID(),UUID.randomUUID())); approvals.put("bob-1",List.of(UUID.randomUUID()));
         approvals.put("alice-2",List.of(UUID.randomUUID(),UUID.randomUUID()));
         approvals.put("bob-3",List.of(UUID.randomUUID()));
-        for(int i=3;i<=13;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
+        for(int i=3;i<=15;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
         approvals.put("bob-2",List.of(UUID.randomUUID()));
         // Settings permission comes exclusively from the real approved V7 migration.
         // Fixtures provision synthetic firms/identities, never role-capability grants.
@@ -59,7 +59,7 @@ public final class LocalOidcHarness {
                             : approval.getKey().equals("bob-3") ? "Despacho suspendido DEMO" : "Despacho Centro DEMO";
                         UUID tenant=sql.queryForObject("SELECT tenant_private.provision(?,?,?,?,'contacto@example.invalid',NULL,'America/Mexico_City','es-MX')",UUID.class,
                             command,users.getFirst(),command,name); QuotaFixtures.seed(sql,tenant);
-                        if(List.of("alice-9","alice-10").contains(approval.getKey()))sql.update("UPDATE entitlement_private.limits SET limit_value=? WHERE tenant_id=? AND resource='USERS'",position==0?2:3,tenant);
+                        if(List.of("alice-9","alice-10","alice-15").contains(approval.getKey()))sql.update("UPDATE entitlement_private.limits SET limit_value=? WHERE tenant_id=? AND resource='USERS'",position==0?2:3,tenant);
                         connection.commit();position++;
                         if(approval.getKey().equals("bob-3")) {
                             sql.queryForObject("SELECT tenant_private.change_status(?,?,?,0,'SUSPENDED')",Long.class,tenant,UUID.randomUUID(),UUID.randomUUID());connection.commit();

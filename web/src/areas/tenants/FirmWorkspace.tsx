@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { FirmSettings } from './FirmSettings'
 import { PlanUsage } from '../entitlements/PlanUsage'
 import { Button } from '../../shared/ui/button'
-import { TeamInvitations } from '../team/TeamInvitations'
+import { TeamManagement } from '../team/TeamManagement'
 export function FirmWorkspace(props: {
   userId: string
   tenantId: string
@@ -39,7 +39,7 @@ export function FirmWorkspace(props: {
       ) : area === 'usage' ? (
         <PlanUsage {...props} />
       ) : (
-        <TeamInvitations {...props} onUsage={() => setArea('usage')} />
+        <TeamManagement {...props} onUsage={() => setArea('usage')} />
       )}
     </>
   )

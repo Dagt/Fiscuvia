@@ -13,21 +13,31 @@ export function SideDrawer({
   footer,
   state = 'ready',
   onRetry,
+  open,
+  onOpenChange,
+  onCloseAutoFocus,
 }: {
   title: string
   description: string
-  trigger: ReactNode
+  trigger?: ReactNode
   children: ReactNode
   footer?: ReactNode
   state?: ViewState
   onRetry?: () => void
+  open?: boolean | undefined
+  onOpenChange?: ((open: boolean) => void) | undefined
+  onCloseAutoFocus?: ((event: Event) => void) | undefined
 }) {
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      {trigger && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
       <Dialog.Portal>
         <Dialog.Overlay className="layer-overlay" />
-        <Dialog.Content className="side-drawer" aria-busy={state === 'loading'}>
+        <Dialog.Content
+          className="side-drawer"
+          aria-busy={state === 'loading'}
+          onCloseAutoFocus={onCloseAutoFocus}
+        >
           <header className="panel-heading">
             <div>
               <Dialog.Title>{title}</Dialog.Title>
@@ -87,6 +97,7 @@ export function ConfirmationDialog({
   description,
   confirmLabel,
   onConfirm,
+  failureMessage = 'No pudimos completar la acción. Puedes reintentar.',
   destructive = false,
 }: {
   trigger: ReactNode
@@ -94,6 +105,8 @@ export function ConfirmationDialog({
   description: string
   confirmLabel: string
   onConfirm: () => Promise<void> | void
+  /** Safe caller-owned copy; never display a raw server/exception message. */
+  failureMessage?: string | undefined
   destructive?: boolean
 }) {
   const [open, setOpen] = useState(false)
@@ -145,7 +158,7 @@ export function ConfirmationDialog({
           <Dialog.Description>{description}</Dialog.Description>
           {failed && (
             <p className="field-error" role="alert">
-              No pudimos completar la acción. Puedes reintentar.
+              {failureMessage}
             </p>
           )}
           <div className="component-actions">

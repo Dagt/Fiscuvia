@@ -1,5 +1,9 @@
 # Invitaciones por correo verificadas — #33, corte autorizado
 
+## Administración de equipo #33 — ampliación aprobada
+
+Ampliación autorizada posterior: V11 implementa A, sin alterar las restricciones de correo V10. Los límites de administración general descritos en el corte inicial siguiente son históricos; ahora el propietario aprobó ese alcance limitado. No hay correo productivo. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
 Base: `19d6ec043ccbfda3c75c39b3e5428a72666cd3ba` (#32), rama `issue-33-team-management`. FR-005/011, BR-003/004, NFR-007. Aprobación expresa del propietario en conversación del **2026-11-11**, exclusivamente desarrollo/pruebas con Keycloak real local. [Matriz y decisiones](TEAM-POLICY-PROPOSAL-33.md). OQ-014 no se resuelve ni se elige un proveedor de producción.
 
 ## Alcance real y límites

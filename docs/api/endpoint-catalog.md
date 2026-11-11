@@ -94,3 +94,7 @@ Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas
 
 ## Contrato incompleto deliberadamente
 Especificar request/response/error/status y authorization de cada ruta en un PR de diseño API antes de implementarla. Este catálogo no es OpenAPI listo para producción.
+
+## Administración implementada A #33 (V11)
+
+GET `/api/v1/tenants/{tenantId}/team/members`, GET `.../invitations` y POST `.../members/{memberId}/status`, `.../members/{memberId}/role`, `.../invitations/{invitationId}/revoke`. [Política y DTOs](../security/TEAM-ADMINISTRATION-33.md), [OpenAPI](openapi-v1.yaml). Sólo owner+MFA propio ACTIVE, sin endpoints de cartera o globales.

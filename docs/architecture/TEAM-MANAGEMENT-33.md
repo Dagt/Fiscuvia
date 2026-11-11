@@ -1,5 +1,9 @@
 # Equipo #33 — auditoría y fronteras de implementación
 
+## Administración de equipo #33 — ampliación aprobada
+
+La política A fue aprobada expresamente para completar PR #91. V11 implementa directorio/invitaciones, cambios de rol operativos y reactivación con cuota; se conserva el correo B. Los apartados de auditoría inicial siguientes registran los pendientes anteriores a esa aprobación. Cartera sigue diferida por #74. [Controles y alcance](../security/TEAM-ADMINISTRATION-33.md).
+
 Base remota: `19d6ec043ccbfda3c75c39b3e5428a72666cd3ba`, merge de #32. Rama: `issue-33-team-management`. Estado: **invitaciones por correo local/test implementadas con aprobación limitada; administración general/cartera pendientes**. FR-005/011, BR-003/004, NFR-007. V10 es aditiva; V1–V9 y los grants administrativos permanecen intactos. [Guía del corte implementado](../security/LOCAL-EMAIL-INVITATIONS-33.md).
 
 ## Infraestructura comprobada y reutilizable

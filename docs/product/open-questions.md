@@ -49,3 +49,7 @@ Esta autorización técnica se limita al scaffold #20; no convierte los ADR Prop
 ## Implementación técnica propuesta #32
 
 OQ-007 y ADR-015 conservan sus pendientes comerciales. V8 prepara límites técnicos/reservas, sin precios ni catálogos comerciales. La política limitada de consulta y conteo fue aprobada por Dagt en https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955 y V9 activa consulta owner+MFA y protección de membresías; el alcance está descrito en [entitlements](../architecture/TENANT-ENTITLEMENTS.md); no resuelve OQ-014, OQ-015 ni #74.
+
+### Aprobación parcial A #33 (2026-11-11)
+
+El propietario aprobó expresamente la [política limitada de equipo](../security/TEAM-ADMINISTRATION-33.md) para owner/MFA. OQ-015 no se resuelve globalmente: no aprueba matriz fiscal, cartera ni permisos de auxiliares. OQ-014 mantiene proveedor/semántica/entrega productivos pendientes; ADR-015 sigue parcialmente pendiente.

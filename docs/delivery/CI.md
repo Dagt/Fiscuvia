@@ -1,5 +1,9 @@
 # CI reproducible — issue #23
 
+## Administración de equipo #33 — ampliación aprobada
+
+Mínimos actuales A #33: 456 Java,129 Vitest,61 Playwright fundación,20 OIDC,23 tools/ci. No cambios de workflows, bypasses ni presupuesto. Los cinco checks se verifican por el nuevo SHA final del PR #91; los resultados del corte B no acreditan esta ampliación. [Controles y alcance](../security/TEAM-ADMINISTRATION-33.md).
+
 ## Corte de invitaciones locales #33
 
 Mínimos nuevos: **416 Java (375+41),107 Vitest,61 Playwright de fundación/presentación,18 OIDC y21 tools/ci**. Se conservan las385/92/61/15/19 previas. EmailInvitationTests27, el cierre por defecto en OidcAuthenticationTests23 y EmailInvitationMigrationIT3 usan PostgreSQL/Keycloak reales, sin grants sintéticos de equipo. Tres E2E nuevos validan creación/replay/aceptación, revocación y error real; el escenario de dos sesiones y diez capturas tiene timeout propio120s, sin cambiar45s/retries0 de suites anteriores. Un fallo inicial de sincronización del harness fue corregido esperando la respuesta original antes de retirar el handler, sin fabricar datos o respuestas de seguridad.

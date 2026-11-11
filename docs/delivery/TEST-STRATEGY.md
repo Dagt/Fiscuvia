@@ -1,5 +1,9 @@
 # Estrategia de pruebas
 
+## Administración de equipo #33 — ampliación aprobada
+
+Ampliación A #33: mínimos456 Java (412+44),129 Vitest,61 Playwright fundación,20 OIDC,23 tools/ci. Se mantienen todas las suites anteriores; nuevas pruebas de política real, SQL/HTTP, locks observables, cuotas, auditoría/rollback e interfaz. [Controles y alcance](../security/TEAM-ADMINISTRATION-33.md).
+
 ## Invitación por correo local/test #33
 
 Se preserva385 Java y se añaden27 de correo HTTP/SQL/OIDC y3 de migración V10, además del cierre por defecto en OIDC: **416 (375 Surefire+41 Failsafe)**. Positivos sin grants sintéticos de administración; datos/IdP sólo locales. Casos de identidad exacta vs correo, firma por propósito, privacidad, MFA, aislamiento, cuotas V9, replays/concurrencia, rollback y oráculos de trigger/privilegios. V1–V9 sin cambios/checksums alterados. Frontend107 Vitest,61 Playwright fundación y18 OIDC; tools/ci21. Capturas reales sin tokens/proveedor/PII real. Los nuevos permisos de listado, rol y reactivación no están aprobados: se prueba que permanecen denegados, no se declaran implementados. [Especificación y cobertura](../security/LOCAL-EMAIL-INVITATIONS-33.md).

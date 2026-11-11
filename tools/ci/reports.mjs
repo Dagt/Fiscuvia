@@ -43,6 +43,8 @@ const baseline = {
   'com.fiscuvia.MembershipCapacityMigrationIT': 3,
   'com.fiscuvia.EmailInvitationTests': 27,
   'com.fiscuvia.EmailInvitationMigrationIT': 3,
+  'com.fiscuvia.TeamAdministrationTests': 37,
+  'com.fiscuvia.TeamAdministrationMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {
@@ -100,8 +102,8 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
 }
 
 export function completeWebReports(unit, foundation, identity) {
-  const base = webReports(unit, foundation, 61, 107)
-  const auth = webReports(unit, identity, 18, 107)
+  const base = webReports(unit, foundation, 61, 129)
+  const auth = webReports(unit, identity, 20, 129)
   return { ...base, oidcPlaywright: auth.playwright }
 }
 

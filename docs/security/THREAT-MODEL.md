@@ -1,5 +1,9 @@
 # Modelo inicial de amenazas
 
+## Administración de equipo #33 — ampliación aprobada
+
+Amenazas #33: enumeración global, elevación por rol, autoedición, upgrade a owner, sobrecupo, TOCTOU y recibos cruzados. V11 exige capacidad exacta/MFA/tenant, mutex de raíz antes de target/cuota, versión y huella ligadas al actor. Pruebas negativas37 y guardas de política/privilegios/triggers; correo productivo y cartera siguen cerrados. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
 ## Correo verificado local #33
 
 | Amenaza | Control efectivo | Evidencia requerida |

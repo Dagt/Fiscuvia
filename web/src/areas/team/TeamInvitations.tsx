@@ -327,8 +327,8 @@ function InvitationForm({ tenantId, onUnavailable, onUsage }: Props) {
       )}
       <aside className="team-notice">
         <p>
-          El directorio de colaboradores, el historial de invitaciones y los
-          cambios de rol o reactivación todavía no están disponibles.
+          Consulta colaboradores e invitaciones desde las vistas del equipo. Los
+          tokens no pueden recuperarse desde el historial.
         </p>
       </aside>
     </section>

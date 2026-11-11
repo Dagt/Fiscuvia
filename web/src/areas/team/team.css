@@ -58,3 +58,44 @@
   border-radius: var(--radius-control);
   user-select: all;
 }
+
+.team-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 200px) auto auto;
+  gap: var(--space-16);
+  align-items: end;
+}
+.team-person {
+  display: grid;
+  gap: var(--space-8);
+  overflow-wrap: anywhere;
+}
+.team-person > span {
+  color: var(--muted);
+}
+.team-member-actions {
+  display: grid;
+  gap: var(--space-12);
+  min-width: 180px;
+}
+.team-command {
+  display: grid;
+  gap: var(--space-8);
+}
+.team-area .data-mobile-list p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 767px) {
+  .team-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .team-member-actions {
+    min-width: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .team-filters {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

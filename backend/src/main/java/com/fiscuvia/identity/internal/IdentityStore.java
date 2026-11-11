@@ -56,7 +56,9 @@ class IdentityStore implements AuthorizedTenantOperations {
             String state=cause instanceof java.sql.SQLException sql ? sql.getSQLState() : "";
             throw new ApiFailure("42501".equals(state) ? ApiErrorCode.ACCESS_DENIED
                     : ("P3201".equals(state)||"P3202".equals(state)) ? ApiErrorCode.QUOTA_UNAVAILABLE
-                    : "P3301".equals(state) ? ApiErrorCode.VALIDATION_FAILED
+                    : ("P3301".equals(state)||"P3310".equals(state)) ? ApiErrorCode.VALIDATION_FAILED
+                    : "P3311".equals(state) ? ApiErrorCode.NOT_FOUND
+                    : "P3312".equals(state) ? ApiErrorCode.STALE_VERSION
                     : "23505".equals(state) ? ApiErrorCode.CONFLICT : ApiErrorCode.INTERNAL_ERROR);
         }
     }

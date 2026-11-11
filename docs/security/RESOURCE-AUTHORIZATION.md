@@ -1,5 +1,9 @@
 # Autorización por recurso — infraestructura #28
 
+## Administración de equipo #33 — ampliación aprobada
+
+Aprobación limitada A #33: tres capacidades owner+MFA, versiones y serialización administrativa. No concede capacidades fiscales ni cartera. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
 ## Consumidor efectivo #31
 
 El módulo tenants consume `AuthorizedTenantOperations`, nunca `TenantTransactions`. TENANT_READ conserva sus cuatro roles aprobados; V7 instala TENANT_SETTINGS_MANAGE exclusivamente para owner del propio despacho con MFA confiable reciente, según aprobación parcial expresa. El resto de la matriz sigue DENY cuando no esté aprobado. No hay capacidad del operador ni roles comerciales nuevos. V6 ordena bloqueo de raíz antes de membresía/política y toma FOR UPDATE temprano para configuración; conserva el conjunto de recursos/locks de V4. La suspensión administrativa bloquea nuevas autorizaciones protegidas sin destruir asignaciones. [Contratos, autorización registrada y pruebas](../architecture/TENANT-PROVISIONING.md).

@@ -1,5 +1,9 @@
 # Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–29
 
+## Administración de equipo #33 — ampliación aprobada
+
+V11 integra administración aprobada A #33: directorio propio, roles operativos, reactivación con cuotas, versiones y journal/outbox. No cambiar V1–V10. [Controles y alcance](../docs/security/TEAM-ADMINISTRATION-33.md).
+
 ## Invitaciones locales #33
 
 [V10, API, identidad verificada y privacidad](../docs/security/LOCAL-EMAIL-INVITATIONS-33.md). Adaptador de correo sobre el flujo original de invitaciones, sin permisos nuevos de administración de equipo. Opt-in FISCUVIA_OIDC_CONTACT_POLICY=keycloak-local-verified-email-v1 sólo con Keycloak local/test; disabled por defecto. No hay entrega externa. Contactos privados con prueba HMAC por propósito; token mostrado una vez, sólo hash almacenado y replay sin secreto. V1–V9 intactas; nueva suite27 HTTP/OIDC/SQL +3 migration IT, sin grants sintéticos positivos.
