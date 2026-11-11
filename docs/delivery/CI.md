@@ -151,3 +151,5 @@ El run 41255643316 confirmó esa corrección y detectó caché Trivy no escribib
 [Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.
 
 La entrega #32 conserva los cinco checks y eleva los mínimos a 363 Java, 91 Vitest, 61 Playwright de fundación/presentación, 13 OIDC y 19 tools/ci. Resultados y SHA final en [Draft #90](https://github.com/Dagt/Fiscuvia/pull/90); [validación local, repetición por puerto rootless y límites](../../backend/VALIDATION-32.md).
+
+V9 en el mismo PR #90: mínimos 385 Java, 92 Vitest, 61 Playwright de fundación/presentación, 15 OIDC y 19 tools/ci. La aprobación limitada está en el comentario 6798951955 del propietario. La evidencia del SHA nuevo se registra en #90; CI #44 anterior no acredita esta integración. No se modifican workflows ni presupuesto.

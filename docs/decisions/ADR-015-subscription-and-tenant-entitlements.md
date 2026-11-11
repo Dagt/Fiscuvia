@@ -32,4 +32,4 @@ E03/E11. Cambios que contradigan este documento requieren issue, propuesta de AD
 
 ## Infraestructura técnica #32
 
-La solicitud de #32 autoriza límites técnicos, reservas y administración interna auditada, sin aceptar precios/cobros/cancelaciones ni este ADR completo. [Implementación V8 y fronteras de aprobación](../architecture/TENANT-ENTITLEMENTS.md). La política limitada de consulta y aceptación permanece pendiente; no se instalan grants ni el hook por omisión. Status Proposed se conserva.
+La solicitud de #32 autoriza límites técnicos, reservas y administración interna auditada, sin aceptar precios/cobros/cancelaciones ni este ADR completo. [Implementación V8 y fronteras de aprobación](../architecture/TENANT-ENTITLEMENTS.md). La política limitada de consulta y conteo fue aprobada expresamente en https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955: V9 la instala, sin aceptar el resto del ADR. Status Proposed se conserva.

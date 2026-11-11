@@ -395,9 +395,9 @@ class AuditJournalTests {
             admin(tenant,s->{s.update("INSERT INTO app.tenants(tenant_id) VALUES(?)",tenant);
                 if(owner){s.queryForObject("SELECT identity_private.bootstrap_owner(?,?,?)",Object.class,tenant,user,approval);
                     member[0]=s.queryForObject("SELECT id FROM identity.memberships WHERE user_id=?",UUID.class,user);
-                } else {member[0]=UUID.randomUUID();s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,member[0],user);
+                } else {member[0]=UUID.randomUUID();QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,member[0],user);
                     s.update("INSERT INTO identity.membership_roles VALUES(?,?,'ACCOUNTANT')",tenant,member[0]);}
-                s.update("INSERT INTO journal_fixture.counters(tenant_id,id) VALUES(?,?)",tenant,tenant);});membership=member[0];
+                QuotaFixtures.seed(s,tenant);s.update("INSERT INTO journal_fixture.counters(tenant_id,id) VALUES(?,?)",tenant,tenant);});membership=member[0];
         }
         java.net.http.HttpResponse<String> command(UUID id,String mode) throws Exception {return browser.send("POST",ROOT+tenant+"/command/"+id+"?mode="+mode,null,browser.csrf());}
         java.net.http.HttpResponse<String> status(UUID id,String state) throws Exception {return browser.send("POST","/api/v1/auth/memberships/status","{\"tenantId\":\""+tenant+"\",\"membershipId\":\""+id+"\",\"status\":\""+state+"\"}",browser.csrf());}
@@ -431,7 +431,7 @@ class AuditJournalTests {
     static List<Map<String,Object>> rows(UUID tenant,String query) throws Exception {var result=new ArrayList<Map<String,Object>>();admin(tenant,s->result.addAll(s.queryForList(query)));return result;}
     static List<Map<String,Object>> global(String query) throws Exception {return rows(null,query);}
     static int value(Fixture f) throws Exception {return ((Number)rows(f.tenant,"SELECT value FROM journal_fixture.counters").getFirst().get("value")).intValue();}
-    static UUID member(UUID tenant,UUID user) throws Exception {UUID id=UUID.randomUUID();admin(tenant,s->{s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);s.update("INSERT INTO identity.membership_roles VALUES(?,?,'ACCOUNTANT')",tenant,id);});return id;}
+    static UUID member(UUID tenant,UUID user) throws Exception {UUID id=UUID.randomUUID();admin(tenant,s->{QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);s.update("INSERT INTO identity.membership_roles VALUES(?,?,'ACCOUNTANT')",tenant,id);});return id;}
     @RestController static class JournalFixtureController {
         static volatile CountDownLatch entered,release;
         final AuthorizedTenantOperations operations;final AuditJournal journal;final JdbcTemplate sql;

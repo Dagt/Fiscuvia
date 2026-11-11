@@ -1,10 +1,20 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-11-11T12:54:31.198Z",
+  "recordedAt": "2026-11-11T15:19:48.930Z",
   "chromium": "156.0.8078.4",
-  "captureCommand": "FISCUVIA_CAPTURE=1 npx playwright test e2e/plan-usage.spec.ts --project=desktop --project=mobile",
-  "fixture": "web/e2e/plan-usage.spec.ts",
-  "securityEvidence": "Separate real OIDC/PostgreSQL suites; these screenshots do not prove authorization",
+  "captureCommands": [
+    "FISCUVIA_CAPTURE=1 npx playwright test e2e/plan-usage.spec.ts --project=desktop --project=mobile",
+    "FISCUVIA_CAPTURE=1 node tools/ci/auth-browser.mjs"
+  ],
+  "captureScriptSha256": "b900976abbd23ccf4d62fe6ef8774fe4d705ead3d8ff93a97854e565a289ba2f",
+  "fixture": [
+    "web/e2e/plan-usage.spec.ts",
+    "web/auth-e2e/firm-settings.spec.ts",
+    "backend/src/test/java/com/fiscuvia/LocalOidcHarness.java",
+    "backend/src/test/java/com/fiscuvia/QuotaFixtures.java",
+    "backend/src/test/java/com/fiscuvia/KeycloakTestProvider.java"
+  ],
+  "securityEvidence": "Production V9/OIDC/PostgreSQL assertions verify security. Four real-oidc screenshots use real APIs with synthetic limits; fourteen others use presentation interceptors. Screenshots alone do not prove authorization.",
   "applicationSources": [
     {
       "sha256": "bb0c257d701f96c0b017949bcef08481209cba2d2600735ae168054c84ccf834",
@@ -47,11 +57,11 @@
       "path": "backend/src/main/java/com/fiscuvia/entitlements/Resource.java"
     },
     {
-      "sha256": "b664f398460a484962498f2a996c090008a2510872be999841ac39ad7382339b",
+      "sha256": "fe83ed81d24f4bfe8ac5c9aa4a9241b4b997049336f6662610fab9ba168b099d",
       "path": "backend/src/main/java/com/fiscuvia/entitlements/internal/EntitlementController.java"
     },
     {
-      "sha256": "3de153010525589fae7284c5a74c53a938d0761f7a1344910aaa9bd14adabdee",
+      "sha256": "c6b651f3ca5085f7abb3bcabeb69ddbd05686baad66470eeb4bcd495229fb85d",
       "path": "backend/src/main/java/com/fiscuvia/entitlements/internal/EntitlementGuards.java"
     },
     {
@@ -95,7 +105,7 @@
       "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentitySettings.java"
     },
     {
-      "sha256": "4ef6b2e4e938b19a0e231cf33848d1206719508713db8ab09a4eace3ee337907",
+      "sha256": "8cbd5f333957fb59506a96b55eceec15991fd9c8a4348034d408da9b6ee9d59b",
       "path": "backend/src/main/java/com/fiscuvia/identity/internal/IdentityStore.java"
     },
     {
@@ -123,7 +133,7 @@
       "path": "backend/src/main/java/com/fiscuvia/platform/AccessDecisionEvent.java"
     },
     {
-      "sha256": "7e6e53944b076de68aa20fc410b69d034c7e6469fbf5333bb582503418156a3f",
+      "sha256": "3d79a2552be9e0b1ba490a15e31aebfada50d802f108633c11d3c7e9df40bc9c",
       "path": "backend/src/main/java/com/fiscuvia/platform/ApiErrorCode.java"
     },
     {
@@ -323,6 +333,26 @@
       "path": "backend/src/main/resources/db/migration/V8__tenant_entitlements.sql"
     },
     {
+      "sha256": "356aed0625329927ff90b104c8eff3d6bfc10434b6c3a365663433c7f027c518",
+      "path": "backend/src/main/resources/db/migration/V9__approve_plan_view_and_membership_capacity.sql"
+    },
+    {
+      "sha256": "6104aeab39bdd324625cb830472d897d7f0c62c09238608f8d306534669a89f9",
+      "path": "backend/src/test/java/com/fiscuvia/KeycloakTestProvider.java"
+    },
+    {
+      "sha256": "5845576042ea12774a34d17fa5c732bb64e591730a78b148b9f63c42d3f8ac97",
+      "path": "backend/src/test/java/com/fiscuvia/LocalOidcHarness.java"
+    },
+    {
+      "sha256": "4aa5bf3e0125317c4116c5ee8a647b4a4052a1925a43ad95ba319afe4be343c5",
+      "path": "backend/src/test/java/com/fiscuvia/QuotaFixtures.java"
+    },
+    {
+      "sha256": "3c6878c7321f125ee2d473ba8cdbcb3baf04d90d63e3b1d8c5b5d6391fdd97ae",
+      "path": "web/auth-e2e/firm-settings.spec.ts"
+    },
+    {
       "sha256": "ef471ed270f446f9fd48463d74362cd496c8f18e747fee87be5eb2f2fc228d9e",
       "path": "web/e2e/plan-usage.spec.ts"
     },
@@ -363,11 +393,11 @@
       "path": "web/src/areas/component-catalog/catalog.css"
     },
     {
-      "sha256": "08e0beefad96047fa228c81299b8f0c6892d188cc93d79597587146509dd8cc5",
+      "sha256": "0e7fca1d6abecc7253161f52a67f65c5a1154687cc12349f336dd42d54f5f622",
       "path": "web/src/areas/entitlements/PlanUsage.test.tsx"
     },
     {
-      "sha256": "a9448c4c5d610b97a22c50a051e31e1cd1b787e4876929a944d9789d03eda502",
+      "sha256": "3f374d6ac7bc658ebd2e1d0e2b9ab4ade86a6381cd73b312459fa87ebc87a2e0",
       "path": "web/src/areas/entitlements/PlanUsage.tsx"
     },
     {
@@ -443,7 +473,7 @@
       "path": "web/src/shared/api/client.ts"
     },
     {
-      "sha256": "bc8e378d1709ab6e8b22a774aac6cad8ede105dc33be5a587b10c498f6676d5d",
+      "sha256": "d68181b8c55d506a9a767b0eed58107f7580652762e29c7fe31bc7b0579c8e7f",
       "path": "web/src/shared/api/contract-metadata.ts"
     },
     {
@@ -459,7 +489,7 @@
       "path": "web/src/shared/api/firm-client.ts"
     },
     {
-      "sha256": "0f5085aada6647c71c7f04ac5413f147b32d7f60a776cc464ecb4c85c15e8879",
+      "sha256": "868de30a546c26ac059d79f32d5ed999f6ddbdda0f1adcd33195ecae01846b59",
       "path": "web/src/shared/api/schema.d.ts"
     },
     {
@@ -566,14 +596,14 @@
       "file": "denied-desktop.png",
       "width": 1440,
       "height": 900,
-      "sha256": "f1c42daa7a87cfd90ab8a0432868f8343c4c469ea2b49d9294fdeb61d95d56ae",
+      "sha256": "52673ac09ab7d9d680bd650542e009b44fa8309144caa3e3b14f2973691777ca",
       "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
     },
     {
       "file": "denied-mobile.png",
       "width": 390,
       "height": 844,
-      "sha256": "ff410384fde11421dcf50de8d41f8318355b1e48e7a5e1d904e15138cf6e3066",
+      "sha256": "863e1e6442e68ea745477112b8a1782c15777148482bd356aeb62b9cf8a56edd",
       "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
     },
     {
@@ -633,6 +663,34 @@
       "data": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY"
     },
     {
+      "file": "real-oidc-full-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "bbb35288bbd71f73c1ab296fea6e257724fb62a71ae78f178a01a2201fec6df7",
+      "data": "REAL_OIDC_POSTGRES_V9_SYNTHETIC_LIMITS"
+    },
+    {
+      "file": "real-oidc-full-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "399b0121bb58e1334c0287ef0112e4466ba8150cc3d66b023a085800c0e891ea",
+      "data": "REAL_OIDC_POSTGRES_V9_SYNTHETIC_LIMITS"
+    },
+    {
+      "file": "real-oidc-plan-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "66bc5bb3e18254a431d2a87e49d7fcdf274084f2b5dd0d74579414c935bee338",
+      "data": "REAL_OIDC_POSTGRES_V9_SYNTHETIC_LIMITS"
+    },
+    {
+      "file": "real-oidc-plan-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "7110a3a7a6e2b7ea37082768c963de62b89cd06bee98f26c5f5937f91c88cda5",
+      "data": "REAL_OIDC_POSTGRES_V9_SYNTHETIC_LIMITS"
+    },
+    {
       "file": "sin-consumo-medido-desktop.png",
       "width": 1440,
       "height": 900,
@@ -654,7 +712,7 @@
     "expired session removes usage"
   ],
   "limitations": [
-    "TENANT_PLAN_VIEW remains DENY without approved policy",
+    "Limited owner+MFA policy approved in issuecomment-6798951955; V9 installed",
     "no WCAG certification or pixel-diff baseline"
   ]
 }

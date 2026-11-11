@@ -400,3 +400,144 @@ test('suspensión administrativa real no ofrece acceso operativo ni reactivació
     (await page.request.get(`/api/v1/tenants/${tenant}/settings`)).status(),
   ).toBe(403)
 })
+
+test('Plan y uso consulta cuotas reales con OIDC y limpia al cambiar despacho', async ({
+  page,
+}) => {
+  await login(page, 'alice-9')
+  await choose(page)
+  await page.getByRole('button', { name: 'Plan y uso', exact: true }).click()
+  const tenant = await own(page)
+  const response = await page.request.get(
+    `/api/v1/tenants/${tenant}/entitlements`,
+  )
+  expect(response.status()).toBe(200)
+  const rows = await response.json()
+  expect(validator('EntitlementUsage')(rows[0])).toBe(true)
+  expect(rows[0]).toMatchObject({
+    resource: 'USERS',
+    measured: 1,
+    reserved: 0,
+    limit: 2,
+    available: 1,
+  })
+  expect(
+    rows
+      .slice(1)
+      .every(
+        (r: { measured: unknown; integration: string }) =>
+          r.measured === null && r.integration === 'NOT_INTEGRATED',
+      ),
+  ).toBe(true)
+  await expect(page.getByText('Usuarios', { exact: true })).toBeVisible()
+  for (const [width, height] of [
+    [1440, 900],
+    [390, 844],
+  ] as const) {
+    await page.setViewportSize({ width, height })
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+          .analyze()
+      ).violations,
+    ).toEqual([])
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    if (process.env.FISCUVIA_CAPTURE) {
+      mkdirSync('../docs/ux/evidence/issue-32', { recursive: true })
+      await page.screenshot({
+        path: `../docs/ux/evidence/issue-32/real-oidc-plan-${width}.png`,
+        animations: 'disabled',
+      })
+    }
+  }
+  await page
+    .getByRole('button', { name: 'Cambiar de despacho', exact: true })
+    .click()
+  await expect(page.getByText('Usuarios', { exact: true })).toHaveCount(0)
+  await page
+    .getByRole('button', { name: /Despacho de Servicios Profesionales/ })
+    .click()
+  await page.getByRole('button', { name: 'Plan y uso', exact: true }).click()
+  await expect(page.getByText('Usuarios', { exact: true })).toBeVisible()
+  const me = await (await page.request.get('/api/v1/me')).json()
+  const second = me.memberships.find(
+    (m: { tenantId: string }) => m.tenantId !== tenant,
+  ).tenantId
+  expect(
+    (
+      await (
+        await page.request.get(`/api/v1/tenants/${second}/entitlements`)
+      ).json()
+    )[0].limit,
+  ).toBe(3)
+})
+
+test('aceptación real llena el cupo y un contador no puede consultar planes', async ({
+  page,
+  browser,
+}) => {
+  await login(page, 'alice-10')
+  const tenant = await own(page)
+  const csrf = await (await page.request.get('/api/v1/auth/csrf')).json()
+  const invite = await page.request.post('/api/v1/auth/invitations', {
+    headers: { 'X-CSRF-TOKEN': csrf.token },
+    data: { tenantId: tenant, subject: subject('bob-10'), role: 'ACCOUNTANT' },
+  })
+  expect(invite.status()).toBe(201)
+  const invitation = await invite.json()
+  const context = await browser.newContext({ ignoreHTTPSErrors: true })
+  try {
+    const other = await context.newPage()
+    await login(other, 'bob-10', 0)
+    const otherCsrf = await (
+      await other.request.get('/api/v1/auth/csrf')
+    ).json()
+    expect(
+      (
+        await other.request.post('/api/v1/auth/invitations/accept', {
+          headers: { 'X-CSRF-TOKEN': otherCsrf.token },
+          data: { token: invitation.token },
+        })
+      ).status(),
+    ).toBe(200)
+    expect(
+      (
+        await other.request.get(`/api/v1/tenants/${tenant}/entitlements`)
+      ).status(),
+    ).toBe(403)
+    await other.reload()
+    await other.getByRole('button', { name: /Despacho Horizonte DEMO/ }).click()
+    await other.getByRole('button', { name: 'Plan y uso', exact: true }).click()
+    await expect(
+      other.getByText('Sin permiso para consultar el plan'),
+    ).toBeVisible()
+    await expect(other.getByText('Usuarios', { exact: true })).toHaveCount(0)
+  } finally {
+    await context.close()
+  }
+  await choose(page)
+  await page.getByRole('button', { name: 'Plan y uso', exact: true }).click()
+  await expect(
+    page.getByText('Límite alcanzado', { exact: true }),
+  ).toBeVisible()
+  const rows = await (
+    await page.request.get(`/api/v1/tenants/${tenant}/entitlements`)
+  ).json()
+  expect(rows[0]).toMatchObject({ measured: 2, reserved: 0, available: 0 })
+  for (const [width, height] of [
+    [1440, 900],
+    [390, 844],
+  ] as const) {
+    await page.setViewportSize({ width, height })
+    if (process.env.FISCUVIA_CAPTURE)
+      await page.screenshot({
+        path: `../docs/ux/evidence/issue-32/real-oidc-full-${width}.png`,
+        animations: 'disabled',
+      })
+  }
+})

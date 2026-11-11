@@ -373,7 +373,7 @@ class OidcAuthenticationTests {
         try(var connection=migration()) {
             connection.setAutoCommit(false); var sql=new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection,true));
             sql.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant); sql.update("INSERT INTO app.tenants(tenant_id) VALUES(?)",tenant);
-            sql.queryForObject("SELECT identity_private.bootstrap_owner(?,?,?)",Object.class,tenant,user,UUID.randomUUID()); connection.commit();
+            sql.queryForObject("SELECT identity_private.bootstrap_owner(?,?,?)",Object.class,tenant,user,UUID.randomUUID()); QuotaFixtures.seed(sql,tenant); connection.commit();
         } return tenant;
     }
     private tools.jackson.databind.JsonNode invite(OidcBrowser owner,OidcBrowser recipient,UUID tenant) throws Exception {

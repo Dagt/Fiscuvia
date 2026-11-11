@@ -46,4 +46,4 @@ Esta autorización técnica se limita al scaffold #20; no convierte los ADR Prop
 
 ## Implementación técnica propuesta #32
 
-OQ-007 y ADR-015 conservan sus pendientes comerciales. V8 prepara límites técnicos/reservas, sin precios ni catálogos comerciales. La consulta TENANT_PLAN_VIEW y el hook de aceptación de membresías permanecen sin activar hasta aprobar la política limitada descrita en [entitlements](../architecture/TENANT-ENTITLEMENTS.md); no resuelve OQ-014, OQ-015 ni #74.
+OQ-007 y ADR-015 conservan sus pendientes comerciales. V8 prepara límites técnicos/reservas, sin precios ni catálogos comerciales. La política limitada de consulta y conteo fue aprobada por Dagt en https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955 y V9 activa consulta owner+MFA y protección de membresías; el alcance está descrito en [entitlements](../architecture/TENANT-ENTITLEMENTS.md); no resuelve OQ-014, OQ-015 ni #74.

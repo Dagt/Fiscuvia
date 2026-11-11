@@ -76,7 +76,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Consumir invitación atómica de un solo uso */
+    /**
+     * Consumir invitación atómica de un solo uso con cuota productiva
+     * @description V9 exige cupo USERS vigente; una invitación pendiente no consume plaza. La membresía, reserva correspondiente y auditoría/outbox se confirman juntas. QUOTA_UNAVAILABLE (409) conserva la invitación sin consumir.
+     */
     post: operations['acceptInvitation']
     delete?: never
     options?: never
@@ -232,7 +235,7 @@ export interface paths {
     }
     /**
      * Consultar límites y uso del despacho con TENANT_PLAN_VIEW explícito
-     * @description Sin grants implícitos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros no publican consumo.
+     * @description V9 concede consulta sólo al owner ACTIVE con MFA confiable ≤10 minutos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros no publican consumo.
      */
     get: operations['getTenantEntitlements']
     put?: never
@@ -432,6 +435,7 @@ export interface components {
         | 'NOT_FOUND'
         | 'METHOD_NOT_ALLOWED'
         | 'NOT_ACCEPTABLE'
+        | 'QUOTA_UNAVAILABLE'
         | 'CONFLICT'
         | 'STALE_VERSION'
         | 'IDEMPOTENCY_KEY_REUSED'
@@ -704,6 +708,7 @@ export interface operations {
       400: components['responses']['BadRequest']
       401: components['responses']['Unauthorized']
       403: components['responses']['Forbidden']
+      409: components['responses']['Conflict']
       422: components['responses']['Validation']
       500: components['responses']['InternalError']
     }

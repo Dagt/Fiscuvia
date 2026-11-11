@@ -10,7 +10,10 @@ import org.springframework.context.annotation.*;
 class EntitlementGuards {
     @Bean @DependsOnDatabaseInitialization InitializingBean verifyEntitlementPrivileges(DataSource source) { return ()->{
         try(var c=source.getConnection();var s=c.createStatement();var r=s.executeQuery("""
-            SELECT NOT has_schema_privilege('entitlement_private','USAGE')
+            SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE tgrelid='identity.memberships'::regclass
+              AND tgname='entitlement_capacity' AND tgenabled='O' AND tgfoid IN (SELECT p.oid FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='entitlement_private' AND p.proname='membership_capacity' AND p.pronargs=0) AND tgtype=23)
+            AND entitlement_api.approved_view_policy()
+            AND NOT has_schema_privilege('entitlement_private','USAGE')
             AND NOT has_schema_privilege('entitlement_api','CREATE')
             AND NOT has_schema_privilege('fiscuvia_sessions','entitlement_api','USAGE')
             AND (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='entitlement_private' AND c.relkind='r')=3

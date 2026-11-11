@@ -15,6 +15,7 @@ x-error-statuses:
   NOT_FOUND: 404
   METHOD_NOT_ALLOWED: 405
   NOT_ACCEPTABLE: 406
+  QUOTA_UNAVAILABLE: 409
   CONFLICT: 409
   STALE_VERSION: 409
   IDEMPOTENCY_KEY_REUSED: 409
@@ -277,7 +278,8 @@ paths:
   /auth/invitations/accept:
     post:
       operationId: acceptInvitation
-      summary: Consumir invitación atómica de un solo uso
+      summary: Consumir invitación atómica de un solo uso con cuota productiva
+      description: V9 exige cupo USERS vigente; una invitación pendiente no consume plaza. La membresía, reserva correspondiente y auditoría/outbox se confirman juntas. QUOTA_UNAVAILABLE (409) conserva la invitación sin consumir.
       security:
         - SessionCookie: []
       x-implementation-status: implemented
@@ -297,6 +299,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
         "422":
           $ref: "#/components/responses/Validation"
         "500":
@@ -512,7 +516,7 @@ paths:
     get:
       operationId: getTenantEntitlements
       summary: Consultar límites y uso del despacho con TENANT_PLAN_VIEW explícito
-      description: Sin grants implícitos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros
+      description: V9 concede consulta sólo al owner ACTIVE con MFA confiable ≤10 minutos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros
         no publican consumo.
       security:
         - SessionCookie: []
@@ -715,6 +719,7 @@ components:
             - NOT_FOUND
             - METHOD_NOT_ALLOWED
             - NOT_ACCEPTABLE
+            - QUOTA_UNAVAILABLE
             - CONFLICT
             - STALE_VERSION
             - IDEMPOTENCY_KEY_REUSED

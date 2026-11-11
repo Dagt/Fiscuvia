@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   tenantUsage,
   type EntitlementUsage,
@@ -34,14 +34,21 @@ export function PlanUsage({
   tenantId: string
   onUnavailable: (status: number) => void
 }) {
+  const client = useQueryClient()
+  const key = ['tenant-usage', userId, tenantId]
   const query = useQuery({
-    queryKey: ['tenant-usage', userId, tenantId],
+    queryKey: key,
     queryFn: async ({ signal }) => {
       try {
         return await tenantUsage(tenantId, signal)
       } catch (error) {
-        if (error instanceof ApiClientError && error.status === 401)
-          onUnavailable(401)
+        if (
+          error instanceof ApiClientError &&
+          (error.status === 401 || error.status === 403)
+        ) {
+          client.setQueryData(key, [])
+          if (error.status === 401) onUnavailable(401)
+        }
         throw error
       }
     },
@@ -55,7 +62,7 @@ export function PlanUsage({
       query.error.status === 403 ? (
       <PermissionState
         title="Sin permiso para consultar el plan"
-        description="Esta información requiere autorización explícita y, cuando corresponda, verificación reciente con doble factor."
+        description="Sólo la persona propietaria del despacho puede consultar esta información. Se requiere una verificación confiable con doble factor de los últimos 10 minutos."
       />
     ) : (
       <ErrorState onRetry={() => void query.refetch()} />

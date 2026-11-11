@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -90,4 +90,27 @@ it('conserva sobrecupo sin sugerir borrado', async () => {
   view()
   expect(await screen.findByText('Sobrecupo')).toBeVisible()
   expect(screen.getByText(/Se conservan los datos existentes/)).toBeVisible()
+})
+
+it('elimina cifras de la caché después de una denegación', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  })
+  render(
+    <QueryClientProvider client={client}>
+      <PlanUsage userId="u" tenantId="a" onUnavailable={vi.fn()} />
+    </QueryClientProvider>,
+  )
+  await screen.findByText('Usuarios')
+  expect(client.getQueryData(['tenant-usage', 'u', 'a'])).toEqual(rows)
+  vi.mocked(api.tenantUsage).mockRejectedValue(
+    new ApiClientError('ACCESS_DENIED', 403),
+  )
+  await act(async () => {
+    await client.refetchQueries({ queryKey: ['tenant-usage', 'u', 'a'] })
+  })
+  await waitFor(() =>
+    expect(screen.queryByText('Usuarios')).not.toBeInTheDocument(),
+  )
+  expect(client.getQueryData(['tenant-usage', 'u', 'a'])).toEqual([])
 })

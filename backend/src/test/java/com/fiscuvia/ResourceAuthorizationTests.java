@@ -368,7 +368,7 @@ class ResourceAuthorizationTests {
     }
     static UUID tenant() throws Exception { UUID id=UUID.randomUUID(); admin(id,s->s.update("INSERT INTO app.tenants(tenant_id) VALUES(?)",id)); return id; }
     static UUID membership(UUID tenant,UUID user,String role) throws Exception {
-        UUID id=UUID.randomUUID(); admin(tenant,s->{ s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);
+        UUID id=UUID.randomUUID(); admin(tenant,s->{ QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);
             s.update("INSERT INTO identity.membership_roles VALUES(?,?,?)",tenant,id,role); }); return id;
     }
     static UUID resource(UUID tenant,String kind) throws Exception { UUID id=UUID.randomUUID(); admin(tenant,s->s.update("INSERT INTO resource_fixture.items(tenant_id,id,kind,label) VALUES(?,?,?,'DEMO own')",tenant,id,kind)); return id; }

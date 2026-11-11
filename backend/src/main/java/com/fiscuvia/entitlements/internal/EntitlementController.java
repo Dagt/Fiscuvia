@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-/** Query only. TENANT_PLAN_VIEW has no installed grants without express policy approval. */
+/** Query only. V9 grants TENANT_PLAN_VIEW only to the approved owner with recent MFA. */
 @RestController
 @RequestMapping("/api/v1/tenants/{tenantId}/entitlements")
 class EntitlementController {

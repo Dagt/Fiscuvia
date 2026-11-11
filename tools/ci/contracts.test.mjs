@@ -46,7 +46,7 @@ test('evidencia HTTP exige todos los códigos y concordancia status/header/cuerp
     valid.push({ scenario: code, status, contentType: 'application/problem+json', correlationId: example.traceId,
       body: { ...example, code, status, type: `urn:fiscuvia:problem:${code.toLowerCase().replaceAll('_', '-')}` } })
   }
-  assert.equal(checkHttpResponses(valid), 16)
+  assert.equal(checkHttpResponses(valid), 17)
   assert.throws(() => checkHttpResponses(valid.slice(1)))
   assert.throws(() => checkHttpResponses(valid.slice(0, -1)))
   const mismatch = structuredClone(valid)

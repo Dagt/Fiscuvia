@@ -1,4 +1,4 @@
-**Entitlements técnicos #32:** [modelo y fronteras de aprobación](docs/architecture/TENANT-ENTITLEMENTS.md). V8 incorpora límites versionados, reservas, medición real de membresías y consulta condicionada a TENANT_PLAN_VIEW; sin grants implícitos, precios ni cobros. El hook de invitaciones permanece preparado hasta aprobación de la política limitada.
+**Entitlements técnicos #32:** [modelo y fronteras de aprobación](docs/architecture/TENANT-ENTITLEMENTS.md). V8 incorpora límites versionados, reservas, medición real de membresías y consulta condicionada a TENANT_PLAN_VIEW; sin grants implícitos, precios ni cobros. V9 instala el permiso owner+MFA y el trigger de activaciones según la aprobación limitada del propietario.
 
 # Fiscuvia
 
