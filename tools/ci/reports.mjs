@@ -12,7 +12,7 @@ const baseline = {
   'com.fiscuvia.platform.internal.ScaffoldRuntimeConfigurationTests': 15,
   'com.fiscuvia.ModuleBoundariesTests': 4,
   'com.fiscuvia.FiscuviaApplicationTests': 17,
-  'com.fiscuvia.ApiContractsTests': 39,
+  'com.fiscuvia.ApiContractsTests': 40,
   'com.fiscuvia.ApiPrimitivesTests': 3,
   'com.fiscuvia.PostgresFoundationTests': 3,
   'com.fiscuvia.FiscuviaApplicationIT': 11,
@@ -38,6 +38,9 @@ const baseline = {
   'com.fiscuvia.TenantProvisioningTests': 37,
   'com.fiscuvia.ProvisioningMigrationIT': 3,
   'com.fiscuvia.TenantSettingsPolicyMigrationIT': 4,
+  'com.fiscuvia.EntitlementTests': 39,
+  'com.fiscuvia.EntitlementMigrationIT': 3,
+  'com.fiscuvia.MembershipCapacityMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {
@@ -95,8 +98,8 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
 }
 
 export function completeWebReports(unit, foundation, identity) {
-  const base = webReports(unit, foundation, 33, 85)
-  const auth = webReports(unit, identity, 13, 85)
+  const base = webReports(unit, foundation, 61, 92)
+  const auth = webReports(unit, identity, 15, 92)
   return { ...base, oidcPlaywright: auth.playwright }
 }
 

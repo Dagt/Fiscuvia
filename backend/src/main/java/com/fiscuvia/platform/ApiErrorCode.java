@@ -9,6 +9,7 @@ public enum ApiErrorCode {
     NOT_FOUND(404, "Recurso no encontrado", "El recurso solicitado no está disponible."),
     METHOD_NOT_ALLOWED(405, "Método no permitido", "El método HTTP no está disponible para este recurso."),
     NOT_ACCEPTABLE(406, "Formato no disponible", "El formato de respuesta solicitado no está disponible."),
+    QUOTA_UNAVAILABLE(409, "Cupo no disponible", "No hay cupo disponible para activar otra membresía. Solicita al equipo de Fiscuvia revisar la configuración y los límites del despacho."),
     CONFLICT(409, "Conflicto", "La operación entra en conflicto con el estado actual."),
     STALE_VERSION(409, "Versión desactualizada", "Actualiza la información antes de volver a intentarlo."),
     IDEMPOTENCY_KEY_REUSED(409, "Clave de idempotencia reutilizada", "La clave ya se utilizó para otra solicitud."),

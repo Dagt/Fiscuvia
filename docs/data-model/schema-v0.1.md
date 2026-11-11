@@ -91,3 +91,7 @@ Aplicar RLS explícito `USING (tenant_id = current_setting('app.current_tenant_i
 
 ## 9. Gates antes de la primera migración de dominio
 Revisión de OQ-001–006/011/013/014/015 y políticas de roles. Aceptar formalmente modelo/ADR en PR, completar FKs y referencias, denormalización, uniqueness de contactos, escala de dinero/catálogos, datos de identidad externa, índices, delete/retención. **No derivar automáticamente Flyway de este documento sin revisión.**
+
+## Implementación técnica #32 (sin dominio fiscal)
+
+V8 añade exclusivamente entitlement_private.limits, changes y reservations: UUID/FK, tenant, versiones/vigencias, historia append-only y reservas serializadas. [Modelo físico y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). No implementa las tablas fiscales propuestas de este documento ni resuelve #74.

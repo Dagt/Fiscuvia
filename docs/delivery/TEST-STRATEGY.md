@@ -64,3 +64,10 @@ Pruebas observables HTTP/SQL con OIDC y PG reales, roles runtime/sesiones/transp
 295 backend: 250 anteriores más 45 CrossTenantRegressionTests (270 Surefire + 25 Failsafe). Se conservan 37 Vitest, 13 Playwright y cinco OIDC; tools/ci aumenta de nueve a 16. Harness A/B/C con usuarios/carpetas separados, sesiones reales, corrupción de tokens por callback, transacciones y filas/journal/outbox observables. Concurrencia con barreras/latches/pg_locks; propagación REQUIRES_NEW sin autoridad heredada, NESTED rechazado, threads virtuales/pool y PID reutilizado. [Matriz de amenazas](../security/CROSS-TENANT-REGRESSION.md), [guía de mutaciones](../security/NEGATIVE-TESTING.md), [evidencia](../../backend/VALIDATION-30.md).
 
 El gate exige métodos concretos para 28 escenarios críticos y distingue siete escenarios futuros/pendientes/decisiones sin PASS. No hay Redis, storage documental ni worker fiscal de demostración. Rutas inexistentes denegadas no acreditan esos componentes. #79 cerrado tras #85; validar los cinco jobs nuevamente para cada SHA, conservando presupuesto $0. Párrafos históricos anteriores no representan un bloqueo remoto vigente.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.
+
+
+V9 — política limitada aprobada: [referencia del propietario](https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955). TENANT_PLAN_VIEW sólo owner ACTIVE + MFA ≤10 minutos; trigger productivo de cupos en INSERT/UPDATE ACTIVE, sin cuotas comerciales por defecto. La aceptación conserva el flujo original y confirma reservas sin duplicar consumo; reactivaciones registran journal/outbox. [Detalles y límites](../architecture/TENANT-ENTITLEMENTS.md). No resuelve OQ-007/014/015, ADR-015 completa ni #74.

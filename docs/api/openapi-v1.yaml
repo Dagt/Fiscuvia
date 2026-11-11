@@ -2,8 +2,8 @@ openapi: 3.1.0
 info:
   title: Fiscuvia API — contratos implementados
   version: 1.0.0
-  description: "Contratos implementados #24/#27. BFF OIDC local, sesiones JDBC e identidad/membresías. Sin
-    proveedor de producción aprobado ni módulos fiscales."
+  description: "Contratos implementados #24/#27. BFF OIDC local, sesiones JDBC e identidad/membresías. Sin proveedor de
+    producción aprobado ni módulos fiscales."
 servers:
   - url: /api/v1
 security: []
@@ -15,6 +15,7 @@ x-error-statuses:
   NOT_FOUND: 404
   METHOD_NOT_ALLOWED: 405
   NOT_ACCEPTABLE: 406
+  QUOTA_UNAVAILABLE: 409
   CONFLICT: 409
   STALE_VERSION: 409
   IDEMPOTENCY_KEY_REUSED: 409
@@ -148,8 +149,8 @@ paths:
             type: string
             minLength: 32
           description: Token CSRF de la sesión same-origin; no es un token de identidad.
-      description: "Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF
-        válido de la misma sesión. No acepta un returnUrl arbitrario."
+      description: "Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF válido de
+        la misma sesión. No acepta un returnUrl arbitrario."
       requestBody:
         required: false
         content:
@@ -277,7 +278,8 @@ paths:
   /auth/invitations/accept:
     post:
       operationId: acceptInvitation
-      summary: Consumir invitación atómica de un solo uso
+      summary: Consumir invitación atómica de un solo uso con cuota productiva
+      description: V9 exige cupo USERS vigente; una invitación pendiente no consume plaza. La membresía, reserva correspondiente y auditoría/outbox se confirman juntas. QUOTA_UNAVAILABLE (409) conserva la invitación sin consumir.
       security:
         - SessionCookie: []
       x-implementation-status: implemented
@@ -297,6 +299,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
         "422":
           $ref: "#/components/responses/Validation"
         "500":
@@ -397,8 +401,8 @@ paths:
       x-implementation-status: implemented
       responses:
         "302":
-          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
-            devuelve tokens.
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve
+            tokens.
           headers:
             Location:
               schema:
@@ -411,14 +415,14 @@ paths:
   /auth/callback/local:
     get:
       operationId: completeLocalOidc
-      summary: Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de
-        identidad genérico.
+      summary: Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de identidad
+        genérico.
       security: []
       x-implementation-status: implemented
       responses:
         "302":
-          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
-            devuelve tokens.
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve
+            tokens.
           headers:
             Location:
               schema:
@@ -465,12 +469,11 @@ paths:
       operationId: updateFirmSettings
       summary: Actualizar configuración con capacidad explícita y MFA reciente
       description: >
-        Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable.
-        Política limitada aprobada e instalada por V7 sólo para FIRM_OWNER_ADMIN del propio despacho;
-        MFA confiable de los últimos diez minutos. Otros roles permanecen DENY.
-        No permite cambiar owner, estado, logo, rol ni tenant.
-        Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada,
-        incluso si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
+        Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable. Política
+        limitada aprobada e instalada por V7 sólo para FIRM_OWNER_ADMIN del propio despacho; MFA confiable de los
+        últimos diez minutos. Otros roles permanecen DENY. No permite cambiar owner, estado, logo, rol ni tenant.
+        Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada, incluso
+        si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -507,6 +510,48 @@ paths:
           $ref: "#/components/responses/Conflict"
         "422":
           $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /tenants/{tenantId}/entitlements:
+    get:
+      operationId: getTenantEntitlements
+      summary: Consultar límites y uso del despacho con TENANT_PLAN_VIEW explícito
+      description: V9 concede consulta sólo al owner ACTIVE con MFA confiable ≤10 minutos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros
+        no publican consumo.
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Límites técnicos y medición autorizada
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 6
+                maxItems: 6
+                items:
+                  $ref: "#/components/schemas/EntitlementUsage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "500":
           $ref: "#/components/responses/InternalError"
 components:
@@ -630,8 +675,8 @@ components:
         - fieldErrors
       description: >
         RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas, consultas SQL ni datos de
-        infraestructura. El catálogo de códigos es infraestructura, no implementación de autenticación, reglas
-        de negocio o rate limiting.
+        infraestructura. El catálogo de códigos es infraestructura, no implementación de autenticación, reglas de
+        negocio o rate limiting.
       properties:
         type:
           type: string
@@ -674,6 +719,7 @@ components:
             - NOT_FOUND
             - METHOD_NOT_ALLOWED
             - NOT_ACCEPTABLE
+            - QUOTA_UNAVAILABLE
             - CONFLICT
             - STALE_VERSION
             - IDEMPOTENCY_KEY_REUSED
@@ -726,25 +772,46 @@ components:
           $ref: "#/components/schemas/MembershipRole"
         commercialName:
           description: Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre inventado.
-          type: [string, "null"]
+          type:
+            - string
+            - "null"
           maxLength: 160
         tenantStatus:
           type: string
-          enum: [ACTIVE, SUSPENDED]
+          enum:
+            - ACTIVE
+            - SUSPENDED
     FirmSettings:
       type: object
       additionalProperties: false
-      required: [commercialName, contactEmail, phone, timeZone, locale, status, version, createdAt, updatedAt, canManage, logoReference]
+      required:
+        - commercialName
+        - contactEmail
+        - phone
+        - timeZone
+        - locale
+        - status
+        - version
+        - createdAt
+        - updatedAt
+        - canManage
+        - logoReference
       properties:
         commercialName:
-          type: [string, "null"]
+          type:
+            - string
+            - "null"
           maxLength: 160
         contactEmail:
-          type: [string, "null"]
+          type:
+            - string
+            - "null"
           maxLength: 254
           format: email
         phone:
-          type: [string, "null"]
+          type:
+            - string
+            - "null"
           maxLength: 30
         timeZone:
           $ref: "#/components/schemas/FirmTimeZone"
@@ -753,7 +820,9 @@ components:
           const: es-MX
         status:
           type: string
-          enum: [ACTIVE, SUSPENDED]
+          enum:
+            - ACTIVE
+            - SUSPENDED
         version:
           type: integer
           minimum: 0
@@ -771,11 +840,23 @@ components:
           type: "null"
     FirmTimeZone:
       type: string
-      enum: [America/Mexico_City, America/Cancun, America/Chihuahua, America/Ciudad_Juarez, America/Hermosillo, America/Mazatlan, America/Monterrey, America/Tijuana]
+      enum:
+        - America/Mexico_City
+        - America/Cancun
+        - America/Chihuahua
+        - America/Ciudad_Juarez
+        - America/Hermosillo
+        - America/Mazatlan
+        - America/Monterrey
+        - America/Tijuana
     UpdateFirmSettings:
       type: object
       additionalProperties: false
-      required: [expectedVersion, commercialName, timeZone, locale]
+      required:
+        - expectedVersion
+        - commercialName
+        - timeZone
+        - locale
       properties:
         expectedVersion:
           type: integer
@@ -785,14 +866,18 @@ components:
           type: string
           minLength: 1
           maxLength: 160
-          pattern: '^[^\u0000-\u001f\u007f]+$'
+          pattern: ^[^\u0000-\u001f\u007f]+$
         contactEmail:
-          type: [string, "null"]
+          type:
+            - string
+            - "null"
           maxLength: 254
           format: email
         phone:
-          type: [string, "null"]
-          pattern: '^[+0-9 ()-]{7,30}$'
+          type:
+            - string
+            - "null"
+          pattern: ^[+0-9 ()-]{7,30}$
         timeZone:
           $ref: "#/components/schemas/FirmTimeZone"
         locale:
@@ -801,7 +886,8 @@ components:
     FirmSettingsUpdated:
       type: object
       additionalProperties: false
-      required: [version]
+      required:
+        - version
       properties:
         version:
           type: integer
@@ -924,6 +1010,55 @@ components:
           enum:
             - SUSPENDED
             - REVOKED
+    EntitlementUsage:
+      type: object
+      additionalProperties: false
+      required:
+        - resource
+        - limit
+        - version
+        - validFrom
+        - validUntil
+        - measured
+        - reserved
+        - available
+        - overLimit
+        - integration
+      properties:
+        resource:
+          type: string
+          enum:
+            - USERS
+            - TAXPAYERS
+            - STORAGE_BYTES
+            - JOBS_RUNNING
+            - JOBS_PENDING
+            - JOBS_PER_PERIOD
+        limit: &a2
+          type:
+            - integer
+            - "null"
+          minimum: 0
+          maximum: 9007199254740991
+        version: *a2
+        validFrom: &a3
+          type:
+            - string
+            - "null"
+          format: date-time
+        validUntil: *a3
+        measured: *a2
+        reserved: *a2
+        available: *a2
+        overLimit:
+          type:
+            - boolean
+            - "null"
+        integration:
+          type: string
+          enum:
+            - MEASURED
+            - NOT_INTEGRATED
   responses:
     BadRequest:
       description: Sintaxis, tipo o parámetro inválido (400)
@@ -984,5 +1119,5 @@ components:
       type: apiKey
       in: cookie
       name: __Host-FiscuviaSession
-      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones requieren
-        X-CSRF-TOKEN obtenido en /auth/csrf.
+      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones requieren X-CSRF-TOKEN
+        obtenido en /auth/csrf.

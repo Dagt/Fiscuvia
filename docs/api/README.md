@@ -35,3 +35,8 @@ JUnit realiza HTTP real con Spring Boot/PostgreSQL Testcontainers y escribe resp
 El borrador conserva la composición `Taxpayer.allOf`/`additionalProperties` pendiente de revisión del modelo; no se promueve como contrato válido de negocio. Los tipos implementados la excluyen.
 
 **REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento #79.** El propietario mantiene presupuesto $0: checks locales completos, sin deshabilitar workflows ni reintentar runners.
+
+Consulta técnica #32: GET /api/v1/tenants/{tenantId}/entitlements, sólo con sesión y TENANT_PLAN_VIEW explícito; sin grant por defecto ni mutaciones HTTP de planes. DTO EntitlementUsage y tipos TS generados en el OpenAPI implementado. No hay precios/cobros/endpoints comerciales nuevos. [Autoridad y semántica de NULL](../architecture/TENANT-ENTITLEMENTS.md).
+
+
+V9 — política limitada aprobada: [referencia del propietario](https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955). TENANT_PLAN_VIEW sólo owner ACTIVE + MFA ≤10 minutos; trigger productivo de cupos en INSERT/UPDATE ACTIVE, sin cuotas comerciales por defecto. La aceptación conserva el flujo original y confirma reservas sin duplicar consumo; reactivaciones registran journal/outbox. [Detalles y límites](../architecture/TENANT-ENTITLEMENTS.md). No resuelve OQ-007/014/015, ADR-015 completa ni #74.

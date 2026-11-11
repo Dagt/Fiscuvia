@@ -65,3 +65,7 @@ La comparación con #19 es contra el mismo producto antes del cambio y la especi
 #31 podrá componer Field/PageHeader/ConfirmationDialog/AppShell para provisioning, con sus propias APIs, autorización, idempotencia y pruebas. No debe convertir los ordinales en datos comerciales inventados ni reutilizar DEMO como contribuyentes. Nombres/logos reales requieren contrato y datos autorizados. No hay tema personalizable persistente ni panel administrativo implementado.
 
 Las rutas de desarrollo son accesibles sin sesión y contienen exclusivamente ejemplos públicos estáticos. No conectar allí datos protegidos. La tabla no es un grid editable ni virtualización; recibe una página acotada. La validación local del formulario es demostrativa. Menús muy altos pueden desplazar verticalmente. El header permite crecer cuando el texto se amplía. Revisar las dependencias moderadas heredadas sin aplicar actualizaciones forzadas ajenas a #52.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.

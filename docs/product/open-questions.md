@@ -43,3 +43,7 @@ No bloquear desarrollo de scaffold por preguntas comerciales no críticas, pero 
 El propietario autorizó explícitamente en la conversación de #20 usar Spring Boot 4.1.2, Spring Modulith 2.1.2 y JUnit 6/Jupiter, sustituyendo la petición inicial de JUnit 5. Spring Boot 3.5.16 pasó 26 pruebas exploratorias en Java 25.0.3, pero es la [última versión con soporte OSS de la línea 3.5](https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/). La base final y sus pruebas se registran en [backend/README.md](../../backend/README.md).
 
 Esta autorización técnica se limita al scaffold #20; no convierte los ADR Proposed en Accepted. OQ-022 sigue Open para validar las futuras bibliotecas y el repositorio de identidades; OQ-014 y las preguntas fiscales permanecen abiertas.
+
+## Implementación técnica propuesta #32
+
+OQ-007 y ADR-015 conservan sus pendientes comerciales. V8 prepara límites técnicos/reservas, sin precios ni catálogos comerciales. La política limitada de consulta y conteo fue aprobada por Dagt en https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955 y V9 activa consulta owner+MFA y protección de membresías; el alcance está descrito en [entitlements](../architecture/TENANT-ENTITLEMENTS.md); no resuelve OQ-014, OQ-015 ni #74.

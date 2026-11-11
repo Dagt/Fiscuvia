@@ -32,6 +32,7 @@ final class TenantRlsFixtures {
             var sql = new JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection, true));
             sql.queryForObject("SELECT app.establish_tenant_context(?)", Object.class, tenant);
             sql.update("INSERT INTO app.tenants(tenant_id) VALUES (?)", tenant);
+            QuotaFixtures.seed(sql,tenant);
             for(String actor:actors) {
                 UUID user=UUID.fromString(actor);
                 sql.update("INSERT INTO identity_private.users(id) VALUES(?) ON CONFLICT DO NOTHING",user);

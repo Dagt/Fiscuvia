@@ -53,3 +53,10 @@ Si DB/revalidación/almacenamiento fallan, el acceso permanece denegado y se emi
 Consultar con rol administrativo controlado, transacción y contexto tenant, según runbook de [outbox](../delivery/OUTBOX.md). No otorgar SELECT runtime/owner para investigar ni subir filas/logs a artifacts. Buscar por tenant/momento/código y correlación del servidor bajo custodia; no ampliar logs SQL. Eventos confirmados no se borran automáticamente. Retención/archivo/borrado legal OQ-008 y acceso AUDIT_VIEW necesitan aprobación; no crear un purge para resolver crecimiento.
 
 [Protocolo y resultados](../../backend/VALIDATION-29.md): SQL real/runtime/transportes sin bypass, OIDC real, oráculos RLS/append-only/grants, atomicidad y carreras. #74 intacto; no hay UI nueva, lector de historial, proveedor productivo, worker de negocio ni avance de #30. Presupuesto $0 intacto, seguimiento #79 si hay bloqueo; el PR registra el estado real por SHA. La primera ejecución de #29 sí inició runners.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.
+
+
+V9 — política limitada aprobada: [referencia del propietario](https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955). TENANT_PLAN_VIEW sólo owner ACTIVE + MFA ≤10 minutos; trigger productivo de cupos en INSERT/UPDATE ACTIVE, sin cuotas comerciales por defecto. La aceptación conserva el flujo original y confirma reservas sin duplicar consumo; reactivaciones registran journal/outbox. [Detalles y límites](../architecture/TENANT-ENTITLEMENTS.md). No resuelve OQ-007/014/015, ADR-015 completa ni #74.

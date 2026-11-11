@@ -84,7 +84,7 @@ class PostgresFoundationTests {
                         "access_control.resource_grants","access_control_private.role_capabilities","access_control_private.operation_context",
                         "journal.events","journal.outbox","journal_private.command_context","journal_private.commands",
                         "journal_private.delivery_scopes","journal_private.denials",
-                        "tenant_private.profiles","tenant_private.admin_commands","tenant_private.profile_commands");
+                        "entitlement_private.limits","entitlement_private.changes","entitlement_private.reservations","tenant_private.profiles","tenant_private.admin_commands","tenant_private.profile_commands");
             }
             try (var result = statement.executeQuery("SELECT count(*), bool_and(success AND checksum IS NOT NULL) FROM infrastructure.flyway_schema_history WHERE version IN ('1','2','3','4','5','6','7')")) {
                 assertThat(result.next()).isTrue();

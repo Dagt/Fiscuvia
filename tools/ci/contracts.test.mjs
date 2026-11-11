@@ -5,7 +5,7 @@ import { contract, validator, checkHttpResponses, generatedTypes } from './contr
 test('contrato implementado publica sólo infraestructura e identidad reales y tipos reproducibles', async () => {
   assert.deepEqual(Object.keys(contract.paths), ['/public/info','/me','/auth/status','/auth/csrf','/auth/login','/auth/logout',
     '/auth/tenant','/auth/invitations','/auth/invitations/accept','/auth/invitations/revoke','/auth/memberships/status',
-    '/auth/authorize/local','/auth/callback/local','/tenants/{tenantId}/settings'])
+    '/auth/authorize/local','/auth/callback/local','/tenants/{tenantId}/settings','/tenants/{tenantId}/entitlements'])
   assert.deepEqual(contract.security, [])
   assert.equal(contract.paths['/public/info'].get['x-implementation-status'], 'implemented')
   await generatedTypes()
@@ -46,7 +46,7 @@ test('evidencia HTTP exige todos los códigos y concordancia status/header/cuerp
     valid.push({ scenario: code, status, contentType: 'application/problem+json', correlationId: example.traceId,
       body: { ...example, code, status, type: `urn:fiscuvia:problem:${code.toLowerCase().replaceAll('_', '-')}` } })
   }
-  assert.equal(checkHttpResponses(valid), 16)
+  assert.equal(checkHttpResponses(valid), 17)
   assert.throws(() => checkHttpResponses(valid.slice(1)))
   assert.throws(() => checkHttpResponses(valid.slice(0, -1)))
   const mismatch = structuredClone(valid)

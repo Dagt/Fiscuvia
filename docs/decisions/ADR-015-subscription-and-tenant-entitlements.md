@@ -29,3 +29,7 @@ No aceptar producción sin pruebas de contratos, RLS, seguridad y flujos según 
 
 ## Seguimiento
 E03/E11. Cambios que contradigan este documento requieren issue, propuesta de ADR y aprobación; no modificar implementación silenciosamente. Una vez aprobado, actualizar estado a Accepted y registrar fecha de aprobación, responsable y PR.
+
+## Infraestructura técnica #32
+
+La solicitud de #32 autoriza límites técnicos, reservas y administración interna auditada, sin aceptar precios/cobros/cancelaciones ni este ADR completo. [Implementación V8 y fronteras de aprobación](../architecture/TENANT-ENTITLEMENTS.md). La política limitada de consulta y conteo fue aprobada expresamente en https://github.com/Dagt/Fiscuvia/pull/90#issuecomment-6798951955: V9 la instala, sin aceptar el resto del ADR. Status Proposed se conserva.

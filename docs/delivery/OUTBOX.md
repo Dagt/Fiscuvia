@@ -59,3 +59,7 @@ DEAD requiere revisión de causa/versión y un procedimiento futuro de reemisió
 Referencia TrailerSaaS: OutboxStore/DurableJobWorker/V25 aportan locking, leases, retry y fencing como prácticas contrastadas. No se copian su GUC de actor vacío, permiso CRUD runtime, logging de IDs o worker automático: Fiscuvia exige actor verificado para producción y transporte separado, sin autoridad de negocio. El namespace audit de la referencia es un placeholder, no evidencia de un journal reutilizable. Referencias primarias: [SELECT/SKIP LOCKED PostgreSQL 18](https://www.postgresql.org/docs/18/sql-select.html), [RLS](https://www.postgresql.org/docs/18/ddl-rowsecurity.html), [fases de eventos transaccionales Spring](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html). El éxito aquí se escribe antes del commit en la misma DB, no mediante un listener AFTER_COMMIT.
 
 No se cambia presupuesto $0, no se deshabilitan workflows y no se continúa con #30. Si no ejecutan runners, REMOTE CI NOT VERIFIED y causa comprobada/#79; si ejecutan, informar el resultado real por SHA en el PR, incluidos fallos. La primera ejecución de #29 sí inició pasos; no se atribuye un fallo de scanner a billing.
+
+## Entitlements técnicos #32
+
+[Modelo, migración V8, reservas, reglas de consumo y límites de aprobación](../architecture/TENANT-ENTITLEMENTS.md). Sin precios, cobros, grants implícitos ni módulos fiscales. La evidencia vigente corresponde al SHA del PR #32; resultados de PRs anteriores no lo acreditan.

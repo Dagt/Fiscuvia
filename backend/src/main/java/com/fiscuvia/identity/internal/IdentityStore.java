@@ -55,6 +55,7 @@ class IdentityStore implements AuthorizedTenantOperations {
             while (!(cause instanceof java.sql.SQLException) && cause.getCause()!=null) cause=cause.getCause();
             String state=cause instanceof java.sql.SQLException sql ? sql.getSQLState() : "";
             throw new ApiFailure("42501".equals(state) ? ApiErrorCode.ACCESS_DENIED
+                    : ("P3201".equals(state)||"P3202".equals(state)) ? ApiErrorCode.QUOTA_UNAVAILABLE
                     : "23505".equals(state) ? ApiErrorCode.CONFLICT : ApiErrorCode.INTERNAL_ERROR);
         }
     }
@@ -163,7 +164,7 @@ class IdentityStore implements AuthorizedTenantOperations {
     }
     private static void decision(Capability capability,ResourceTarget target,AccessDecisionEvent.Reason reason) {
         var operation=switch(capability) {
-            case TENANT_READ,MEMBERSHIP_VIEW,TAXPAYER_VIEW,DOCUMENT_VIEW,REPORT_VIEW,AUDIT_VIEW -> AccessDecisionEvent.Operation.READ;
+            case TENANT_READ,TENANT_PLAN_VIEW,MEMBERSHIP_VIEW,TAXPAYER_VIEW,DOCUMENT_VIEW,REPORT_VIEW,AUDIT_VIEW -> AccessDecisionEvent.Operation.READ;
             case MEMBERSHIP_INVITE -> AccessDecisionEvent.Operation.INVITE;
             case TAXPAYER_CREATE -> AccessDecisionEvent.Operation.CREATE;
             case TAXPAYER_EDIT -> AccessDecisionEvent.Operation.EDIT;

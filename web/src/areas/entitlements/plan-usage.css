@@ -1,0 +1,24 @@
+.plan-usage {
+  display: grid;
+  gap: var(--space-24, 24px);
+}
+.usage-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.usage-stats .stat-value {
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1100px) {
+  .usage-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .usage-stats {
+    grid-template-columns: 1fr;
+  }
+}

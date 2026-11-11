@@ -71,7 +71,7 @@ final class ThreatHarness {
         var result=new ArrayList<Map<String,Object>>();admin(tenant,s->result.addAll(s.queryForList(query,parameters)));return result;
     }
     UUID member(UUID tenant,UUID user,String role) throws Exception {
-        UUID id=UUID.randomUUID();admin(tenant,s->{s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);
+        UUID id=UUID.randomUUID();admin(tenant,s->{QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,id,user);
             s.update("INSERT INTO identity.membership_roles VALUES(?,?,?)",tenant,id,role);});return id;
     }
     void grant(UUID tenant,UUID member,UUID resource,String capability) throws Exception {

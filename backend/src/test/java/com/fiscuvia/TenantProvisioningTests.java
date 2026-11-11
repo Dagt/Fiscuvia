@@ -223,7 +223,7 @@ class TenantProvisioningTests {
     @Test void eachNonOwnerRoleCanReadButCannotManageEvenWhenClaimsSuggestOtherwise() throws Exception {
         for(String role:List.of("FIRM_SUPERVISOR","ACCOUNTANT","ASSISTANT")) {
             UUID tenant=firm(),member=UUID.randomUUID();admin(s->{s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);
-                s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,member,otherId);
+                QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,member,otherId);
                 s.update("INSERT INTO identity.membership_roles VALUES(?,?,?)",tenant,member,role);});
             var get=other.get(path(tenant));assertThat(get.statusCode()).isEqualTo(200);assertThat(OidcBrowser.json(get).path("canManage").asBoolean()).isFalse();
             assertThat(update(other,tenant,UUID.randomUUID(),body(0,"No permitido")).statusCode()).isEqualTo(403);assertThat(version(tenant)).isZero();
@@ -361,7 +361,7 @@ class TenantProvisioningTests {
             assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,foreign)).isEqualTo("MEMBERSHIP_INACTIVE");
             assertRootNotLocked(foreign);connection.rollback();
             admin(s->{s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,own);
-                s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",own,member,otherId);
+                QuotaFixtures.seed(s,own);s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",own,member,otherId);
                 s.update("INSERT INTO identity.membership_roles VALUES(?,?,'ACCOUNTANT')",own,member);});
             sql=bindRuntime(connection,other,java.time.Instant.now().getEpochSecond());
             assertThat(sql.queryForObject("SELECT access_control.authorize_operation(?,'TENANT_SETTINGS_MANAGE','TENANT',NULL)",String.class,own)).isEqualTo("CAPABILITY_UNCONFIGURED");
