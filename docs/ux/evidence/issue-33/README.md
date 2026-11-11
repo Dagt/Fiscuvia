@@ -1,4 +1,4 @@
-# Evidencia real #33: invitaciones de correo local/test
+# Evidencia real #33: equipo e invitaciones de correo local/test
 
 Alcance A aprobado y correo B local/test: [flujo y controles](../../../security/LOCAL-EMAIL-INVITATIONS-33.md). El directorio, reactivación y cambios operativos de rol ya tienen aprobación limitada del propietario y se implementan en V11; cartera conserva #74. No existe entrega externa de correo ni cartera simulada. [Administración y controles](../../../security/TEAM-ADMINISTRATION-33.md).
 
@@ -37,3 +37,20 @@ Revisión visual: jerarquía legible, campos y acciones alineados, mensajes ES-M
 Las mutaciones y el error de cuota son HTTP reales con PostgreSQL/Keycloak; el error recuperable de transporte se induce abortando una única solicitud del navegador y se reintenta luego contra el backend real. No se simula autorización ni éxito. El rol actualizado se comprueba también en /me del destinatario; suspensión/revocación/revocación de invitación se comprueban mediante HTTP denegado al receptor. Cambio de despacho elimina contactos anteriores y un UUID conocido del otro despacho devuelve404.
 
 El escenario administrativo revisa además1280,768 y320 CSS px mediante axe y overflow. Panel y confirmaciones mantienen estado al cambiar de ancho; el foco vuelve a Colaboradores al cerrar. El concepto escrito #52 es la referencia; no se afirma pixel-diff contra una imagen ausente ni certificación completa de WCAG.
+
+## Capturas A verificadas
+
+| Estado | Escritorio | Móvil |
+|---|---|---|
+| Directorio | [1440×900](equipo-colaboradores-1440.png) | [390×844](equipo-colaboradores-390.png) |
+| Cambio de rol | [1440×900](equipo-cambio-rol-1440.png) | [390×844](equipo-cambio-rol-390.png) |
+| Confirmación | [1440×900](equipo-confirmacion-1440.png) | [390×844](equipo-confirmacion-390.png) |
+| Suspendido | [1440×900](equipo-suspendido-1440.png) | [390×844](equipo-suspendido-390.png) |
+| Revocado | [1440×900](equipo-revocado-1440.png) | [390×844](equipo-revocado-390.png) |
+| Otro despacho | [1440×900](equipo-otro-despacho-1440.png) | [390×844](equipo-otro-despacho-390.png) |
+| Cuota agotada | [1440×900](equipo-sin-cupo-1440.png) | [390×844](equipo-sin-cupo-390.png) |
+| Invitaciones | [1440×900](equipo-invitaciones-1440.png) | [390×844](equipo-invitaciones-390.png) |
+| Vacío | [1440×900](equipo-vacio-1440.png) | [390×844](equipo-vacio-390.png) |
+| Error recuperable | [1440×900](equipo-error-recuperable-1440.png) | [390×844](equipo-error-recuperable-390.png) |
+
+Las 30 imágenes de la ejecución completa de 20 pruebas OIDC aprobadas se verificaron por dimensiones PNG, SHA256 y trees Git del manifiesto. Se revisaron visualmente directorio, panel, confirmación, cuota, invitaciones, vacío y error. Axe registra cero violaciones y no hay overflow horizontal en cada captura. El vacío y error se capturan después de cerrar notificaciones anteriores; no se altera la respuesta ni el estado del backend.

@@ -1,5 +1,7 @@
 # Inventario de rutas, pantallas y estados UX — propuesta v0.1
 
+**Enmienda efectiva #33 (prevalece sobre notas históricas de implementación):** `/app` → Equipo es una vista real dentro del workspace autorizado, no la ruta propuesta `/app/settings/members`. Colaboradores e invitaciones paginadas, filtros, panel lateral y comandos confirmados, exclusivamente owner ACTIVE con MFA reciente según A aprobada. [Controles](../security/TEAM-ADMINISTRATION-33.md) y [capturas](evidence/issue-33/README.md). Correo local/test; cartera #74, matriz fiscal y proveedor productivo pendientes. Las filas de planeación siguientes no conceden permisos a manager, AUDIT_VIEW ni funcionalidades fiscales.
+
 **Estado actual #52 (prevalece sobre la enmienda histórica #19):** OQ-021 Resolved para implementación visual, Dagt opción B 2026-11-03. Se añade `/desarrollo/componentes`, catálogo público DEMO sin APIs; `/app` comparte AppShell tras verificar identidad/membresías. [Contratos efectivos](DESIGN-SYSTEM-52.md), [capturas/comparación](evidence/issue-52/README.md). Las demás rutas de negocio siguen propuestas; no se autorizan capacidades ni nombres comerciales de #31.
 
 **Propósito:** evitar replicar el problema de TrailerSaaS de mejorar UX después de la construcción. Ruta marcada Future no se debe simular como funcional.
