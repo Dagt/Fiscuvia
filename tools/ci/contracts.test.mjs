@@ -5,7 +5,7 @@ import { contract, validator, checkHttpResponses, generatedTypes } from './contr
 test('contrato implementado publica sólo infraestructura e identidad reales y tipos reproducibles', async () => {
   assert.deepEqual(Object.keys(contract.paths), ['/public/info','/me','/auth/status','/auth/csrf','/auth/login','/auth/logout',
     '/auth/tenant','/auth/invitations','/auth/invitations/accept','/auth/invitations/revoke','/auth/memberships/status',
-    '/auth/authorize/local','/auth/callback/local','/tenants/{tenantId}/settings','/tenants/{tenantId}/entitlements'])
+    '/auth/authorize/local','/auth/callback/local','/tenants/{tenantId}/team/invitation-options','/tenants/{tenantId}/team/invitations','/tenants/{tenantId}/settings','/tenants/{tenantId}/entitlements'])
   assert.deepEqual(contract.security, [])
   assert.equal(contract.paths['/public/info'].get['x-implementation-status'], 'implemented')
   await generatedTypes()

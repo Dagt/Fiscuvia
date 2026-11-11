@@ -59,6 +59,24 @@ class OidcAuthenticationTests {
             assertThat(response.body()).doesNotContain("issuer","subject","access_token","id_token","password","alice");
         }
     }
+    @Test void verifiedEmailInvitationsRemainClosedWithoutExplicitLocalPolicy() throws Exception {
+        try(var owner=new OidcBrowser(TLS,OIDC)) {
+            UUID tenant=bootstrap(UUID.fromString(owner.login("alice").path("userId").asText()));
+            var options=owner.get("/api/v1/tenants/"+tenant+"/team/invitation-options");
+            assertThat(options.statusCode()).isEqualTo(200);
+            assertThat(OidcBrowser.json(options).path("emailInvitationsAvailable").isBoolean()).isTrue();
+            assertThat(OidcBrowser.json(options).path("emailInvitationsAvailable").asBoolean()).isFalse();
+            var request=java.net.http.HttpRequest.newBuilder(java.net.URI.create(TLS.origin()+"/api/v1/tenants/"+tenant+"/team/invitations"))
+                    .header("Content-Type","application/json").header("X-CSRF-TOKEN",owner.csrf())
+                    .header("Idempotency-Key",UUID.randomUUID().toString())
+                    .POST(java.net.http.HttpRequest.BodyPublishers.ofString("{\"email\":\"local-recipient@example.invalid\",\"role\":\"ACCOUNTANT\"}")).build();
+            var response=owner.client.send(request,java.net.http.HttpResponse.BodyHandlers.ofString());
+            assertThat(response.statusCode()).isEqualTo(403);
+            try(var connection=migration();var query=connection.createStatement();var rows=query.executeQuery("SELECT count(*) FROM identity_private.verified_contacts")) {
+                rows.next(); assertThat(rows.getInt(1)).isZero();
+            }
+        }
+    }
     @Test void anonymousRequestsAndArbitraryIdentityHeadersCannotAuthenticate() throws Exception {
         try(var browser=new OidcBrowser(TLS,OIDC)) {
             assertThat(browser.get("/api/v1/auth/authorize/local").statusCode()).isEqualTo(401);

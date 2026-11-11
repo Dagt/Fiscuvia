@@ -6,9 +6,9 @@ import { verifyGateTotals } from './test-gates.mjs'
 const sha = 'a'.repeat(40)
 const passed = () => new Set(scenarios.flatMap(row => row.tests))
 test('tools gate rejects reduced, skipped, failed and missing totals', () => {
-  const good = '# tests 19\n# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n'
+  const good = '# tests 21\n# pass 21\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n'
   verifyGateTotals(good)
-  for (const bad of ['', good.replaceAll('19', '18'), good.replace('# skipped 0', '# skipped 1'), good.replace('# fail 0', '# fail 1')]) assert.throws(() => verifyGateTotals(bad))
+  for (const bad of ['', good.replaceAll('21', '20'), good.replace('# skipped 0', '# skipped 1'), good.replace('# fail 0', '# fail 1')]) assert.throws(() => verifyGateTotals(bad))
 })
 test('regression report requires exact critical methods, not only totals', () => {
   const cases = passed(); cases.delete(scenarios[0].tests[0]); cases.add('com.fiscuvia.Other#unrelatedTest')

@@ -2,6 +2,8 @@
 
 # Fiscuvia
 
+**#33, corte autorizado de invitaciones:** [correo verificado sólo con Keycloak local/test](docs/security/LOCAL-EMAIL-INVITATIONS-33.md), token de un uso para entrega manual, issuer/subject exactos, CSRF/idempotencia/RLS y journal/outbox. V10 conserva V1–V9 y los permisos existentes. El directorio general de equipo, cambios de rol/reactivación y cartera siguen pendientes de autorización/modelo; no se presentan como implementados.
+
 **Despachos #31:** [provisioning interno, configuración y límites de autoridad](docs/architecture/TENANT-PROVISIONING.md). Nuevo módulo tenants, perfiles privados, lifecycle administrativo no destructivo, configuración autorizada y nombres reales en AppShell. Sin operador HTTP, alta pública, cobros o almacenamiento de logos. La habilitación permanente de TENANT_SETTINGS_MANAGE requiere aprobación expresa de la política mínima documentada; permanece DENY mientras esté pendiente. No se adelantan #32/#33 ni el gate fiscal #74.
 
 **Base visual #52:** [design system y AppShell implementados](docs/ux/DESIGN-SYSTEM-52.md), catálogo `/desarrollo/componentes` y [evidencia real](docs/ux/evidence/issue-52/README.md). Referencia escrita aprobada por Dagt el 2026-11-03 (opción B OQ-021); el collage continúa ausente. No implementa provisioning #31 ni pixel-diff #56.
@@ -52,7 +54,7 @@ Tenancy/RLS #26: [modelo físico, contexto transaccional, permisos y límites](d
 
 El workflow [CI](.github/workflows/ci.yml) valida PRs a main, incluso Draft, push a main y ejecución manual. Checks estables: `Backend CI`, `Web CI`, `OpenAPI CI`, `Security CI` y `CI Required`. No despliega ni requiere secrets. Ver [guía CI, comandos equivalentes, artifacts, diagnóstico y protección recomendada](docs/delivery/CI.md). El resultado debe consultarse por SHA en GitHub Actions; la existencia del YAML no acredita una ejecución exitosa.
 
-**REMOTE CI NOT VERIFIED — GitHub Actions bloqueado por presupuesto/facturación; seguimiento [#79](https://github.com/Dagt/Fiscuvia/issues/79).** Presupuesto $0 por decisión del propietario; validación local completa obligatoria, sin deshabilitar workflows ni reintentar runners.
+**Estado CI por SHA:** #79 quedó resuelto tras ejecuciones reales de los cinco checks. Cada PR necesita su propia evidencia local/remota; los resultados históricos no acreditan el HEAD nuevo. Presupuesto $0, billing, protecciones y verificaciones se mantienen sin cambios.
 
 ## Contratos API — issue #24
 

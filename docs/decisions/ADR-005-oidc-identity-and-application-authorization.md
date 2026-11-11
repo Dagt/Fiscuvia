@@ -30,6 +30,10 @@ No aceptar producción sin pruebas de contratos, RLS, seguridad y flujos según 
 
 ## Seguimiento
 
+### Autorización parcial #33 — 2026-11-11
+
+Sólo desarrollo/test Keycloak: localizar por correo una identidad ya OIDC-verificada, fijar issuer/subject exactos al invitar y validar esos valores al aceptar; persistencia privada mínima de nombre/correo sin claims/tokens en sesión. Token aleatorio, hash irreversible, uso único/expiración/revocación, entrega manual de una sola vez; no correo externo ni producción. [V10 y formulario implementados](../security/LOCAL-EMAIL-INVITATIONS-33.md). Esta decisión no aprueba toda la matriz de equipo, proveedor productivo u OQ-014; el ADR conserva Proposed.
+
 ### Autorización técnica parcial del propietario — 2026-10-30, revisión de PR #83
 
 Se autorizaron explícitamente: BFF del mismo origen; Spring Security Code+PKCE/state/nonce; Spring Session JDBC PostgreSQL privado; cookies Secure/HttpOnly/SameSite, CSRF/rotación/expiración/logout; Keycloak real sólo local/test; identidad global separada de membresías; roles FIRM_OWNER_ADMIN/FIRM_SUPERVISOR/ACCOUNTANT/ASSISTANT; privilegios denegados sin MFA verificable; bootstrap administrativo controlado e invitaciones de un uso para identidad exacta verificada.

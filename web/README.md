@@ -1,5 +1,9 @@
 # Fiscuvia web — design system y AppShell #52
 
+## Equipo: invitación por correo local/test #33
+
+La sección Equipo del workspace compone el kit #52 para el corte aprobado de invitación manual. Opciones y POST reales owner+MFA mediante BFF/CSRF; exige destinatario ya OIDC-verificado y fija issuer/subject. No hay envío de email, listado general, promoción de owner, cambio de rol o reactivación simulados. Token sólo en memoria de la vista tras creación real, retirado al ocultar/copiar/navegar/cambiar contexto, nunca en cache/storage/URL. Copiar al portapapeles requiere acción explícita. Replay sin secreto y confirmación real de solicitud de revocación, sin afirmar una revocación si la invitación ya se aceptó. [Configuración, condiciones y pruebas](../docs/security/LOCAL-EMAIL-INVITATIONS-33.md).
+
 ## Configuración de despacho #31
 
 `/app` consume nombres/estados propios de `/api/v1/me` y configura el despacho seleccionado mediante GET/POST `/api/v1/tenants/{tenantId}/settings`. Reutiliza el kit #52; sin operador inventado, alta pública ni datos DEMO en la vista operativa. Logo sin almacenamiento aprobado: referencia NULL y fallback Lucide. Formularios con versión/idempotencia/CSRF, confirmación, cancelar, carga/error y éxito sólo tras respuesta real. `canManage` es presentación, nunca seguridad; V7 instala la política de edición aprobada sólo para owner del propio despacho con MFA confiable reciente. Otros roles permanecen DENY. [Autoridad y configuración](../docs/architecture/TENANT-PROVISIONING.md).

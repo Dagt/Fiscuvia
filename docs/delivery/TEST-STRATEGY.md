@@ -1,5 +1,9 @@
 # Estrategia de pruebas
 
+## Invitación por correo local/test #33
+
+Se preserva385 Java y se añaden27 de correo HTTP/SQL/OIDC y3 de migración V10, además del cierre por defecto en OIDC: **416 (375 Surefire+41 Failsafe)**. Positivos sin grants sintéticos de administración; datos/IdP sólo locales. Casos de identidad exacta vs correo, firma por propósito, privacidad, MFA, aislamiento, cuotas V9, replays/concurrencia, rollback y oráculos de trigger/privilegios. V1–V9 sin cambios/checksums alterados. Frontend107 Vitest,61 Playwright fundación y18 OIDC; tools/ci21. Capturas reales sin tokens/proveedor/PII real. Los nuevos permisos de listado, rol y reactivación no están aprobados: se prueba que permanecen denegados, no se declaran implementados. [Especificación y cobertura](../security/LOCAL-EMAIL-INVITATIONS-33.md).
+
 ## Despachos #31
 
 Se conservan las 295 pruebas Java anteriores y se exigen 37 TenantProvisioningTests, tres ProvisioningMigrationIT y cuatro TenantSettingsPolicyMigrationIT: **339 (307 Surefire +32 Failsafe)**. OIDC/PG reales, roles runtime/migrador/sesiones, primer owner verificado, replay de alta, mismo nombre en A/B, GET/POST cruzados, validación/CSRF/versiones, MFA/roles, suspensión/reactivación, recibos y ambos sinks fallidos. Locks observables y barreras para concurrencia; no sleeps como evidencia. Mutaciones de FORCE/grants/filtro de directorio disparan la guarda y se restauran en finally; RLS de membresía sigue siendo defensa independiente del filtro explícito. Upgrade V5 incluye una raíz anterior sin nombre, checksum inalterado y rollback de DDL. V7 añade exclusivamente la política owner+MFA expresamente aprobada: upgrade desde V6 sin alterar sus checksums, reejecución sin duplicación, rollback del grant y fallo por checksum modificado. Las pruebas HTTP/navegador usan esa política real, sin grant sintético; identidad DISABLED o membresía SUSPENDED/REVOKED impiden editar. La matriz completa OQ-015 sigue pendiente.

@@ -1,5 +1,9 @@
 # Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–29
 
+## Invitaciones locales #33
+
+[V10, API, identidad verificada y privacidad](../docs/security/LOCAL-EMAIL-INVITATIONS-33.md). Adaptador de correo sobre el flujo original de invitaciones, sin permisos nuevos de administración de equipo. Opt-in FISCUVIA_OIDC_CONTACT_POLICY=keycloak-local-verified-email-v1 sólo con Keycloak local/test; disabled por defecto. No hay entrega externa. Contactos privados con prueba HMAC por propósito; token mostrado una vez, sólo hash almacenado y replay sin secreto. V1–V9 intactas; nueva suite27 HTTP/OIDC/SQL +3 migration IT, sin grants sintéticos positivos.
+
 ## Despachos #31
 
 [Guía implementada de provisioning, SQL, configuración y operación local](../docs/architecture/TENANT-PROVISIONING.md). V6 añade perfiles/recibos privados, procedimientos administrativos específicos y GET/POST de settings bajo AuthorizedTenantOperations. V7 instala la política limitada de edición owner+MFA expresamente aprobada; V1–V6 permanecen intactas. Tests/harness consumen esa política real sin sembrar grants de edición. `/me` entrega nombres/estados propios; suspensión bloquea acceso operativo. No hay endpoint de operador, logo upload o capacidades fiscales. No se añaden dependencias ni proveedores.

@@ -39,7 +39,7 @@ class IdentitySecurityConfiguration {
     @Bean @ConditionalOnProperty(name="fiscuvia.identity.enabled",havingValue="true")
     ClientRegistrationRepository oidcClients(IdentitySettings settings) {
         ClientRegistration client=ClientRegistrations.fromIssuerLocation(settings.issuer()).registrationId("local")
-                .clientId(settings.clientId()).clientSecret(settings.clientSecret()).scope("openid")
+                .clientId(settings.clientId()).clientSecret(settings.clientSecret()).scope(settings.localContactsEnabled()?new String[]{"openid","email","profile"}:new String[]{"openid"})
                 .redirectUri(settings.origin()+"/api/v1/auth/callback/local").clientName("Fiscuvia local").build();
         return new InMemoryClientRegistrationRepository(client);
     }
@@ -60,6 +60,8 @@ class IdentitySecurityConfiguration {
                 .requestMatchers("/api/v1/me","/api/v1/auth/tenant","/api/v1/auth/invitations/**","/api/v1/auth/memberships/**").authenticated()
                 .requestMatchers("/api/v1/tenants/*/settings").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/entitlements").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/team/invitation-options").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/v1/tenants/*/team/invitations").authenticated()
                 .anyRequest().denyAll())
             .csrf(config->config.csrfTokenRepository(csrf))
             .requestCache(cache->cache.disable())
@@ -67,7 +69,7 @@ class IdentitySecurityConfiguration {
             .exceptionHandling(errors->errors
                 .authenticationEntryPoint((request,response,error)->problems.write(
                         request.getRequestURI().equals("/api/v1/me") || request.getRequestURI().startsWith("/api/v1/auth/")
-                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/(settings|entitlements)")
+                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/(settings|entitlements|team/invitation-options|team/invitations)")
                                 ? ApiErrorCode.AUTHENTICATION_REQUIRED : ApiErrorCode.NOT_FOUND,request,response))
                 .accessDeniedHandler((request,response,error)->problems.write(ApiErrorCode.ACCESS_DENIED,request,response)))
             .sessionManagement(session->session.sessionFixation(fixation->fixation.changeSessionId()))
@@ -117,7 +119,9 @@ class IdentitySecurityConfiguration {
                                     && methods!=null && methods.containsAll(java.util.List.of("pwd","otp")))
                                 mfa=authenticated.getEpochSecond();
                             IdentityStore.Actor actor;
-                            try { actor=store.resolve(oidc.getIssuer().toString(),oidc.getSubject(),mfa); }
+                            try { actor=store.resolve(oidc.getIssuer().toString(),oidc.getSubject(),mfa,
+                                settings.localContactsEnabled()?LocalContact.verified(oidc.getIdToken().getClaimAsString("email"),
+                                    oidc.getIdToken().getClaimAsString("name"),Boolean.TRUE.equals(oidc.getIdToken().getClaimAsBoolean("email_verified"))):null); }
                             catch(com.fiscuvia.platform.ApiFailure invalid) { throw new OAuth2AuthenticationException("invalid_identity"); }
                             var principal=new AppPrincipal(actor.id(),oidc.getIssuer().toString(),oidc.getSubject(),actor.version(),
                                     authenticated.getEpochSecond(),now+28800,mfa);

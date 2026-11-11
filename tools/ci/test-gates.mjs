@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 
 export function verifyGateTotals(tap) {
   const total = name => Number(new RegExp(`^# ${name} (\\d+)\\r?$`, 'm').exec(tap)?.[1] ?? NaN)
-  if (total('tests') < 19 || !Number.isFinite(total('tests')) || total('pass') !== total('tests')
+  if (total('tests') < 21 || !Number.isFinite(total('tests')) || total('pass') !== total('tests')
     || ['fail', 'cancelled', 'skipped', 'todo'].some(name => total(name) !== 0)) throw Error('Suite tools/ci reducida, incompleta u omitida')
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

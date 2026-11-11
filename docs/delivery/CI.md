@@ -1,5 +1,11 @@
 # CI reproducible — issue #23
 
+## Corte de invitaciones locales #33
+
+Mínimos nuevos: **416 Java (375+41),107 Vitest,61 Playwright de fundación/presentación,18 OIDC y21 tools/ci**. Se conservan las385/92/61/15/19 previas. EmailInvitationTests27, el cierre por defecto en OidcAuthenticationTests23 y EmailInvitationMigrationIT3 usan PostgreSQL/Keycloak reales, sin grants sintéticos de equipo. Tres E2E nuevos validan creación/replay/aceptación, revocación y error real; el escenario de dos sesiones y diez capturas tiene timeout propio120s, sin cambiar45s/retries0 de suites anteriores. Un fallo inicial de sincronización del harness fue corregido esperando la respuesta original antes de retirar el handler, sin fabricar datos o respuestas de seguridad.
+
+Capturas versionadas explícitamente con FISCUVIA_TEAM_CAPTURE=1; por defecto son privadas en .ci-work y no artifacts. Los cinco jobs y permisos no cambian. No atribuir CI histórica al SHA nuevo ni activar correo de producción; alcance restante #33 está pendiente, no PASS. [Guía y límites](../security/LOCAL-EMAIL-INVITATIONS-33.md).
+
 ## Gate de despachos #31
 
 Se preservan los cinco jobs, permisos mínimos, presupuesto y suites previas. Nuevos mínimos: **339 Java (307+32),85 Vitest,33 Playwright de fundación/catálogo,13 OIDC y18 tools/ci**. Se añaden 37 TenantProvisioningTests, tres ProvisioningMigrationIT y cuatro TenantSettingsPolicyMigrationIT a las 295 anteriores. El harness OIDC aprovisiona despachos e identidades sintéticos mediante el procedimiento real, sin entrada al JAR; la política de edición es la permanente aprobada, instalada exclusivamente por Flyway V7, sin grants del harness. OpenAPI/generación conserva comandos #24 y añade schemas cerrados de settings; el navegador valida respuestas HTTP reales. No se publican handoff, logs, claves, OTP, JAR, SBOM o capturas dentro de artifacts; la allowlist anterior permanece intacta. Las capturas revisables se versionan aparte con procedencia.

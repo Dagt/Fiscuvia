@@ -1,6 +1,7 @@
 # UX por rol y flujos Fiscuvia (Proposed)
 
 ## Documentos
+- [Invitaciones local/test #33: capturas y fronteras de alcance](evidence/issue-33/README.md)
 - [Configuración de despachos #31: capturas reales, comparación y límites](evidence/issue-31/README.md)
 - [Biblioteca visual #19 aprobada por opción B OQ-021](reference-library/README.md)
 - [Componentes y AppShell implementados #52](DESIGN-SYSTEM-52.md)

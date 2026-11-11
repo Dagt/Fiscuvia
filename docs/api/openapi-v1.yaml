@@ -432,6 +432,72 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "500":
           $ref: "#/components/responses/InternalError"
+  /tenants/{tenantId}/team/invitation-options:
+    get:
+      operationId: localEmailInvitationOptions
+      summary: Consultar disponibilidad de invitaciones manuales locales
+      description: Sólo owner ACTIVE con MFA reciente, MEMBERSHIP_INVITE y despacho propio. No lista personas ni invitaciones.
+      x-implementation-status: implemented
+      security:
+        - SessionCookie: []
+      parameters:
+        - in: path
+          name: tenantId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Política local disponible; no implica envío de correo.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LocalInvitationOptions" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "500": { $ref: "#/components/responses/InternalError" }
+  /tenants/{tenantId}/team/invitations:
+    post:
+      operationId: createVerifiedLocalEmailInvitation
+      summary: Crear invitación manual para una identidad OIDC ya verificada
+      description: >
+        Exclusivamente Keycloak local/test con política de contacto explícita. Correo como localizador, nunca prueba de identidad.
+        Fija issuer/subject exactos y conserva la aceptación original. Token aleatorio mostrado una sola vez; sólo hash persistido.
+        Un replay devuelve token null, nunca el secreto anterior. No envía correo, no enumera destinatarios y no concede permisos de equipo adicionales.
+        Pendientes no reservan plazas; la aceptación conserva la validación transaccional de capacidad V9.
+      x-implementation-status: implemented
+      security:
+        - SessionCookie: []
+      parameters:
+        - in: path
+          name: tenantId
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - in: header
+          name: X-CSRF-TOKEN
+          required: true
+          schema: { type: string, minLength: 32 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LocalEmailInvitationRequest" }
+      responses:
+        "201":
+          description: Invitación persistida; entrega manual pendiente. El token sólo aparece en esta primera respuesta.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LocalEmailInvitation" }
+        "200":
+          description: Replay autorizado; sólo metadatos, token null.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LocalEmailInvitation" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/Validation" }
+        "500": { $ref: "#/components/responses/InternalError" }
   /tenants/{tenantId}/settings:
     parameters:
       - in: path
@@ -781,6 +847,33 @@ components:
           enum:
             - ACTIVE
             - SUSPENDED
+    LocalInvitationOptions:
+      type: object
+      additionalProperties: false
+      required: [emailInvitationsAvailable, delivery]
+      properties:
+        emailInvitationsAvailable: { type: boolean }
+        delivery: { type: string, const: MANUAL }
+    LocalEmailInvitationRequest:
+      type: object
+      additionalProperties: false
+      required: [email, role]
+      properties:
+        email: { type: string, format: email, maxLength: 254 }
+        role: { type: string, enum: [FIRM_SUPERVISOR, ACCOUNTANT, ASSISTANT] }
+    LocalEmailInvitation:
+      type: object
+      additionalProperties: false
+      required: [invitationId, token, expiresAt, delivery, replayed]
+      properties:
+        invitationId: { type: string, format: uuid }
+        token:
+          type: [string, "null"]
+          pattern: "^[A-Za-z0-9_-]{43}$"
+          description: Sólo primera respuesta de creación. Null en cualquier replay; nunca en listados, logs o auditoría.
+        expiresAt: { type: string, format: date-time }
+        delivery: { type: string, const: MANUAL }
+        replayed: { type: boolean }
     FirmSettings:
       type: object
       additionalProperties: false

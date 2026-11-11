@@ -20,6 +20,7 @@ public final class LocalOidcHarness {
         System.setProperty("fiscuvia.identity.enabled","true"); System.setProperty("fiscuvia.identity.issuer",idp.issuer());
         System.setProperty("fiscuvia.identity.client-secret",idp.clientSecret); System.setProperty("fiscuvia.identity.origin","https://127.0.0.1:4174");
         System.setProperty("fiscuvia.identity.mfa-policy","keycloak-local-otp-v1");
+        System.setProperty("fiscuvia.identity.contact-policy","keycloak-local-verified-email-v1");
         var application=SpringApplication.run(FiscuviaApplication.class);
         Runtime.getRuntime().addShutdownHook(new Thread(()->{
             application.close(); idp.stop(); database.stop(); try { Files.deleteIfExists(output); } catch(Exception ignored) { }
@@ -36,7 +37,7 @@ public final class LocalOidcHarness {
         approvals.put("alice-1",List.of(UUID.randomUUID(),UUID.randomUUID())); approvals.put("bob-1",List.of(UUID.randomUUID()));
         approvals.put("alice-2",List.of(UUID.randomUUID(),UUID.randomUUID()));
         approvals.put("bob-3",List.of(UUID.randomUUID()));
-        for(int i=3;i<=10;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
+        for(int i=3;i<=13;i++)approvals.put("alice-"+i,List.of(UUID.randomUUID(),UUID.randomUUID()));
         approvals.put("bob-2",List.of(UUID.randomUUID()));
         // Settings permission comes exclusively from the real approved V7 migration.
         // Fixtures provision synthetic firms/identities, never role-capability grants.
