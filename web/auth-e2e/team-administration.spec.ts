@@ -294,6 +294,9 @@ test('cuota agotada real, invitaciones paginadas, revocación, vacío y error re
         })
       ).status(),
     ).toBe(403)
+    await expect(
+      page.getByRole('combobox', { name: 'Estado', exact: true }),
+    ).toBeVisible()
     await page.getByLabel('Estado', { exact: true }).selectOption('PENDING')
     await expect(
       page.getByText('No hay resultados', { exact: true }),

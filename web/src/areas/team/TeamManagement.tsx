@@ -208,6 +208,7 @@ function TeamPanel(props: Props) {
               <span>Estado</span>
               <select
                 className="input"
+                aria-label="Estado"
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value)
