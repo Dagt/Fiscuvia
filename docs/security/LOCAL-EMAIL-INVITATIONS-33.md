@@ -8,7 +8,7 @@ Base: `19d6ec043ccbfda3c75c39b3e5428a72666cd3ba` (#32), rama `issue-33-team-mana
 
 ## Alcance real y límites
 
-Se implementa el formulario de invitación por correo y la revocación de la invitación que se acaba de crear. Reutiliza MEMBERSHIP_INVITE owner+MFA, identidad/membresía/tenant ACTIVE, la invitación original y la aceptación OIDC existente. No instala MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE ni autoridad de reactivación. El directorio de equipo/invitaciones y los cambios de rol/reactivación permanecen pendientes de autorización; no hay listados vacíos o botones que simulen esas funciones. Cartera sigue bloqueada por #74/OQ-013/015, sin tablas fiscales.
+Se implementa el formulario de invitación por correo y la revocación de la invitación que se acaba de crear. Reutiliza MEMBERSHIP_INVITE owner+MFA, identidad/membresía/tenant ACTIVE, la invitación original y la aceptación OIDC existente. V10 no instala permisos de administración adicionales; V11 incorpora posteriormente MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y MEMBERSHIP_REACTIVATE conforme a A aprobada. El directorio y las acciones reales se documentan en [TEAM-ADMINISTRATION-33](TEAM-ADMINISTRATION-33.md). Cartera sigue bloqueada por #74/OQ-013/015, sin tablas fiscales.
 
 **Correo como localizador, nunca autenticación:** el destinatario debe haber completado OIDC real y tener correo verificado por el emisor local controlado. Se resuelve en backend y se fija issuer/subject exacto. Cambiar o conocer un correo no cambia la identidad global ni el receptor de un token ya emitido. Ambigüedad, falta de verificación, usuario desconocido o ya incorporado devuelven el mismo error seguro de validación sin directorio global.
 

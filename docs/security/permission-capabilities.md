@@ -6,7 +6,7 @@ A aprobada #33: MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y MEMBERSHIP_REACTIVATE 
 
 ## Corte aprobado #33: invitación por correo local/test
 
-Se reutiliza MEMBERSHIP_INVITE owner ACTIVE + MFA reciente, sin grants nuevos. El propietario aprobó explícitamente el flujo de correo sólo con identidades Keycloak local/test ya verificadas y destinatario issuer/subject exacto. [Implementación y contrato](LOCAL-EMAIL-INVITATIONS-33.md). MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y autoridad de reactivación siguen sin autorización: [propuesta pendiente A](TEAM-POLICY-PROPOSAL-33.md). No usar la aprobación del correo como aprobación de la matriz de equipo/fiscal. No hay permisos sintéticos positivos sustituyendo esa autorización.
+Se reutiliza MEMBERSHIP_INVITE owner ACTIVE + MFA reciente, sin grants nuevos. El propietario aprobó explícitamente el flujo de correo sólo con identidades Keycloak local/test ya verificadas y destinatario issuer/subject exacto. [Implementación y contrato](LOCAL-EMAIL-INVITATIONS-33.md). La aprobación posterior A incorpora MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y MEMBERSHIP_REACTIVATE sólo bajo la [política limitada aprobada](TEAM-POLICY-PROPOSAL-33.md), instalada por V11. No usar la aprobación del correo como aprobación de la matriz de equipo/fiscal. No hay permisos sintéticos positivos sustituyendo esa autorización.
 
 ## Propuesta mínima pendiente #31
 
