@@ -1,5 +1,13 @@
 # Identidad, sesiones y membresías — #27
 
+## Administración de equipo #33 — ampliación aprobada
+
+V11 agrega únicamente la administración de equipo aprobada para owner con MFA reciente; conserva OIDC, sesiones y las restricciones del correo local/test. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
+## Extensión aprobada local/test #33
+
+[Invitaciones por correo verificadas, V10 y límites](LOCAL-EMAIL-INVITATIONS-33.md). La aprobación expresa del 2026-11-11 permite recoger nombre opcional/correo verificado desde OIDC local mediante atestación HMAC separada por propósito y resolver un destinatario issuer/subject exacto; no unir identidades por email. Configuración opt-in `FISCUVIA_OIDC_CONTACT_POLICY=keycloak-local-verified-email-v1`, disabled por defecto. No se guardan contactos/tokens en Spring Session. Sólo hash del token, primera respuesta secreta, replay sin secreto y entrega manual; sin correo externo o producción. No concede MEMBERSHIP_VIEW, cambio de rol o reactivación ni resuelve OQ-014/015.
+
 Base técnica autorizada por el propietario el 2026-10-30 en la revisión del PR #83. **Sólo local/test**. No se ha seleccionado proveedor para producción. ADR-005 conserva Proposed para los pendientes; OQ-014 sigue Open. No se habilitan staging/producción ni el esquema fiscal #74.
 
 ## Fronteras implementadas

@@ -1,5 +1,13 @@
 # Seguridad y privacidad: criterios de liberación
 
+## Administración de equipo #33 — ampliación aprobada
+
+Administración A #33 aprobada: directorio propio por puerto estrecho, owner/MFA, sin acceso SQL global; mutaciones versionadas/idempotentes y auditadas, propietarios protegidos y REVOKED terminal. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
+## Invitación local/test #33
+
+[Política limitada y controles](LOCAL-EMAIL-INVITATIONS-33.md): sólo dueño con MFA reciente y permisos existentes, destinatario ya verificado por OIDC y fijado por issuer/subject; email no autentica. Contactos globales privados con atestación por propósito y sin datos personales en sesión/logs/eventos. Token aleatorio mostrado una vez, hash persistido, expiración/uso único/revocación y replay sin secreto. Sin envío externo, URL con token, grants de administración general ni habilitación productiva OQ-014.
+
 ## Provisioning/configuración #31
 
 [Frontera administrativa y SQL](../architecture/TENANT-PROVISIONING.md): alta/estado sólo mediante credencial migradora custodiada y aprobación independiente de identidad ya OIDC-verificada; no hay operador HTTP ni autoservicio. Runtime no lee/modifica metadatos globales directamente. Toda configuración exige sesión/usuario/membresía/estado/capacidad y MFA; V7 instala la política permanente limitada de edición expresamente aprobada: sólo owner del propio despacho con MFA confiable de los últimos diez minutos; los otros roles permanecen DENY. Raíz con bloqueo hasta commit, versión e idempotencia; journal/outbox atómicos y sin contacto/nombre en payload. Directorio sólo propio; suspensión no destruye historial ni concede facultades de facturación. No se admite URL/SVG/path de logo; fallback sin almacenamiento improvisado. Guardas y mutaciones desechables comprueban FORCE, grants y el filtro de actor del directorio.

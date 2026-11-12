@@ -49,7 +49,7 @@ final class KeycloakTestProvider extends GenericContainer<KeycloakTestProvider> 
         waitingFor(Wait.forHttp("/realms/fiscuvia-local/.well-known/openid-configuration").forStatusCode(200).withStartupTimeout(Duration.ofSeconds(120)));
     }
     private void addUser(ArrayNode users,String name,UUID subject) {
-        var user=users.addObject(); user.put("id",subject.toString()); user.put("username",name); user.put("enabled",true); user.put("emailVerified",false);
+        var user=users.addObject(); user.put("id",subject.toString()); user.put("username",name); user.put("enabled",true); user.put("emailVerified",!name.equals("carol-1"));
         user.put("firstName","Demostración"); user.put("lastName","Local"); user.put("email",name+"@example.invalid");
         var credentials=user.putArray("credentials");
         credentials.addObject().put("type","password").put("value",password).put("temporary",false);

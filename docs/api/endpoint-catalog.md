@@ -1,5 +1,9 @@
 # Catálogo de endpoints — estado explícito
 
+## Implementado en el corte local/test #33
+
+GET `/api/v1/tenants/{tenantId}/team/invitation-options` y POST `/api/v1/tenants/{tenantId}/team/invitations`. Owner+MFA y MEMBERSHIP_INVITE existente, opt-in Keycloak local; destinatario verificado y issuer/subject exactos. Token sólo en primera respuesta; no envío externo ni lista de miembros/invitaciones. Rutas de rol/reactivación/cartera permanecen fuera de implementación. [Alcance aprobado](../security/LOCAL-EMAIL-INVITATIONS-33.md).
+
 ## Implementado en #31
 
 GET y POST `/api/v1/tenants/{tenantId}/settings`, con sesión, capacidad, lifecycle y RLS; POST añade MFA, CSRF, Idempotency-Key y expectedVersion. La política permanente de edición continúa DENY hasta aprobar la propuesta mínima. `/me` y selección entregan nombres/estados de membresías propias. Provisioning/suspensión/reactivación se ejecutan por procedimiento administrativo privado, **sin rutas HTTP de operador**. [Autoridad, datos y límites](../architecture/TENANT-PROVISIONING.md), [OpenAPI implementado](openapi-v1.yaml). Las rutas de negocio restantes son propuestas.
@@ -90,3 +94,7 @@ Prefijo T = `/api/v1/tenants/{tenantId}` con membership/permissions y RLS; rutas
 
 ## Contrato incompleto deliberadamente
 Especificar request/response/error/status y authorization de cada ruta en un PR de diseño API antes de implementarla. Este catálogo no es OpenAPI listo para producción.
+
+## Administración implementada A #33 (V11)
+
+GET `/api/v1/tenants/{tenantId}/team/members`, GET `.../invitations` y POST `.../members/{memberId}/status`, `.../members/{memberId}/role`, `.../invitations/{invitationId}/revoke`. [Política y DTOs](../security/TEAM-ADMINISTRATION-33.md), [OpenAPI](openapi-v1.yaml). Sólo owner+MFA propio ACTIVE, sin endpoints de cartera o globales.

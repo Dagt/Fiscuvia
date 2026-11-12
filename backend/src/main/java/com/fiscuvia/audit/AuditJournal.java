@@ -5,10 +5,10 @@ import java.util.UUID;
 /** Requires the caller's existing authenticated/authorized JDBC transaction. Never starts a success transaction. */
 public interface AuditJournal {
     enum EventCode { OWNER_BOOTSTRAPPED, INVITATION_ISSUED, INVITATION_REVOKED, INVITATION_ACCEPTED,
-        MEMBERSHIP_SUSPENDED, MEMBERSHIP_REVOKED, AUTHORIZED_OPERATION_RECORDED, PRIVILEGED_OPERATION_DENIED,
+        MEMBERSHIP_SUSPENDED, MEMBERSHIP_REVOKED, MEMBERSHIP_REACTIVATED, MEMBERSHIP_ROLE_CHANGED, AUTHORIZED_OPERATION_RECORDED, PRIVILEGED_OPERATION_DENIED,
         TENANT_CREATED, TENANT_PROFILE_UPDATED, TENANT_SUSPENDED, TENANT_REACTIVATED }
     record Receipt(UUID eventId,EventCode eventCode,int schemaVersion,boolean replay) {}
-    enum PrivilegedOperation { TENANT_SETTINGS_MANAGE, MEMBERSHIP_INVITE, MEMBERSHIP_ASSIGN_ROLE, MEMBERSHIP_DISABLE, AUDIT_VIEW }
+    enum PrivilegedOperation { TENANT_SETTINGS_MANAGE, MEMBERSHIP_VIEW, MEMBERSHIP_INVITE, MEMBERSHIP_ASSIGN_ROLE, MEMBERSHIP_DISABLE, MEMBERSHIP_REACTIVATE, AUDIT_VIEW }
     enum DenialReason { MEMBERSHIP_INACTIVE, CAPABILITY_UNCONFIGURED, RESOURCE_UNASSIGNED, MFA_REQUIRED, CONTEXT_REJECTED }
     record Denial(PrivilegedOperation operation,DenialReason reason,UUID commandId,UUID correlationId) {
         public Denial { java.util.Objects.requireNonNull(operation);java.util.Objects.requireNonNull(reason);java.util.Objects.requireNonNull(commandId);java.util.Objects.requireNonNull(correlationId); }

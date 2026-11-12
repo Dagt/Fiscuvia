@@ -1,5 +1,20 @@
 # Modelo inicial de amenazas
 
+## Administración de equipo #33 — ampliación aprobada
+
+Amenazas #33: enumeración global, elevación por rol, autoedición, upgrade a owner, sobrecupo, TOCTOU y recibos cruzados. V11 exige capacidad exacta/MFA/tenant, mutex de raíz antes de target/cuota, versión y huella ligadas al actor. Pruebas negativas37 y guardas de política/privilegios/triggers; correo productivo y cartera siguen cerrados. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
+
+## Correo verificado local #33
+
+| Amenaza | Control efectivo | Evidencia requerida |
+|---|---|---|
+| Correo/claims falsos como prueba de identidad | Callback OIDC comprobado, opt-in local, HMAC distinto por propósito/xid, issuer/subject fijados y aceptación original exacta | OIDC real, MAC de actor no sirve para contacto, cambio de correo no retargetea token |
+| Directorio global/enumeración por email | Sin endpoint de búsqueda/listado; owner+MFA antes de resolver contacto privado; error genérico para desconocido/no verificado/ambiguo | Otros roles/tenants, respuestas seguras y tablas sin grants runtime/sesiones |
+| Replay, doble emisión y pérdida de secreto | Hash de token, recibo idempotente sin token, serialización por comando/receptor, expiración/revocación/uso único | Dos requests concurrentes, primera respuesta única, rollback y aceptación existente |
+| Tokens/PII en sesión, logs o evidencia | Principal mínimo, eventos/outbox tipados sin contacto, estado efímero no cacheado, capturas sólo tras ocultar token | Inspección de sesión/logs, HTTP y captura real sin material privado |
+
+[Modelo físico, API y límites](LOCAL-EMAIL-INVITATIONS-33.md). No hay aprobación de administración general, cartera o correo productivo; no convertir cobertura diferida en PASS.
+
 ## Amenazas de despachos #31
 
 | Ataque | Control efectivo | Verificación / límite |

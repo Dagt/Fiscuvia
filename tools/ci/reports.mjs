@@ -28,7 +28,7 @@ const baseline = {
   'com.fiscuvia.TenantConcurrencyTests': 2,
   'com.fiscuvia.TenantHttpPrivacyTests': 2,
   'com.fiscuvia.TenantMigrationIT': 3,
-  'com.fiscuvia.OidcAuthenticationTests': 22,
+  'com.fiscuvia.OidcAuthenticationTests': 23,
   'com.fiscuvia.IdentityMigrationIT': 3,
   'com.fiscuvia.ResourceAuthorizationTests': 37,
   'com.fiscuvia.AuthorizationMigrationIT': 3,
@@ -41,6 +41,10 @@ const baseline = {
   'com.fiscuvia.EntitlementTests': 39,
   'com.fiscuvia.EntitlementMigrationIT': 3,
   'com.fiscuvia.MembershipCapacityMigrationIT': 3,
+  'com.fiscuvia.EmailInvitationTests': 27,
+  'com.fiscuvia.EmailInvitationMigrationIT': 3,
+  'com.fiscuvia.TeamAdministrationTests': 37,
+  'com.fiscuvia.TeamAdministrationMigrationIT': 3,
 }
 
 export function backendReports(xmls, expected = baseline) {
@@ -98,8 +102,8 @@ export function webReports(unit, e2e, minimum = 13, minimumUnit = minimum) {
 }
 
 export function completeWebReports(unit, foundation, identity) {
-  const base = webReports(unit, foundation, 61, 92)
-  const auth = webReports(unit, identity, 15, 92)
+  const base = webReports(unit, foundation, 61, 129)
+  const auth = webReports(unit, identity, 20, 129)
   return { ...base, oidcPlaywright: auth.playwright }
 }
 

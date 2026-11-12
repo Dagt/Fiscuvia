@@ -5,8 +5,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("fiscuvia.identity")
 record IdentitySettings(boolean enabled, String issuer, String clientId, String clientSecret,
-        String origin, String mfaPolicy, String proofKey, String sessionPassword) {
+        String origin, String mfaPolicy, String proofKey, String sessionPassword, String contactPolicy) {
     IdentitySettings {
+        if(contactPolicy==null)contactPolicy="disabled";
+        if(!java.util.Set.of("disabled","keycloak-local-verified-email-v1").contains(contactPolicy)
+            || (!enabled && !"disabled".equals(contactPolicy)))throw new IllegalStateException("Local contact policy unavailable");
         if (proofKey == null || !proofKey.matches("[0-9a-f]{64}") || sessionPassword == null || sessionPassword.isBlank())
             throw new IllegalStateException("Identity private configuration required");
         URI base = URI.create(origin);
@@ -21,5 +24,6 @@ record IdentitySettings(boolean enabled, String issuer, String clientId, String 
                 throw new IllegalStateException("Only the controlled local OIDC issuer is enabled");
         }
     }
+    boolean localContactsEnabled(){return enabled && "keycloak-local-verified-email-v1".equals(contactPolicy);}
     @Override public String toString() { return "IdentitySettings[private]"; }
 }

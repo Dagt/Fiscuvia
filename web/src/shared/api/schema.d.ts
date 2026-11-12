@@ -270,6 +270,130 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tenants/{tenantId}/team/invitation-options': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Consultar disponibilidad de invitaciones manuales locales
+     * @description Sólo owner ACTIVE con MFA reciente, MEMBERSHIP_INVITE y despacho propio. No lista personas ni invitaciones.
+     */
+    get: operations['localEmailInvitationOptions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/team/invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Consultar invitaciones sin tokens ni hashes
+     * @description Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No habilita cartera ni administración global.
+     */
+    get: operations['listTeamInvitations']
+    put?: never
+    /**
+     * Crear invitación manual para una identidad OIDC ya verificada
+     * @description Exclusivamente Keycloak local/test con política de contacto explícita. Correo como localizador, nunca prueba de identidad. Fija issuer/subject exactos y conserva la aceptación original. Token aleatorio mostrado una sola vez; sólo hash persistido. Un replay devuelve token null, nunca el secreto anterior. No envía correo, no enumera destinatarios y no concede permisos de equipo adicionales. Pendientes no reservan plazas; la aceptación conserva la validación transaccional de capacidad V9.
+     */
+    post: operations['createVerifiedLocalEmailInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/team/invitations/{invitationId}/revoke': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Revocar invitación pendiente con versión e idempotencia
+     * @description Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No habilita cartera ni administración global.
+     */
+    post: operations['revokeTeamInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/team/members': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Consultar colaboradores del propio despacho
+     * @description Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No habilita cartera ni administración global.
+     */
+    get: operations['listTeamMembers']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/team/members/{memberId}/role': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Cambiar rol operativo de otro miembro no propietario
+     * @description Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No habilita cartera ni administración global.
+     */
+    post: operations['changeTeamMemberRole']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/team/members/{memberId}/status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Suspender, revocar o reactivar SUSPENDED sujeto a cuota
+     * @description Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No habilita cartera ni administración global.
+     */
+    post: operations['changeTeamMemberStatus']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -371,6 +495,28 @@ export interface components {
       /** Format: uuid */
       tenantId: string
     }
+    LocalEmailInvitation: {
+      /** @constant */
+      delivery: 'MANUAL'
+      /** Format: date-time */
+      expiresAt: string
+      /** Format: uuid */
+      invitationId: string
+      replayed: boolean
+      /** @description Sólo primera respuesta de creación. Null en cualquier replay; nunca en listados, logs o auditoría. */
+      token: string | null
+    }
+    LocalEmailInvitationRequest: {
+      /** Format: email */
+      email: string
+      /** @enum {string} */
+      role: 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+    }
+    LocalInvitationOptions: {
+      /** @constant */
+      delivery: 'MANUAL'
+      emailInvitationsAvailable: boolean
+    }
     Membership: {
       /** @description Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre inventado. */
       commercialName?: string | null
@@ -462,6 +608,73 @@ export interface components {
       invitationId: string
       /** Format: uuid */
       tenantId: string
+    }
+    TeamCommandResult: {
+      replayed: boolean
+      /** Format: uuid */
+      targetId: string
+      version: number
+    }
+    TeamInvitation: {
+      /** Format: date-time */
+      createdAt: string
+      displayName: string | null
+      /** Format: email */
+      email: string | null
+      /** Format: date-time */
+      expiresAt: string
+      /** Format: uuid */
+      invitationId: string
+      /** @enum {string} */
+      role: 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+      /** @enum {string} */
+      status: 'PENDING' | 'ACCEPTED' | 'REVOKED' | 'EXPIRED'
+      version: number
+    }
+    TeamInvitationsPage: {
+      items: components['schemas']['TeamInvitation'][]
+      page: number
+      size: number
+      total: number
+    }
+    TeamMember: {
+      canManage: boolean
+      /** Format: date-time */
+      changedAt: string
+      displayName: string | null
+      /** Format: email */
+      email: string | null
+      /** @enum {string} */
+      identityStatus: 'ACTIVE' | 'DISABLED'
+      /** Format: date-time */
+      joinedAt: string
+      /** Format: uuid */
+      membershipId: string
+      roles: (
+        'FIRM_OWNER_ADMIN' | 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+      )[]
+      /** @enum {string} */
+      status: 'ACTIVE' | 'SUSPENDED' | 'REVOKED'
+      version: number
+    }
+    TeamMembersPage: {
+      items: components['schemas']['TeamMember'][]
+      page: number
+      size: number
+      total: number
+    }
+    TeamRoleCommand: {
+      expectedVersion: number
+      /** @enum {string} */
+      role: 'FIRM_SUPERVISOR' | 'ACCOUNTANT' | 'ASSISTANT'
+    }
+    TeamStatusCommand: {
+      expectedVersion: number
+      /** @enum {string} */
+      status: 'ACTIVE' | 'SUSPENDED' | 'REVOKED'
+    }
+    TeamVersionCommand: {
+      expectedVersion: number
     }
     TenantRequest: {
       /** Format: uuid */
@@ -1035,6 +1248,265 @@ export interface operations {
       400: components['responses']['BadRequest']
       401: components['responses']['Unauthorized']
       403: components['responses']['Forbidden']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  localEmailInvitationOptions: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Política local disponible; no implica envío de correo. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LocalInvitationOptions']
+        }
+      }
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      500: components['responses']['InternalError']
+    }
+  }
+  listTeamInvitations: {
+    parameters: {
+      query?: {
+        page?: number
+        /** @description Subcadena literal de nombre/correo, dentro del despacho; no interpreta comodines. */
+        search?: string
+        size?: number
+        status?: 'ALL' | 'PENDING' | 'ACCEPTED' | 'REVOKED' | 'EXPIRED'
+      }
+      header?: never
+      path: {
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Resultado autorizado; no contiene tokens ni datos ajenos. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TeamInvitationsPage']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  createVerifiedLocalEmailInvitation: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        'X-CSRF-TOKEN': string
+      }
+      path: {
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LocalEmailInvitationRequest']
+      }
+    }
+    responses: {
+      /** @description Replay autorizado; sólo metadatos, token null. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LocalEmailInvitation']
+        }
+      }
+      /** @description Invitación persistida; entrega manual pendiente. El token sólo aparece en esta primera respuesta. */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LocalEmailInvitation']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  revokeTeamInvitation: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        'X-CSRF-TOKEN': string
+      }
+      path: {
+        invitationId: string
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TeamVersionCommand']
+      }
+    }
+    responses: {
+      /** @description Resultado autorizado; no contiene tokens ni datos ajenos. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TeamCommandResult']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  listTeamMembers: {
+    parameters: {
+      query?: {
+        page?: number
+        /** @description Subcadena literal de nombre/correo, dentro del despacho; no interpreta comodines. */
+        search?: string
+        size?: number
+        status?: 'ALL' | 'ACTIVE' | 'SUSPENDED' | 'REVOKED'
+      }
+      header?: never
+      path: {
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Resultado autorizado; no contiene tokens ni datos ajenos. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TeamMembersPage']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  changeTeamMemberRole: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        'X-CSRF-TOKEN': string
+      }
+      path: {
+        memberId: string
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TeamRoleCommand']
+      }
+    }
+    responses: {
+      /** @description Resultado autorizado; no contiene tokens ni datos ajenos. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TeamCommandResult']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  changeTeamMemberStatus: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        'X-CSRF-TOKEN': string
+      }
+      path: {
+        memberId: string
+        tenantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TeamStatusCommand']
+      }
+    }
+    responses: {
+      /** @description Resultado autorizado; no contiene tokens ni datos ajenos. */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TeamCommandResult']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
       409: components['responses']['Conflict']
       422: components['responses']['Validation']
       500: components['responses']['InternalError']

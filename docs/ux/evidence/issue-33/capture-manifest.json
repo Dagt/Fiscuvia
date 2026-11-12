@@ -1,0 +1,251 @@
+{
+  "sourceSha": "c249d682bc042cd2a203da8d38c6d6eebc58491b",
+  "applicationTree": "4878b6406896b8e0beb2cbfd24c16975a0404a4b",
+  "backendTree": "5a331004b56b32813edad058419829d0592ce150",
+  "fixtureTree": "cd54f11587ff537240446563c039c0e9e6792980",
+  "chromium": "156.0.8078.4",
+  "capturedAt": "2026-11-11T23:38:20.391Z",
+  "scope": "Approved owner team administration; local/test verified email only; no fiscal portfolio or external email delivery",
+  "screenshots": [
+    {
+      "file": "equipo-colaboradores-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "f7b0078632570cf5b5277642063abf0224e5af3a7ddaeaeb9ec1aaf5d95cac7b",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-colaboradores-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "efdee668333acbdf4049f846d3c0faf261f232b49c987cabf541e948257c8353",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-cambio-rol-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "312bfccf22972fff3a9caba9a74db9054bab45a39dd78d71c2f29a49421edec3",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-cambio-rol-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "5085e68840ba551f94df7233c3b913dd58b8197e49910e698e27d94b4439b698",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-confirmacion-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "0c220dfd1d5999b61b7428cfd71a2d690cdfdb75563e0dda49f0f268371b044f",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-confirmacion-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ea4dcb29dabdefc567eac8e351c6ebd97f736e9f1cf958a19a38551f5eeb14eb",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-suspendido-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "967f4105a70df3cb31f2cebeca4d7d854a72eace97fca9c57c43b06d4b9f9482",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-suspendido-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b83e17291e08f2af41028658ceee4619a4fd5d4e0735c73baf7bced537f88a18",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-revocado-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "f4eefecbecf5490f8a5b04dee38b86df58c77b6f139afb4ed8beeedc2f943b20",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-revocado-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "e6d810ef6c8e84c22efb80b841bbcb4ad155a61f9f8a98ccf8a831ba17c70561",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-otro-despacho-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "acf7716d7ef80fa72443e938437b495ed46213ca24126e0c9017c8c2de596dd5",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-otro-despacho-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "50e6f25a374739c67931b0007c8f6d4d0839fccda852534e256102280361bf62",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-sin-cupo-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "3427105dbc17372ba4ac882c6aeadd797f2a6d12474eefaca012b8a874606b83",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-sin-cupo-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "856675451e13f9a21650997ec69c628fa24a048e175ca59debe48e11608bda24",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-invitaciones-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "1a1618fc8fc41f234a3d76b24926cfb80fbb4856d94dc43c730bfdd228b51432",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-invitaciones-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "5135a396281a340361f7b4c4c17694f9ddf8c1b82d4e0b5e16bf8a14d3319950",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-vacio-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "7a2822bf309203ddb1659eb11a03154957c25d5f118de0e7de16f1764aaecb6e",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-vacio-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "6bdb59f9c65ac810534bba4e361143cc2818d24a8f493c3c7419167378dcb780",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-error-recuperable-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "3e04915d23eaa8ae54ca1b0aeeca2874ff990cf4254afbaf5199a0dd0805a1cf",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "equipo-error-recuperable-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b88e26d1e5792e26a82377be68080e515cea46d9765eac47d6ab7cd3ddf76234",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "cargando-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "6f24297c090a1c0abe3d4e745056283ffc69cb3b006f173fc591055af6785653",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "cargando-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "02aac8a5921bb605e7b0fe8b3b93ae82761ab5fed4b6355571df103269a3ebc6",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "formulario-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "624ff36b25e5ff0eb84cc593649b69daf036f355945af5b27fe41d5a58622757",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "formulario-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "02aac8a5921bb605e7b0fe8b3b93ae82761ab5fed4b6355571df103269a3ebc6",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "creada-entrega-manual-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "ec09551d1d8de2935c79ac648d859ea4f426b52cd170c783f4db0e7b99f92f91",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "creada-entrega-manual-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "23a7aa85ecc7716b574bc3a3c3872a5011bd375fdaf937c25a37a6dc0031da03",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "sin-permiso-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "9d76bc4d5ff0a4a30265c2e264a9714bab75c27add579aa12d422e1e12b18dc6",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "sin-permiso-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "480548e44ca36b5077ec3efdc1cfb499f77bc43d42b83a34501f27a592851583",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "error-destinatario-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "804a6c2bbb302a7bf63f9879f69f5fd623a47fcb2035fda1213c747318c7d3b0",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "error-destinatario-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "08d6a217ece63ef290b1c4589419980af3b7e55c2377b9cd8fdc14a7a5f432eb",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    }
+  ]
+}

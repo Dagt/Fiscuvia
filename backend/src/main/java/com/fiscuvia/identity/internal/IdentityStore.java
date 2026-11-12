@@ -56,11 +56,48 @@ class IdentityStore implements AuthorizedTenantOperations {
             String state=cause instanceof java.sql.SQLException sql ? sql.getSQLState() : "";
             throw new ApiFailure("42501".equals(state) ? ApiErrorCode.ACCESS_DENIED
                     : ("P3201".equals(state)||"P3202".equals(state)) ? ApiErrorCode.QUOTA_UNAVAILABLE
+                    : ("P3301".equals(state)||"P3310".equals(state)) ? ApiErrorCode.VALIDATION_FAILED
+                    : "P3311".equals(state) ? ApiErrorCode.NOT_FOUND
+                    : "P3312".equals(state) ? ApiErrorCode.STALE_VERSION
                     : "23505".equals(state) ? ApiErrorCode.CONFLICT : ApiErrorCode.INTERNAL_ERROR);
         }
     }
     Actor resolve(String issuer,String subject,long mfaAt) {
         return transaction(() -> bind(issuer,subject,mfaAt));
+    }
+    Actor resolve(String issuer,String subject,long mfaAt,LocalContact contact) {
+        return transaction(()->{
+            var actor=bind(issuer,subject,mfaAt);
+            if(settings.localContactsEnabled() && contact!=null) {
+                String tx=jdbc.queryForObject("SELECT pg_current_xact_id()::text",String.class);
+                String payload="FISCUVIA_LOCAL_CONTACT_V1\n"+issuer+"\n"+subject+"\n"+tx+"\n"+(contact.email()==null?"":contact.email())+"\n"+(contact.name()==null?"":contact.name());
+                try {
+                    var mac=Mac.getInstance("HmacSHA256");mac.init(new SecretKeySpec(HexFormat.of().parseHex(settings.proofKey()),"HmacSHA256"));
+                    String proof=HexFormat.of().formatHex(mac.doFinal(payload.getBytes(StandardCharsets.UTF_8)));
+                    jdbc.queryForObject("SELECT identity.record_verified_local_contact(?,?,?,?,?)",Object.class,issuer,subject,contact.email(),contact.name(),proof);
+                } catch(java.security.GeneralSecurityException impossible){throw new IllegalStateException("Contact proof unavailable");}
+            }
+            return actor;
+        });
+    }
+    record EmailInvitation(UUID invitationId,String token,Instant expiresAt,String delivery,boolean replayed) {
+        @Override public String toString(){return "EmailInvitation[private]";}
+    }
+    boolean emailInvitationOptions(UUID tenant) {
+        return execute(tenant,Capability.MEMBERSHIP_INVITE,ResourceTarget.tenant(),access->settings.localContactsEnabled());
+    }
+    EmailInvitation inviteEmail(UUID tenant,UUID command,String email,String role) {
+        String canonical=LocalContact.canonicalEmail(email);
+        if(!settings.localContactsEnabled())throw new ApiFailure(ApiErrorCode.ACCESS_DENIED);
+        if(canonical==null || command==null)throw new ApiFailure(ApiErrorCode.VALIDATION_FAILED);
+        return execute(tenant,Capability.MEMBERSHIP_INVITE,ResourceTarget.tenant(),access->{
+            journal.bindCommand(command);
+            byte[] bytes=new byte[32];new SecureRandom().nextBytes(bytes);
+            String token=Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            return jdbc.queryForObject("SELECT * FROM identity.invite_verified_local_email(?,?,?,?,?,?)",(row,n)->
+                new EmailInvitation(row.getObject(1,UUID.class),row.getBoolean(3)?token:null,row.getTimestamp(2).toInstant(),"MANUAL",!row.getBoolean(3)),
+                tenant,command,canonical,role,hash(token),java.sql.Timestamp.from(Instant.now().plusSeconds(86400)));
+        });
     }
     private Actor bind(String issuer,String subject,long mfaAt) {
         if (issuer==null || !issuer.equals(settings.issuer()) || subject==null || subject.length()>255

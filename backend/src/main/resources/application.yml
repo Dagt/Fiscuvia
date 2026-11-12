@@ -60,6 +60,7 @@ fiscuvia:
     client-secret: ${FISCUVIA_OIDC_CLIENT_SECRET:}
     origin: ${FISCUVIA_ORIGIN:https://127.0.0.1:8443}
     mfa-policy: ${FISCUVIA_OIDC_MFA_POLICY:unverified}
+    contact-policy: ${FISCUVIA_OIDC_CONTACT_POLICY:disabled}
 
 management:
   tracing:

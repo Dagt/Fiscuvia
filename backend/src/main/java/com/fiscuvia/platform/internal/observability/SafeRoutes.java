@@ -10,7 +10,10 @@ public final class SafeRoutes {
             "/api/v1/auth/csrf", "/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/tenant",
             "/api/v1/auth/authorize/local", "/api/v1/auth/callback/local", "/api/v1/auth/invitations",
             "/api/v1/auth/invitations/accept", "/api/v1/auth/invitations/revoke", "/api/v1/auth/memberships/status",
-            "/api/v1/tenants/{tenantId}/settings", "/api/v1/tenants/{tenantId}/entitlements");
+            "/api/v1/tenants/{tenantId}/settings", "/api/v1/tenants/{tenantId}/entitlements",
+            "/api/v1/tenants/{tenantId}/team/invitation-options", "/api/v1/tenants/{tenantId}/team/invitations",
+            "/api/v1/tenants/{tenantId}/team/members", "/api/v1/tenants/{tenantId}/team/members/{memberId}/status",
+            "/api/v1/tenants/{tenantId}/team/members/{memberId}/role", "/api/v1/tenants/{tenantId}/team/invitations/{invitationId}/revoke");
     private static final Set<String> METHODS = Set.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE");
     private SafeRoutes() {}
     public static String route(String template) { return ROUTES.contains(template == null ? "" : template) ? template : "UNMAPPED"; }
