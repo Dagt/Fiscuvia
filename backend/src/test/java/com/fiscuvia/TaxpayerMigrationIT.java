@@ -51,9 +51,10 @@ class TaxpayerMigrationIT {
             s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);s.update("INSERT INTO app.tenants(tenant_id) VALUES(?)",tenant);
             QuotaFixtures.seed(s,tenant);s.update("INSERT INTO identity_private.users(id) VALUES(?)",member);
             s.update("INSERT INTO identity.memberships(tenant_id,id,user_id,status) VALUES(?,?,?,'ACTIVE')",tenant,member,member);
-            s.update("INSERT INTO access_control.resource_grants VALUES(?,?,'TAXPAYER',?,'TAXPAYER_VIEW',true,?)",tenant,member,java.util.UUID.randomUUID(),java.util.UUID.randomUUID());c.commit();
+            s.update("INSERT INTO access_control.resource_grants VALUES(?,?,'TAXPAYER',?,'TAXPAYER_VIEW',true,?)",tenant,member,java.util.UUID.randomUUID(),java.util.UUID.randomUUID());
+            assertThat(s.queryForObject("SELECT count(*) FROM access_control.resource_grants WHERE resource_kind='TAXPAYER'",Integer.class)).isEqualTo(1);c.commit();
         }
-        copy();assertThatThrownBy(()->flyway().migrate()).isInstanceOf(FlywayException.class);
+        copy();assertThatThrownBy(()->flyway().migrate()).isInstanceOf(FlywayException.class).hasMessageContaining("taxpayer_legacy_gate");
         assertThat(flyway().info().current().getVersion().toString()).isEqualTo("11");
         try(var c=DriverManager.getConnection(db.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,db.migrationPassword)){
             c.setAutoCommit(false);var s=new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(c,true));s.queryForObject("SELECT app.establish_tenant_context(?)",Object.class,tenant);

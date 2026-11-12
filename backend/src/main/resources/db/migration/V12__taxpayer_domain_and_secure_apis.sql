@@ -80,10 +80,16 @@ BEGIN
 END; $$;
 CREATE TRIGGER regime_overlap BEFORE INSERT ON taxpayers.taxpayer_regime_references
  FOR EACH ROW EXECUTE FUNCTION taxpayer_private.reject_regime_overlap();
+-- CHECK validation scans the heap independently of SELECT RLS. A FK's validation
+-- query alone can miss V11 grants hidden by FORCE RLS without a tenant context.
+-- No taxpayer existed before V12: reject such legacy grants, never synthesize data.
+-- ACCESS EXCLUSIVE is retained until this migration commits. RLS stays enabled.
+ALTER TABLE access_control.resource_grants ADD CONSTRAINT taxpayer_legacy_gate CHECK(resource_kind<>'TAXPAYER');
 ALTER TABLE access_control.resource_grants ADD COLUMN taxpayer_id uuid GENERATED ALWAYS AS
  (CASE WHEN resource_kind='TAXPAYER' THEN resource_id ELSE NULL END) STORED;
 ALTER TABLE access_control.resource_grants ADD CONSTRAINT grant_taxpayer_fk FOREIGN KEY(tenant_id,taxpayer_id)
  REFERENCES taxpayers.taxpayers(tenant_id,id) ON DELETE RESTRICT;
+ALTER TABLE access_control.resource_grants DROP CONSTRAINT taxpayer_legacy_gate;
 CREATE TABLE taxpayer_private.grant_reviews (
  tenant_id uuid NOT NULL,membership_id uuid NOT NULL,resource_kind varchar(10) NOT NULL CHECK(resource_kind='TAXPAYER'),
  capability varchar(32) NOT NULL,resource_id uuid NOT NULL,review_sequence bigint NOT NULL CHECK(review_sequence BETWEEN 1 AND 9007199254740991),
