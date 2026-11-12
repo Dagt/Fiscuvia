@@ -1,12 +1,13 @@
 openapi: 3.1.0
-x-implementation-status: proposed
-x-approval-status: pending-D74-01-through-D74-05
+x-implementation-status: not-implemented
+x-approval-status: accepted-limited-issue-34
 info:
-  title: "Fiscuvia #34 — contribuyentes, propuesta SPEC01"
-  version: 0.1.1-proposed
-  description: "Contrato aislado para revisión #74. No implementado, no genera cliente productivo.
-    Sesión BFF, capacidad+recurso, CSRF, replay y estados sujetos a D74. Perfil no sustituye
-    verificación SAT."
+  title: "Fiscuvia #34 — especificación inicial autorizada, SPEC01"
+  version: 0.1.1-approved-scope
+  description: "Alcance #34 aprobado por Dagt el 2026-11-12 (D74-01..05), no implementado ni generador
+    de cliente productivo en #74. Sesión BFF, capacidad+grant exacto+última revisión ENABLE de
+    versión/rol vigentes, CSRF, replay sin renovar habilitación y cuotas. Sin delegación/revisión de
+    cartera #36 ni verificación SAT; módulos posteriores permanecen diferidos."
 servers:
   - url: /api/v1
 security:
@@ -90,6 +91,9 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "500":
           $ref: "#/components/responses/Internal"
+      description: Filtra grants efectivos con última revisión ENABLE de versión/rol vigentes antes de
+        filtros/orden/LIMIT. Cambiar a ACTIVE o recuperar rol no rehabilita; sin grants efectivos
+        devuelve página vacía.
     post:
       operationId: proposedCreateTaxpayer34
       summary: Alta owner+MFA acotada; no acceso implícito a toda cartera.
@@ -147,6 +151,11 @@ paths:
           $ref: "#/components/responses/Validation"
         "500":
           $ref: "#/components/responses/Internal"
+      description: "Owner propio con identidad/membresía/tenant ACTIVE, MFA confiable≤10min y cuota
+        vigente/disponible. Bootstrap atómico PRIMARY y cuatro grants exactos; sólo
+        VIEW/EDIT/ARCHIVE reciben habilitación inicial de versión/rol actuales. ASSIGN queda
+        reservado para #36, sin política operativa ni endpoint en #34. Replay no revalida grants
+        viejos."
   /tenants/{tenantId}/taxpayers/{taxpayerId}:
     parameters:
       - $ref: "#/components/parameters/TenantId"
@@ -176,6 +185,10 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/Internal"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol
+        vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol.
+        Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva
+        habilitaciones. "
     patch:
       operationId: proposedReplaceTaxpayerProfile34
       summary: Sustituir perfil completo; nunca RFC, persona, estado o tenant.
@@ -218,6 +231,10 @@ paths:
           $ref: "#/components/responses/Validation"
         "500":
           $ref: "#/components/responses/Internal"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol
+        vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol.
+        Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva
+        habilitaciones. "
   /tenants/{tenantId}/taxpayers/{taxpayerId}/archivals:
     parameters:
       - $ref: "#/components/parameters/TenantId"
@@ -264,6 +281,10 @@ paths:
           $ref: "#/components/responses/Validation"
         "500":
           $ref: "#/components/responses/Internal"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol
+        vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol.
+        Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva
+        habilitaciones. "
   /tenants/{tenantId}/taxpayers/{taxpayerId}/restorations:
     parameters:
       - $ref: "#/components/parameters/TenantId"
@@ -310,6 +331,10 @@ paths:
           $ref: "#/components/responses/Validation"
         "500":
           $ref: "#/components/responses/Internal"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol
+        vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol.
+        Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva
+        habilitaciones. "
 components:
   securitySchemes:
     bffSession:
@@ -374,6 +399,9 @@ components:
             - string
             - "null"
           format: date
+      description: Captura manual aprobada, hasta10 referencias por perfil. Código de tres dígitos sin
+        catálogo normativo. Fechas conocidas o ambas NULL; intervalos [desde,hasta) y solapamiento
+        del mismo código comprobados por servidor, sin inferencia fiscal.
     RegimeReference:
       type: object
       additionalProperties: false
@@ -407,8 +435,9 @@ components:
           type: string
           minLength: 12
           maxLength: 32
-          description: Entrada antes de trim/NFC/uppercase; resultado12/13 según persona. Fecha local y
-            genéricos validados en servidor; no confirma SAT.
+          description: Entrada trim/NFC/uppercase de servidor; resultado12/13 según persona y estructura
+            local. Rechazar sólo igualdad normalizada con XAXX010101000/XEXX010101000, no prefijos;
+            sin excepciones ni existencia SAT.
         personType:
           type: string
           enum:
@@ -429,6 +458,12 @@ components:
           maxItems: 10
           items:
             $ref: "#/components/schemas/RegimeInput"
+      x-server-validation:
+        normalizedRfcRejectedValues:
+          - XAXX010101000
+          - XEXX010101000
+        prefixRejection: false
+        officialVerification: false
     ReplaceProfile:
       type: object
       additionalProperties: false
@@ -741,3 +776,18 @@ components:
         application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
+x-approval-reference: ../decisions/issue-74-owner-approval.md
+x-approval-date: 2026-11-12
+x-approved-decisions:
+  - D74-01
+  - D74-02
+  - D74-03
+  - D74-04
+  - D74-05
+x-authorization-constraints:
+  resourceGrantRequired: true
+  latestEnableReviewRequired: true
+  membershipVersionMustMatch: true
+  internalRoleMustMatch: true
+  automaticReenableAfterMembershipOrRoleChange: false
+  assignmentReviewEndpointsInIssue34: false

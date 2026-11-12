@@ -1,6 +1,6 @@
 # SPEC01 — modelo fiscal y preparación de #34
 
-**Estado: Proposed, pendiente de revisión del propietario y especialista; 2026-11-12.** Refs #74. Este documento prepara decisiones; no las aprueba, no completa #34 ni habilita migraciones. Ninguna OQ se marca Resolved. Presupuesto $0, sin merge ni despliegue.
+**Estado: D74-01..05 aprobadas con alcance limitado de #34 por Dagt el 2026-11-12; resto del dominio fiscal Proposed.** Refs #74. [Fuente de aprobación y restricciones](../decisions/issue-74-owner-approval.md). Se incorporan decisiones recibidas sobre HEAD `260c53202a03a80597769f6fab80e348b0e437bd`, en la misma rama/PR #92. No implementa #34 ni habilita grants/migraciones en esta tarea; OQ completas Open. Presupuesto $0, sin merge/Ready/despliegue.
 
 ## Lectura y resultado de la revisión
 
@@ -8,16 +8,19 @@ Base actualizada mediante fetch, switch main y pull --ff-only: `05dc33e77e290777
 
 Se revisaron AGENTS/README/mapa documental, discovery/evidence-matrix, PRD/MVP/FR/BR/OQ, actores/capacidades, ADR-001/003/005/006/007/008/009/010/011/014/015, workflows/estados, esquema/API, UX, backlog/DoD/CI, código identity/tenants/entitlements/audit y Flyway V1–V11. Se consultaron íntegramente las issues [#74](https://github.com/Dagt/Fiscuvia/issues/74), [#18](https://github.com/Dagt/Fiscuvia/issues/18) y #34–45. #74 tiene cero comentarios en esta revisión. #18 permanece abierta: no hay validación profesional documentada que permita aprobar reglas fiscales.
 
-Entregables para revisar juntos:
+La actualización confirma origin/main en el mismo SHA de partida, sin cambios productivos que integrar. El propietario aprobó el corte inicial y los diferimientos; el control de habilitación versionada sustituye expresamente la alternativa anterior que podía recuperar grants al reactivar o volver a un rol. Las decisiones administrativas de V1–V11 se conservan.
+
+Entregables para revisión final:
 
 | Documento | Responsabilidad |
 |---|---|
 | [Esquema v0.1.1](../data-model/schema-v0.1.1-proposed.md) | Enmienda relacional, restricciones, RLS y evolución por módulo |
 | [Dominio revisado](../domain/fiscal-domain-v0.1.1.md) | Agregados, estados, obligaciones, documentos y honorarios |
 | [Permisos](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) | Matriz propuesta y frontera con V11 |
-| [Decisiones/OQ](../product/SPEC01-decisions-74.md) | Alternativas, consecuencias y aprobaciones concretas |
+| [Decisiones/OQ](../product/SPEC01-decisions-74.md) | Decisiones aprobadas, análisis conservado y OQ restantes |
+| [Registro de aprobación](../decisions/issue-74-owner-approval.md) | ID/fecha/autoridad/alcance/restricciones/dependencias/fuente |
 | [Especificación #34](../api/taxpayers-34-specification.md) | Contratos, transacciones, errores, pruebas y frontera UI |
-| [OpenAPI #34 Proposed](../api/openapi-taxpayers-34-proposed.yaml) | Contrato aislado y verificable; no genera cliente productivo |
+| [OpenAPI #34 no implementado](../api/openapi-taxpayers-34-proposed.yaml) | Contrato aislado y verificable; no genera cliente productivo |
 | [Validación](../delivery/VALIDATION-74.md) | Comandos, evidencia y límites de esta entrega documental |
 
 ## Base efectiva que se conserva
@@ -42,12 +45,12 @@ Las aprobaciones parciales de #27/#31/#32/#33 y referencia visual OQ-021 se cons
 
 ## Hallazgos y tratamiento de contradicciones
 
-| Hallazgo en v0.1 / documento histórico | Propuesta y decisión pendiente |
+| Hallazgo en v0.1 / documento histórico | Tratamiento: aprobado #34 o propuesto posteriormente |
 |---|---|
 | Identidad propuesta no coincide con V3; tenant propuesto usa id en lugar de tenant_id | Usar base física V1–V11, no migrar de nuevo identidad/tenant |
-| UNIQUE parcial RFC activo permite dos expedientes históricos del mismo RFC | D74-01 propone UNIQUE tenant+RFC para toda la vida del expediente; restaurar el mismo UUID |
-| FR-015/borrador API incluyen INACTIVE; #34 pide ACTIVE/ARCHIVED | D74-01 propone dos estados para #34; INACTIVE diferido, sin interpretar baja fiscal SAT |
-| Régimen singular y prohibición genérica de solapamiento | D74-02 propone conjunto de referencias con vigencia, admite regímenes distintos simultáneos; no catálogo fiscal inventado |
+| UNIQUE parcial RFC activo permite dos expedientes históricos del mismo RFC | D74-01 aprueba UNIQUE tenant+RFC para toda la vida del expediente; restaurar el mismo UUID |
+| FR-015/borrador API incluyen INACTIVE; #34 pide ACTIVE/ARCHIVED | D74-01 aprueba dos estados para #34; INACTIVE diferido, sin interpretar baja fiscal SAT |
+| Régimen singular y prohibición genérica de solapamiento | D74-02 aprueba conjunto de referencias con vigencia, admite regímenes distintos simultáneos; no catálogo fiscal inventado |
 | Responsable duplicado en taxpayers y assignments | Una relación temporal; no columna primary_owner que pueda divergir |
 | resource_grants referencia UUID genérico sin FK al recurso real | Columna generada nullable por tipo + FK compuesta futura; no registro paralelo de autoridad |
 | Alta exige asignación a recurso que todavía no existe | D74-03: TAXPAYER_CREATE existente, target TENANT, función estrecha; grants iniciales exactos en el mismo commit, lectura posterior reautorizada |
@@ -58,7 +61,7 @@ Las aprobaciones parciales de #27/#31/#32/#33 y referencia visual OQ-021 se cons
 | Tablas fiscales v0.1 sugieren audit JSON/outbox genérico | Reutilizar journal/outbox efectivos, payload mínimo; PII histórica sólo en revisión privada del expediente |
 | Tablas orientativas otorgan cartera completa al owner | D74-03/OQ-015: todos requieren capacidad y grant exacto; ninguna jerarquía o wildcard |
 
-Estas discrepancias se registran en [D74/OQ](../product/SPEC01-decisions-74.md); las alternativas siguen pendientes. La enmienda v0.1.1 prevalecería sobre v0.1 **sólo tras aprobación expresa de sus cortes**. Notas históricas no conceden permisos.
+Estas discrepancias se registran en [D74/OQ](../product/SPEC01-decisions-74.md): el corte de contribuyentes D74-01..05 está aprobado y prevalece sobre alternativas históricas de v0.1. Obligaciones/documentos/pagos/honorarios y sus estados siguen Proposed. Las notas históricas no conceden permisos; nada se instala en este PR. Revisión/versionado de grants impide recuperar acceso automáticamente tras cambios administrativos.
 
 ## Dependencias verificadas de #34–45
 
@@ -66,7 +69,7 @@ Todas las issues #34–45 estaban abiertas al revisar. No se afirma ejecución p
 
 | Issue | Alcance y dependencias leídas | Gate concreto |
 |---|---|---|
-| [#34](https://github.com/Dagt/Fiscuvia/issues/34) | API/modelo RFC; #26/#28; reutiliza #29/#32/#33 | D74-01..05; aprobación de corte mínimo #74 |
+| [#34](https://github.com/Dagt/Fiscuvia/issues/34) | API/modelo RFC; #26/#28; reutiliza #29/#32/#33 | D74-01..05 aprobadas; revisión final/integración #92, siguiente tarea #34 |
 | [#35](https://github.com/Dagt/Fiscuvia/issues/35) | Directorio, búsqueda/filtros; #34/#52 | API lista autorizada; no adelantar directorio en #34 |
 | [#36](https://github.com/Dagt/Fiscuvia/issues/36) | Ficha, contactos, responsables, certificados metadata; #34/#29/#35 | OQ-013/015/024; comandos de cartera y permisos propios |
 | [#37](https://github.com/Dagt/Fiscuvia/issues/37) | CSV/Excel; #34/#46 | Upload seguro, dedupe tenant, preview/confirmación; posterior |
@@ -79,12 +82,12 @@ Todas las issues #34–45 estaban abiertas al revisar. No se afirma ejecución p
 | [#44](https://github.com/Dagt/Fiscuvia/issues/44) | Revisión; #40/#29 | OQ-002/003/005 y separación de funciones |
 | [#45](https://github.com/Dagt/Fiscuvia/issues/45) | Presentación/pago; #44/#46–48 | OQ-003/004; documentos AVAILABLE y procedencia; sin equivalencias SAT |
 
-## Qué se puede decidir y qué sigue bloqueado
+## Decisiones incorporadas y siguiente paso
 
-Las invariantes técnicas ya exigidas por AGENTS (UUID, tenant, FK compuestas, RLS, concurrencia, auditoría, sin secretos ni migraciones históricas editadas) pueden conservarse sin decisión arquitectónica nueva. Se define una propuesta implementable para #34; aún no es autorización de implementación.
+D74-01 aprueba identidad/RFC/lifecycle y rechaza sólo genéricos documentados por igualdad; corrección futura auditada y excepciones contables fuera de #34. D74-02 aprueba hasta10 referencias manuales MANUAL/PENDING_REVIEW con historia/vigencia conocida o desconocida, sin efectos fiscales automáticos. D74-03 aprueba matriz inicial y bootstrap exacto, sin cartera global ni delegación, y exige revisión de habilitación tras cambios de membresía/rol. D74-04 separa API #34, directorio #35 y ficha/cartera #36; D74-05 aprueba cuota sólo ACTIVE, archivo libera y restore/alta serializados. Fecha/autoridad/restricciones/dependencias y origen constan en el registro enlazado; no se vuelven a solicitar decisiones ya adoptadas.
 
-El propietario debe aprobar o corregir **D74-01..05**: identidad/lifecycle RFC, régimen manual y procedencia, matriz fiscal mínima con bootstrap acotado, frontera #34/#36 y cuota TAXPAYERS. Debe registrar fecha, alcance, opción elegida y enlace verificable; una aprobación genérica del PR documental no instala grants.
+El diseño técnico de grant_reviews vincula cada habilitación al membership.version/rol vigentes y verifica su última decisión en autorizador y RLS. V11 ya avanza esa versión al cambiar estado/rol; no se cambia ahora su administración, sus cuotas ni sus endpoints. Conservar grant histórico no conserva habilitación vigente. #34 sólo registra habilitaciones de bootstrap; revisión/gestión de cartera antigua queda #36 con política concreta por aprobar. Una membresía reactivada seguirá sin acceso a grants obsoletos hasta revisión explícita; ningún replay los renueva.
 
-El contador debe validar catálogo/periodicidad, estados y evidencia de cierre, complementarias/parcialidades, autoverificación, interpretación de regímenes y calendarios. Se puede solicitar aprobación expresa para diferir estos módulos y comenzar sólo #34 sin automatizaciones. OQ-001..006/013/015/023 permanecen Open en sus alcances; el experto no se sustituye por esta propuesta.
+El propietario autorizó expresamente diferir OQ-001..005/023 y lo restante de OQ-006/013/015. No se marcan globalmente Resolved. Contador pendiente para obligaciones/periodicidad, estados/evidencia fiscal de cierre, complementarias/parcialidades, autoverificación, catálogo/semántica fiscal de regímenes y calendario legal. Estas preguntas no vuelven a bloquear la captura administrativa ya aprobada de #34; sí bloquean sus módulos correspondientes. Producción OIDC/MFA/correo, custodia e.firma y retención/piloto conservan gates propios.
 
-Para abrir el PR de implementación #34 faltan exactamente: aprobación explícita del corte D74-01..05 y del diferimiento descrito; actualización de documentos/contrato según respuesta; referencia de aprobación para futuras políticas; cuotas sintéticas administradas para pruebas; latest main/SHA nuevos y plan de migración aditiva revisado con las pruebas de esta especificación. No abrir otro PR #34 mientras esos puntos estén pendientes. Retención/producción/proveedor legal/OQ-008/014 siguen gates del piloto, sin bloquear por sí solos el trabajo local/test sintético aprobado.
+La especificación inicial de #34 queda completa y autorizada en su alcance, sin funcionalidad entregada. Faltan revisión final y merge de #92 por el propietario; **no iniciar #34 en esta tarea**. Después, crear su rama/PR desde latest main, registrar SHA, materializar política exacta y habilitación versionada mediante migración aditiva revisada, configurar cuotas sintéticas administradas y ejecutar pruebas PostgreSQL/upgrade/RLS/OIDC/concurrencia/sinks y CI del nuevo SHA. No nueva aprobación de D74-01..05 salvo ampliación o cambio de alcance; no migración fiscal definitiva de módulos diferidos.

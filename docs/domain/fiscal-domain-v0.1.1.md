@@ -1,6 +1,6 @@
 # Dominio fiscal v0.1.1 — propuesta revisada
 
-**Proposed; Refs #74; sin implementación.** [Esquema](../data-model/schema-v0.1.1-proposed.md), [decisiones pendientes](../product/SPEC01-decisions-74.md). Los estados siguientes son propuestas para revisión contable, no reglas de ley aprobadas.
+**D74-01..05 aprobadas sólo para #34 por Dagt el 2026-11-12; sin implementación.** [Fuente/restricciones](../decisions/issue-74-owner-approval.md), [esquema](../data-model/schema-v0.1.1-proposed.md), [decisiones y OQ](../product/SPEC01-decisions-74.md). UUID/RFC/lifecycle, referencias manuales, bootstrap/matriz limitada, cuota y fronteras #34/#35/#36 están autorizados. Estados/reglas de módulos posteriores permanecen Proposed para revisión contable; no aprobación fiscal global.
 
 ## Límites y relaciones
 
@@ -33,13 +33,15 @@ Todas las relaciones del diagrama son tenant-safe; las FK triple del esquema imp
 
 Taxpayer representa una relación de servicio del despacho con persona física/moral. UUID interno estable y RFC comercial normalizado; nombre legal y comercial no son credenciales. ACTIVE/ARCHIVED es ciclo administrativo, jamás situación ante SAT. Archivo conserva revisiones, grants e historia, impide nuevas operaciones ordinarias/generación futura; restauración requiere permiso explícito y cuota, conserva ID. Lectura del archivado sigue requiriendo grant. No delete físico.
 
-D74-02 propone conjunto de referencias de régimen, no un campo autoritativo único. Cada revisión guarda lo que el despacho capturó, fuente MANUAL, actor/instante, vigencia conocida o desconocida y revisión pendiente. Distintos regímenes pueden coexistir; ninguna referencia determina por sí sola obligaciones. El contador valida catálogo, códigos/vigencias reales y compatibilidades antes de usar datos como regla. No hay parsing CSF, consulta SAT, homoclave calculada ni fecha de verificación inventada.
+D74-02 aprueba 0..10 referencias manuales con código de tres dígitos, fuente MANUAL, actor/instante, vigencia conocida/desconocida e historial PENDING_REVIEW, sin campo autoritativo único. Distintos regímenes pueden coexistir; ninguno determina obligaciones. El contador valida catálogo/códigos/vigencias fiscales y compatibilidades antes de usarlos como regla. No CSF parser, consulta SAT, homoclave calculada ni fecha de verificación inventada. Rechazo de RFC genéricos sólo por igualdad con valores documentados, corrección de RFC futura y excepciones pendientes según D74-01.
 
 ## Responsabilidad y acceso
 
 Assignment describe PRIMARY, CONTRIBUTOR o REVIEWER con inicio/fin e historial. Un rol supervisor no es una asignación REVIEWER ni una aprobación fiscal. Máximo un PRIMARY vigente; colaboradores adicionales múltiples tras OQ-013. La cartera autorizada proviene de capacidad por rol **y** grant explícito por membresía/recurso/operación, no de la relación laboral o el responsable mostrado.
 
-En #34 se propone únicamente PRIMARY inicial para el owner creador; los cuatro grants exactos iniciales son efecto explícito del comando de alta revisado en D74-03, no regla automática para todos los owners ni para nuevas membresías. #36 diseñará UI/comandos separados para cambiar responsabilidad y para conceder/retirar acceso exacto, con auditoría de cada operación. Cambiar responsable no concede ni elimina permisos por inferencia. Si se desea combinarlos, será un comando explícito acotado con sus dos efectos declarados y pruebas, no listener implícito.
+En #34 está aprobado sólo PRIMARY inicial del owner creador y cuatro grants exactos VIEW/EDIT/ARCHIVE/ASSIGN sobre el ID nuevo. VIEW/EDIT/ARCHIVE requieren habilitación inicial vinculada a versión/rol de membresía; ASSIGN queda reservado sin delegación operativa hasta #36. Ninguna nueva membresía/rol recibe cartera automáticamente. Cambiar responsable no altera permisos por inferencia; #36 diseñará comandos/revisión explícitos y acotados, con políticas concretas aún pendientes, sin listeners que concedan acceso.
+
+**Regla aprobada obligatoria:** membresía ACTIVE, rol vigente, grant existente, habilitación efectiva y autorización final son conceptos diferentes. Grants/revisiones se conservan para trazabilidad, pero suspensión/reactivación o cambio de rol hace obsoleta la habilitación asociada a la versión anterior de membresía. Recuperar el rol anterior no recupera acceso. [Diseño versionado y locks](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) reutiliza los avances de versión de V11, sin cambiar su administración en #74. #34 valida esa revisión en autorizador/RLS y sólo crea habilitaciones de bootstrap; revisión de cartera anterior queda #36 y no es endpoint autorizado de #34. Sin revisión explícita, DENY.
 
 ## Obligación, período y configuración
 
@@ -83,4 +85,4 @@ TaxPaymentRecord es impuesto del contribuyente y no participa en esos saldos. No
 
 Cada mutación confirmada incluye perfil/historia/evento/outbox/recibo atómicos. Journal tipado sin RFC/nombres/documentos/bodies; detalle histórico privado dentro de expediente con autorización. Correcciones, archivo, reasignación y reaperturas no destruyen atribución. Decisiones de denegación siguen política privada vigente; no prometer auditoría de cada lectura de PII sin diseño/retención aprobados.
 
-Trazabilidad: FR-012..031/040..065, BR-010..064, NFR-001..009/020..026/030..036; ADR-003/005/007/008/010/014/015 conservan Proposed. #34 puede aislarse únicamente con aprobación D74-01..05; #38–45/documentos/honorarios requieren las decisiones propias antes de migraciones definitivas.
+Trazabilidad: FR-012..031/040..065, BR-010..064, NFR-001..009/020..026/030..036; ADR-003/005/007/008/010/014/015 conservan Proposed como documentos globales. D74-01..05 aprueban el corte #34 y el diferimiento explícito de OQ-001..006/013/015/023 fuera de su alcance parcial. #38–45/documentos/honorarios requieren contador y aprobación propia; no funciones fiscales productivas por el mero merge de esta especificación.

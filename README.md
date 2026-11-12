@@ -2,7 +2,7 @@
 
 # Fiscuvia
 
-**SPEC01 #74 — propuesta documental 2026-11-12:** [revisión del dominio, esquema v0.1.1 y preparación de #34](docs/architecture/SPEC01-fiscal-domain-74.md). Base main `05dc33e77e290777c316d26edabb7ce1e7b28c44`, último merge PR #91 (#33), V1–V11 conservadas. [D74-01..05](docs/product/SPEC01-decisions-74.md) requieren aprobación explícita; no tablas/grants fiscales ni implementación de #34. Las secciones de entregas anteriores conservan su contexto histórico; CI debe verificarse por SHA nuevo, presupuesto $0.
+**SPEC01 #74 — aprobación limitada 2026-11-12:** [D74-01..05, fuente y restricciones](docs/decisions/issue-74-owner-approval.md) autorizan la especificación inicial de #34 y difieren decisiones fiscales posteriores. [Modelo/esquema/contrato](docs/architecture/SPEC01-fiscal-domain-74.md), con habilitación de grants ligada a versión de membresía: reactivar/cambiar rol no recupera acceso histórico sin revisión explícita. Base main `05dc33e77e290777c316d26edabb7ce1e7b28c44` (#91), V1–V11 intactas; #92 sólo documental, para revisión final/merge humano, sin comenzar #34. Las notas de entregas anteriores son históricas; CI por SHA nuevo y presupuesto $0.
 
 **Equipo #33:** [administración aprobada owner+MFA](docs/security/TEAM-ADMINISTRATION-33.md): directorio e invitaciones paginados, cambios de rol operativo, suspensión/revocación y reactivación con cuotas, versiones, idempotencia y auditoría/outbox. V11 conserva V1–V10. [Correo B](docs/security/LOCAL-EMAIL-INVITATIONS-33.md) sólo Keycloak local/test, token de un uso y entrega manual. Cartera permanece #74; producción/correo/matriz fiscal conservan pendientes.
 

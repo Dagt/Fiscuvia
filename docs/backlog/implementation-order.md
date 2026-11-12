@@ -1,6 +1,6 @@
 # Oleadas de implementación y dependencias Fiscuvia (propuesta)
 
-**Gate vigente SPEC01 #74:** [revisión de base real y dependencias #34–45](../architecture/SPEC01-fiscal-domain-74.md). Antes de abrir implementación #34 se requiere aprobar D74-01..05 y diferir explícitamente las OQ fiscales no usadas por ese corte; no es autorización por pertenecer a Wave3. #38–45 mantienen sus bloqueos contables y no reciben migraciones por aprobar sólo contribuyentes. Base V1–V11 preservada.
+**Gate vigente SPEC01 #74:** [D74-01..05 y diferimientos aprobados](../decisions/issue-74-owner-approval.md) autorizan especificación inicial #34, con habilitación fiscal versionada y sin reactivación automática de grants. [Dependencias #34–45](../architecture/SPEC01-fiscal-domain-74.md). Faltan revisión final/merge humano de #92; no comenzar #34 en esta tarea. Siguiente trabajo tras integrar: #34 desde latest main, sin volver a aprobar decisiones ya resueltas. #35 directorio, #36 ficha/cartera; #38–45 conservan bloqueos contables propios. V1–V11 intactas.
 
 **Status:** Proposed · **Sin fechas comprometidas**, dependencias explícitas. Se utiliza el patrón *Wave 0–n* de TrailerSaaS.
 

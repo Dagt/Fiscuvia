@@ -1,6 +1,6 @@
 # Catálogo de capacidades (propuesto)
 
-**SPEC01 #74:** [matriz fiscal por recurso para aprobación](FISCAL-PERMISSIONS-PROPOSAL-74.md). El catálogo siguiente incluye códigos aún ausentes de Java/SQL; no son grants efectivos. TAXPAYER_ARCHIVE y bootstrap CREATE requieren D74-03 y cambio aditivo posterior; sin capacidades nuevas de cartera global ni políticas fiscales en #74.
+**SPEC01 #74:** [matriz limitada #34 aprobada](FISCAL-PERMISSIONS-PROPOSAL-74.md), [fuente D74-03](../decisions/issue-74-owner-approval.md). CREATE owner propio+MFA, VIEW/EDIT owner/supervisor/contador con grant efectivo, ARCHIVE owner+MFA; auxiliar DENY. ASSIGN sólo grant reservado para #36, sin política operativa/delegación #34. El catálogo aún contiene códigos no implementados; no grants ni capacidades globales nuevas en #74. Habilitación versionada obligatoria, sin recuperación automática por membresía/rol.
 
 ## Administración de equipo #33 — ampliación aprobada
 

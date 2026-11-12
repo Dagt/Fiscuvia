@@ -1,6 +1,6 @@
 # Contratos API — Fiscuvia
 
-**SPEC01 #74:** [especificación técnica de #34](taxpayers-34-specification.md) y [OpenAPI Proposed aislado](openapi-taxpayers-34-proposed.yaml), sujetos a D74-01..05. Sesión BFF/CSRF, comandos explícitos y recibos, sin generar tipos productivos ni afirmar endpoints implementados. Para contribuyentes, proponen reemplazar el fragmento histórico Bearer/allOf del borrador sólo tras aprobación; el OpenAPI implementado no cambia. Validación adicional: `node tools/ci/openapi.mjs docs/api/openapi-taxpayers-34-proposed.yaml` desde raíz.
+**SPEC01 #74:** [especificación inicial #34 autorizada](taxpayers-34-specification.md), [fuente limitada D74-01..05](../decisions/issue-74-owner-approval.md) y [OpenAPI aislado no implementado](openapi-taxpayers-34-proposed.yaml). Sesión BFF/CSRF, grants con habilitación versionada, comandos/recibos y cuotas, sin tipos productivos ni endpoints ejecutados. No autorización de módulos posteriores. El fragmento histórico Bearer/allOf no gobierna #34; OpenAPI implementado intacto. Validar desde raíz: `node tools/ci/openapi.mjs docs/api/openapi-taxpayers-34-proposed.yaml`.
 
 ## Administración de equipo #33 — ampliación aprobada
 

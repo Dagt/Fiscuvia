@@ -1,6 +1,6 @@
 # Catálogo de endpoints — estado explícito
 
-**SPEC01 #74:** para la revisión de contribuyentes consultar [contrato completo #34 Proposed](taxpayers-34-specification.md), con archivo/restauración explícitos y perfil cerrado; las rutas de asignación/certificados siguen #36. No implementado. La [matriz fiscal](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) permanece pendiente; ninguna fila histórica habilita permisos. V11 sí implementa equipo según su guía/OpenAPI, prevaleciendo sobre notas históricas de este catálogo.
+**SPEC01 #74:** [contrato #34 autorizado en alcance inicial](taxpayers-34-specification.md) por [D74-01..05](../decisions/issue-74-owner-approval.md), no implementado. Perfil cerrado, archivo/restore explícitos y grant efectivo de versión vigente; reactivación/rol no recupera acceso antiguo. Asignación/revisión de cartera y certificados siguen #36, sin endpoints #34. Matriz de módulos posteriores pendiente; V11/OpenAPI efectivo prevalecen sobre notas históricas.
 
 ## Implementado en el corte local/test #33
 
