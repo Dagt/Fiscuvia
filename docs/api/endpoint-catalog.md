@@ -1,5 +1,7 @@
 # Catálogo de endpoints — estado explícito
 
+**SPEC01 #74:** para la revisión de contribuyentes consultar [contrato completo #34 Proposed](taxpayers-34-specification.md), con archivo/restauración explícitos y perfil cerrado; las rutas de asignación/certificados siguen #36. No implementado. La [matriz fiscal](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) permanece pendiente; ninguna fila histórica habilita permisos. V11 sí implementa equipo según su guía/OpenAPI, prevaleciendo sobre notas históricas de este catálogo.
+
 ## Implementado en el corte local/test #33
 
 GET `/api/v1/tenants/{tenantId}/team/invitation-options` y POST `/api/v1/tenants/{tenantId}/team/invitations`. Owner+MFA y MEMBERSHIP_INVITE existente, opt-in Keycloak local; destinatario verificado y issuer/subject exactos. Token sólo en primera respuesta; no envío externo ni lista de miembros/invitaciones. Rutas de rol/reactivación/cartera permanecen fuera de implementación. [Alcance aprobado](../security/LOCAL-EMAIL-INVITATIONS-33.md).

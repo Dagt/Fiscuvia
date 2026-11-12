@@ -1,5 +1,7 @@
 # Modelo de dominio (conceptual, no esquema SQL)
 
+**SPEC01 #74:** [revisión v0.1.1 propuesta](fiscal-domain-v0.1.1.md) detalla régimen temporal, responsabilidades separadas de acceso, configuración/ocurrencias, estados, documentos y honorarios. [Decisiones pendientes](../product/SPEC01-decisions-74.md); no se acepta por esta referencia ni reemplaza políticas efectivas de V1–V11.
+
 **Estado:** Proposed; origen: requisitos FR y relato del despacho. Evitar modelar literalmente las casillas de un HTML o Excel; distinguir el trabajo operativo de evidencia oficial.
 
 ## Agregados principales

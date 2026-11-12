@@ -1,6 +1,6 @@
 # AGENTS.md — Fiscuvia
 
-**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–29 integrada; #30 agrega regresión transversal, sin worker automático ni autoridad de negocio de sistema. Sin proveedor de producción, matriz fiscal ni dominio fiscal aprobados; gate #74. #79 cerrado tras cinco checks Ubuntu de #85; cada PR exige evidencia CI de su SHA, presupuesto $0 intacto.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–33 y #52 integrada, main de partida `05dc33e77e290777c316d26edabb7ce1e7b28c44` (PR #91). #74 prepara [SPEC01 y esquema v0.1.1 Proposed](docs/architecture/SPEC01-fiscal-domain-74.md), sin migraciones ni permisos fiscales; #34 requiere aprobar D74-01..05 y el diferimiento explícito de OQ posteriores. Sin worker automático, autoridad fiscal de sistema, proveedor de producción, matriz fiscal ni dominio fiscal aprobados. #79 cerrado tras CI de #85; cada PR exige evidencia CI de su SHA, presupuesto $0 intacto.
 
 ## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
 Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.

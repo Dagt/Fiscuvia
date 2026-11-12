@@ -1,5 +1,7 @@
 # Preguntas abiertas — OQ-### (registro formal)
 
+**Análisis SPEC01 #74 (2026-11-12):** [alternativas y decisiones D74/OQ](SPEC01-decisions-74.md) revisa OQ-001..006/013/015/023 con efectos técnicos/funcionales y validación requerida. No se resuelve ninguna pregunta: D74-01..05 bloquean comenzar #34 hasta aprobación del corte y diferimiento explícito de módulos posteriores.
+
 **Estado:** Open; ninguna respuesta se presume por la mera creación de issues. Cada resolución deberá citar decisión de propietario, experto contable o evidencia documentada y actualizar FR/BR/ADR/API/schema afectados.
 
 ## Producto/contabilidad (prioridad MVP)

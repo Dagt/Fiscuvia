@@ -1,0 +1,743 @@
+openapi: 3.1.0
+x-implementation-status: proposed
+x-approval-status: pending-D74-01-through-D74-05
+info:
+  title: "Fiscuvia #34 — contribuyentes, propuesta SPEC01"
+  version: 0.1.1-proposed
+  description: "Contrato aislado para revisión #74. No implementado, no genera cliente productivo.
+    Sesión BFF, capacidad+recurso, CSRF, replay y estados sujetos a D74. Perfil no sustituye
+    verificación SAT."
+servers:
+  - url: /api/v1
+security:
+  - bffSession: []
+tags:
+  - name: Taxpayers proposed
+    description: Ningún endpoint de este documento está implementado.
+paths:
+  /tenants/{tenantId}/taxpayers:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+    get:
+      operationId: proposedListTaxpayers34
+      summary: Consultar sólo cartera autorizada, paginada sin total global.
+      tags:
+        - Taxpayers proposed
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              - id,asc
+              - id,desc
+              - legalName,asc
+              - legalName,desc
+              - createdAt,asc
+              - createdAt,desc
+            default: id,asc
+        - name: search
+          in: query
+          description: Literal max80, sin controles; no guardar en URL de navegación/analytics.
+          schema:
+            type: string
+            maxLength: 80
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - ARCHIVED
+            default: ACTIVE
+      responses:
+        "200":
+          description: Filas filtradas por capacidad/grants/RLS antes de paginar.
+          headers:
+            Cache-Control: &a1
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id: &a2
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxpayerPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/Internal"
+    post:
+      operationId: proposedCreateTaxpayer34
+      summary: Alta owner+MFA acotada; no acceso implícito a toda cartera.
+      tags:
+        - Taxpayers proposed
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaxpayer"
+      responses:
+        "200":
+          description: Replay exacto autorizado; versión original, no estado actual.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+            Location:
+              description: Ruta del item; el GET posterior requiere nueva autorización.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "201":
+          description: Expediente creado con UUID de servidor y bootstrap exacto propuesto.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+            Location:
+              description: Ruta del item; el GET posterior requiere nueva autorización.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/Internal"
+  /tenants/{tenantId}/taxpayers/{taxpayerId}:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    get:
+      operationId: proposedGetTaxpayer34
+      summary: Consultar item con grant exacto; archivar no elimina historial.
+      tags:
+        - Taxpayers proposed
+      responses:
+        "200":
+          description: Perfil y referencia manual sin verificación oficial.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Taxpayer"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/Internal"
+    patch:
+      operationId: proposedReplaceTaxpayerProfile34
+      summary: Sustituir perfil completo; nunca RFC, persona, estado o tenant.
+      tags:
+        - Taxpayers proposed
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplaceProfile"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/Internal"
+  /tenants/{tenantId}/taxpayers/{taxpayerId}/archivals:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    post:
+      operationId: proposedArchiveTaxpayer34
+      summary: Archivar ACTIVE con motivo y versión.
+      tags:
+        - Taxpayers proposed
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArchiveTaxpayer"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/Internal"
+  /tenants/{tenantId}/taxpayers/{taxpayerId}/restorations:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    post:
+      operationId: proposedRestoreTaxpayer34
+      summary: Restaurar mismo UUID con permiso y cuota vigente.
+      tags:
+        - Taxpayers proposed
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RestoreTaxpayer"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control: *a1
+            X-Correlation-Id: *a2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/Internal"
+components:
+  securitySchemes:
+    bffSession:
+      type: apiKey
+      in: cookie
+      name: __Host-FiscuviaSession
+      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones
+        requieren X-CSRF-TOKEN obtenido en /auth/csrf.
+  parameters:
+    TenantId:
+      name: tenantId
+      in: path
+      required: true
+      description: "Candidato: validar membresía/contexto; nunca autoridad por sí solo."
+      schema:
+        type: string
+        format: uuid
+    TaxpayerId:
+      name: taxpayerId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: UUID del comando; scope tenant/actor/operación/target/payload canónico, replay tras
+        autorización fresca.
+      schema:
+        type: string
+        format: uuid
+    Csrf:
+      name: X-CSRF-TOKEN
+      in: header
+      required: true
+      description: Token del mecanismo CSRF BFF existente, nunca registrar.
+      schema:
+        type: string
+        minLength: 1
+  schemas:
+    RegimeInput:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - validFrom
+        - validTo
+      properties:
+        code: &a3
+          type: string
+          pattern: ^[0-9]{3}$
+          description: Referencia manual; no catálogo SAT vigente.
+        validFrom: &a4
+          type:
+            - string
+            - "null"
+          format: date
+        validTo: &a5
+          type:
+            - string
+            - "null"
+          format: date
+    RegimeReference:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - validFrom
+        - validTo
+        - source
+        - reviewStatus
+      properties:
+        code: *a3
+        validFrom: *a4
+        validTo: *a5
+        source:
+          type: string
+          const: MANUAL
+        reviewStatus:
+          type: string
+          const: PENDING_REVIEW
+    CreateTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - rfc
+        - personType
+        - legalName
+        - tradeName
+        - regimes
+      properties:
+        rfc:
+          type: string
+          minLength: 12
+          maxLength: 32
+          description: Entrada antes de trim/NFC/uppercase; resultado12/13 según persona. Fecha local y
+            genéricos validados en servidor; no confirma SAT.
+        personType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - LEGAL_ENTITY
+        legalName: &a6
+          type: string
+          minLength: 1
+          maxLength: 300
+        tradeName: &a7
+          type:
+            - string
+            - "null"
+          minLength: 1
+          maxLength: 200
+        regimes: &a8
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/RegimeInput"
+    ReplaceProfile:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - legalName
+        - tradeName
+        - regimes
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        legalName: *a6
+        tradeName: *a7
+        regimes: *a8
+    ArchiveTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - reasonCode
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        reasonCode:
+          type: string
+          enum:
+            - SERVICE_ENDED
+            - DUPLICATE_REVIEW
+            - OTHER
+    RestoreTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - reasonCode
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        reasonCode:
+          type: string
+          enum:
+            - SERVICE_RESUMED
+            - CORRECTION
+    CommandReceipt:
+      type: object
+      additionalProperties: false
+      required:
+        - targetId
+        - version
+        - replayed
+      properties:
+        targetId:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        replayed:
+          type: boolean
+    Taxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - rfc
+        - personType
+        - legalName
+        - tradeName
+        - status
+        - version
+        - createdAt
+        - updatedAt
+        - regimes
+        - rfcValidation
+        - officialVerification
+      properties:
+        id:
+          type: string
+          format: uuid
+        rfc:
+          type: string
+          minLength: 12
+          maxLength: 13
+          pattern: ^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$
+        personType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - LEGAL_ENTITY
+        legalName: *a6
+        tradeName: *a7
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - ARCHIVED
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        regimes:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/RegimeReference"
+        rfcValidation:
+          type: string
+          const: RFC_LOCAL_STRUCTURE_V1
+        officialVerification:
+          type: string
+          const: NOT_PERFORMED
+    TaxpayerPage:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - page
+        - size
+        - hasNext
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/Taxpayer"
+        page:
+          type: integer
+          minimum: 0
+          maximum: 10000
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        hasNext:
+          type: boolean
+    Problem:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - traceId
+        - fieldErrors
+      description: >
+        RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas, consultas SQL
+        ni datos de infraestructura. El catálogo de códigos es infraestructura, no implementación de
+        autenticación, reglas de negocio o rate limiting.
+      properties:
+        type:
+          type: string
+          format: uri
+          pattern: ^urn:fiscuvia:problem:[a-z-]+$
+        title:
+          type: string
+          minLength: 1
+          maxLength: 120
+        status:
+          type: integer
+          enum:
+            - 400
+            - 401
+            - 403
+            - 404
+            - 405
+            - 406
+            - 409
+            - 413
+            - 415
+            - 422
+            - 429
+            - 500
+        detail:
+          type: string
+          minLength: 1
+          maxLength: 240
+        instance:
+          type: string
+          format: uri
+          pattern: ^urn:uuid:[0-9a-f-]{36}$
+        code:
+          type: string
+          enum:
+            - BAD_REQUEST
+            - INVALID_PAGINATION
+            - AUTHENTICATION_REQUIRED
+            - ACCESS_DENIED
+            - NOT_FOUND
+            - METHOD_NOT_ALLOWED
+            - NOT_ACCEPTABLE
+            - QUOTA_UNAVAILABLE
+            - CONFLICT
+            - STALE_VERSION
+            - IDEMPOTENCY_KEY_REUSED
+            - PAYLOAD_TOO_LARGE
+            - UNSUPPORTED_MEDIA_TYPE
+            - VALIDATION_FAILED
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        traceId:
+          type: string
+          format: uuid
+        fieldErrors:
+          type: array
+          maxItems: 20
+          uniqueItems: true
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+                pattern: ^[a-zA-Z][a-zA-Z0-9]{0,63}$
+              code:
+                type: string
+                enum:
+                  - REQUIRED
+                  - SIZE
+                  - FORMAT
+                  - RANGE
+                  - INVALID
+              message:
+                type: string
+                minLength: 1
+                maxLength: 120
+  responses:
+    BadRequest:
+      description: JSON, identificador, header o consulta inválidos.
+      headers: &a9
+        Cache-Control: *a1
+        X-Correlation-Id: *a2
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Unauthorized:
+      description: Sesión BFF requerida; no Bearer.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Forbidden:
+      description: Acceso o CSRF denegado sin detalle privado.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFound:
+      description: Item ausente o no autorizado; misma respuesta.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Conflict:
+      description: CONFLICT, STALE_VERSION, IDEMPOTENCY_KEY_REUSED o QUOTA_UNAVAILABLE; sin datos del
+        expediente existente.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    TooLarge:
+      description: Body excede 64 KiB.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    MediaType:
+      description: Se requiere application/json.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Validation:
+      description: VALIDATION_FAILED; formato/estructura local o regla inválida.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Internal:
+      description: Error seguro; mutación revertida.
+      headers: *a9
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"

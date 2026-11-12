@@ -1,5 +1,7 @@
 # Autorización por recurso — infraestructura #28
 
+**SPEC01 #74, pendiente:** [integración propuesta de contribuyentes](FISCAL-PERMISSIONS-PROPOSAL-74.md) y [FK/RLS v0.1.1](../data-model/schema-v0.1.1-proposed.md) detallan alta sin recurso previo, FK compuesta futura de grants y separación de responsables/acceso. No implementan esas extensiones ni conceden fiscal. El puerto/contexto inmutable de #28 y las aprobaciones limitadas #31–33 se conservan.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 Aprobación limitada A #33: tres capacidades owner+MFA, versiones y serialización administrativa. No concede capacidades fiscales ni cartera. [Controles y alcance](TEAM-ADMINISTRATION-33.md).

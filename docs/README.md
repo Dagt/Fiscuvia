@@ -1,5 +1,7 @@
 # Fiscuvia — mapa de documentación
 
+**Enmienda actual #74 (2026-11-12):** base efectiva main `05dc33e77e290777c316d26edabb7ce1e7b28c44`, V1–V11 y #33 integradas. [SPEC01: índice de propuesta, hallazgos y dependencias](architecture/SPEC01-fiscal-domain-74.md), [esquema v0.1.1 Proposed](data-model/schema-v0.1.1-proposed.md), [decisiones pendientes](product/SPEC01-decisions-74.md) y [contrato técnico #34](api/taxpayers-34-specification.md). No aprobación fiscal, grants, código ni migraciones. Las notas de estado anteriores del índice son históricas; para esta entrega consultar [validación #74](delivery/VALIDATION-74.md), sin reutilizar CI de otro SHA.
+
 **Estado:** propuesta v0.2; PR #1 integrado, sin aceptación automática de cada documento Proposed. Este directorio es la base documental para Codex. Estructura y jerarquía inspiradas en el repositorio real Dagt/TrailerSaas; se han adaptado los conceptos al dominio de despachos contables en México.
 
 ## 1. Descubrimiento y evidencia

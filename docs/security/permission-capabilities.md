@@ -1,5 +1,7 @@
 # Catálogo de capacidades (propuesto)
 
+**SPEC01 #74:** [matriz fiscal por recurso para aprobación](FISCAL-PERMISSIONS-PROPOSAL-74.md). El catálogo siguiente incluye códigos aún ausentes de Java/SQL; no son grants efectivos. TAXPAYER_ARCHIVE y bootstrap CREATE requieren D74-03 y cambio aditivo posterior; sin capacidades nuevas de cartera global ni políticas fiscales en #74.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 A aprobada #33: MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y MEMBERSHIP_REACTIVATE exclusivamente owner propio ACTIVE+MFA reciente; no autoedición/owner/REVOKED, cuota V9. OQ-015 conserva los permisos fiscales/auxiliares pendientes. [Controles y alcance](TEAM-ADMINISTRATION-33.md).

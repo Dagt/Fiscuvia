@@ -2,6 +2,8 @@
 
 # Fiscuvia
 
+**SPEC01 #74 — propuesta documental 2026-11-12:** [revisión del dominio, esquema v0.1.1 y preparación de #34](docs/architecture/SPEC01-fiscal-domain-74.md). Base main `05dc33e77e290777c316d26edabb7ce1e7b28c44`, último merge PR #91 (#33), V1–V11 conservadas. [D74-01..05](docs/product/SPEC01-decisions-74.md) requieren aprobación explícita; no tablas/grants fiscales ni implementación de #34. Las secciones de entregas anteriores conservan su contexto histórico; CI debe verificarse por SHA nuevo, presupuesto $0.
+
 **Equipo #33:** [administración aprobada owner+MFA](docs/security/TEAM-ADMINISTRATION-33.md): directorio e invitaciones paginados, cambios de rol operativo, suspensión/revocación y reactivación con cuotas, versiones, idempotencia y auditoría/outbox. V11 conserva V1–V10. [Correo B](docs/security/LOCAL-EMAIL-INVITATIONS-33.md) sólo Keycloak local/test, token de un uso y entrega manual. Cartera permanece #74; producción/correo/matriz fiscal conservan pendientes.
 
 **Despachos #31:** [provisioning interno, configuración y límites de autoridad](docs/architecture/TENANT-PROVISIONING.md). Nuevo módulo tenants, perfiles privados, lifecycle administrativo no destructivo, configuración autorizada y nombres reales en AppShell. Sin operador HTTP, alta pública, cobros o almacenamiento de logos. La habilitación permanente de TENANT_SETTINGS_MANAGE requiere aprobación expresa de la política mínima documentada; permanece DENY mientras esté pendiente. No se adelantan #32/#33 ni el gate fiscal #74.

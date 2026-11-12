@@ -1,5 +1,7 @@
 # Actores, roles y matriz de permisos — propuesta v0.1
 
+**Revisión SPEC01 #74:** la tabla orientativa histórica de abajo no autoriza cartera completa al owner. [Matriz fiscal propuesta por recurso](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) y D74-03/OQ-015 requieren aprobación; hasta entonces fiscal DENY. Sólo cuatro roles iniciales efectivos, sin FIRM_BILLING/portal nuevos ni jerarquía implícita. Aprobaciones administrativas V7/V9/V11 conservan su alcance independiente.
+
 **Estado:** Proposed. Referencias FR-001–009, BR-001–005, ADR-0002. No equiparar 'rol' con acceso universal; las capacidades son verificadas por backend y restringidas por tenant/expediente/estado.
 
 ## Actores
