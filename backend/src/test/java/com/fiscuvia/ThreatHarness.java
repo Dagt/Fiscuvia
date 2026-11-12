@@ -75,7 +75,7 @@ final class ThreatHarness {
             s.update("INSERT INTO identity.membership_roles VALUES(?,?,?)",tenant,id,role);});return id;
     }
     void grant(UUID tenant,UUID member,UUID resource,String capability) throws Exception {
-        admin(tenant,s->s.update("INSERT INTO access_control.resource_grants VALUES(?,?,'TAXPAYER',?,?,true,?)",tenant,member,resource,capability,UUID.randomUUID()));
+        admin(tenant,s->TaxpayerFixtures.grant(s,tenant,member,resource,capability,"TAXPAYER"));
     }
     int version(UUID tenant,UUID resource) throws Exception {return ((Number)rows(tenant,"SELECT version FROM threat_fixture.resources WHERE id=?",resource).getFirst().get("version")).intValue();}
     int successes(UUID tenant) throws Exception {return rows(tenant,"SELECT event_id FROM journal.events WHERE event_code='AUTHORIZED_OPERATION_RECORDED'").size();}

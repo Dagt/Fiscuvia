@@ -1,5 +1,7 @@
 # Entitlements técnicos por despacho — #32
 
+**Integración C01 #34:** [V12 mide TAXPAYERS](TAXPAYER-DOMAIN-34.md) contando ACTIVE reales del tenant, con límite bloqueado en CREATE/RESTORE, reserved=0 y sin contador paralelo. USERS conserva reservas. Referencias históricas a TAXPAYERS no integrado describen el corte #32.
+
 Base: `1d0105e12d62aaed350d09275704d5ecbb4be4a6` (#89). Trazabilidad: FR-009, BR-081, NFR-001/002/003/009/013/015/020/021/026/030–036/040/044. ADR-015 y OQ-007 siguen Proposed/Open para precios, planes comerciales, cobro y cancelación; OQ-014, OQ-015 y #74 permanecen pendientes.
 
 ## Política limitada aprobada y productiva V9

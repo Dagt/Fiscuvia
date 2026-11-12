@@ -1,5 +1,7 @@
 # Fiscuvia backend — plataforma, tenancy, identidad y autorización #20–29
 
+C01 #34: [modelo/API/seguridad V12](../docs/architecture/TAXPAYER-DOMAIN-34.md), [comandos de validación](../docs/delivery/VALIDATION-34.md). V1–V11 intactas; sólo el corte fiscal D74-01..05 está implementado.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 V11 integra administración aprobada A #33: directorio propio, roles operativos, reactivación con cuotas, versiones y journal/outbox. No cambiar V1–V10. [Controles y alcance](../docs/security/TEAM-ADMINISTRATION-33.md).

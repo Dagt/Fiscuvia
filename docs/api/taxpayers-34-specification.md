@@ -1,6 +1,6 @@
 # #34 — especificación técnica autorizada en su alcance inicial
 
-**D74-01..05 aprobadas para el corte inicial por Dagt el 2026-11-12; Refs #74, futura #34.** [Fuente/alcance/restricciones](../decisions/issue-74-owner-approval.md), [decisiones y OQ abiertas](../product/SPEC01-decisions-74.md). Especificación preparada para implementación posterior, sin endpoints/grants/migraciones ejecutados en este PR. Contrato verificable: [OpenAPI con aprobación de alcance y estado no implementado](openapi-taxpayers-34-proposed.yaml). No editar openapi-v1.yaml implementado ni generar tipos productivos ahora. El propietario exige revisión final e integración de #92 antes del siguiente trabajo #34; no comenzarlo en esta tarea.
+**Implementación C01 #34 en esta rama, posterior al merge humano de #92:** [modelo físico, seguridad y diferencias de transporte](../architecture/TAXPAYER-DOMAIN-34.md), [OpenAPI implementado generador](openapi-v1.yaml), [validación](../delivery/VALIDATION-34.md). D74-01..05 conserva su alcance limitado. El contrato openapi-taxpayers-34-proposed.yaml queda como antecedente de aprobación de #74; no genera clientes. Este documento conserva las reglas aprobadas; metadatos HTTP efectivos se detallan en el contrato implementado.
 
 ## Alcance aprobado y frontera de implementación
 
@@ -35,11 +35,13 @@ D74-01 aprueba formato/estructura local sin afirmar existencia oficial. Output r
 
 JSON cerrado, propiedades desconocidas400; tipos estrictos, no coerción. Nombres trim/NFC, sin controles; legalName1..300, tradeName NULL o1..200. No construir nombre a partir de RFC ni imponer que coincida con SAT sin fuente. Límite de body64KiB propuesto, comprobar en aplicación sin debilitar límites existentes.
 
+Cuerpos limitados a 65536 bytes. Propiedades nullable requeridas ausentes producen400 por deserialización; enviarlas explícitamente como NULL.
+
 regimes requerido como arreglo0..10. Cada elemento: code exactamente tres dígitos, validFrom y validTo date o NULL explícitos; sin fechas inválidas. Ambos NULL = vigencia desconocida; fin sin inicio422; fin exclusivo posterior a inicio. Varios códigos simultáneos válidos como captura de referencia, misma clave sin solapamiento/duplicado en el conjunto vigente. No restringir códigos por catálogo inventado ni prometer que son vigentes/aplicables. Fecha de incorporación no se usa como validFrom por omisión. Orden de elementos canónico por código/fechas para fingerprint; duplicados422, no borrarlos silenciosamente. Datos históricos del mismo código pueden cambiar entre snapshots por corrección sin sobrescribir anteriores.
 
 Source MANUAL/reviewStatus PENDING_REVIEW siempre de servidor para el nuevo snapshot; no funcionalidad de verificación humana en #34. Un futuro estado de revisión requerirá evidencia y permiso propios, nunca se equipara a SAT.
 
-## Contratos HTTP propuestos
+## Contratos HTTP implementados en C01
 
 Prefijo T=`/api/v1/tenants/{tenantId}`. Sesión BFF same-origin vigente, no Bearer. Mutaciones JSON, CSRF X-CSRF-TOKEN e Idempotency-Key UUID obligatorios; no-store y X-Correlation-Id UUID del servidor en respuestas. No usar tenant/actor/roles del body como autoridad. DTOs separados de SQL; no serializar entidades ni principals.
 
@@ -76,7 +78,7 @@ RFC9457 y códigos de infraestructura existentes, detail fijo ES-MX y fieldError
 | 422 VALIDATION_FAILED | Formato/estructura RFC, nombre/régimen/fecha/rango de versión inválido |
 | 500 INTERNAL_ERROR | Error seguro; rollback de mutación si journal/outbox/recibo falla |
 
-Mapper actual sólo conoce algunos SQLSTATE de equipo/cuota y 23505: #34 deberá añadir errores tipados propios sin reciclar P33xx ni mapear toda FK fallida a conflicto detallado. El ocultamiento de item se conserva desde IdentityStore; CSRF puede rechazar antes de MVC con403. No rate limiting operativo por existir429 en catálogo; no se promete SLO ni integración SAT.
+C01 añade SQLSTATE P3401..P3406 para validación, ausencia, versión, cuota, estado y contenido idempotente; 23505 se convierte en conflicto seguro. No recicla P33xx ni expone FK/constraints. El ocultamiento de item se conserva desde IdentityStore; CSRF puede rechazar antes de MVC con403. No rate limiting operativo por existir429 en catálogo; no se promete SLO ni integración SAT.
 
 ## Unidad transaccional y replay
 

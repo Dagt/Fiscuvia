@@ -270,6 +270,109 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tenants/{tenantId}/taxpayers': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    /**
+     * Consultar sólo cartera autorizada, paginada sin total global.
+     * @description Filtra grants efectivos con última revisión ENABLE de versión/rol vigentes antes de filtros/orden/LIMIT. Cambiar a ACTIVE o recuperar rol no rehabilita; sin grants efectivos devuelve página vacía.
+     */
+    get: operations['listTaxpayers']
+    put?: never
+    /**
+     * Alta owner+MFA acotada; no acceso implícito a toda cartera.
+     * @description Owner propio con identidad/membresía/tenant ACTIVE, MFA confiable≤10min y cuota vigente/disponible. Bootstrap atómico PRIMARY y cuatro grants exactos; sólo VIEW/EDIT/ARCHIVE reciben habilitación inicial de versión/rol actuales. ASSIGN queda reservado para #36, sin política operativa ni endpoint en #34. Replay no revalida grants viejos.
+     */
+    post: operations['createTaxpayer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/taxpayers/{taxpayerId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    /**
+     * Consultar item con grant exacto; archivar no elimina historial.
+     * @description Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones.
+     */
+    get: operations['getTaxpayer']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Sustituir perfil completo; nunca RFC, persona, estado o tenant.
+     * @description Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones.
+     */
+    patch: operations['replaceTaxpayerProfile']
+    trace?: never
+  }
+  '/tenants/{tenantId}/taxpayers/{taxpayerId}/archivals': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Archivar ACTIVE con motivo y versión.
+     * @description Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones.
+     */
+    post: operations['archiveTaxpayer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/taxpayers/{taxpayerId}/restorations': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Restaurar mismo UUID con permiso y cuota vigente.
+     * @description Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones.
+     */
+    post: operations['restoreTaxpayer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/tenants/{tenantId}/team/invitation-options': {
     parameters: {
       query?: never
@@ -405,8 +508,30 @@ export interface components {
     AcceptInvitation: {
       token: string
     }
+    ArchiveTaxpayer: {
+      expectedVersion: number
+      /** @enum {string} */
+      reasonCode: 'SERVICE_ENDED' | 'DUPLICATE_REVIEW' | 'OTHER'
+    }
     AuthStatus: {
       loginAvailable: boolean
+    }
+    CommandReceipt: {
+      replayed: boolean
+      /** Format: uuid */
+      targetId: string
+      version: number
+    }
+    CreateTaxpayer: {
+      /** @description Entrada con máximo600 unidades UTF-16. NFC y trim de servidor; nombre resultante obligatorio de máximo300 puntos de código. */
+      legalName: string
+      /** @enum {string} */
+      personType: 'INDIVIDUAL' | 'LEGAL_ENTITY'
+      regimes: components['schemas']['RegimeInput'][]
+      /** @description Entrada trim/NFC/uppercase de servidor; resultado12/13 según persona y estructura local. Rechazar sólo igualdad normalizada con XAXX010101000/XEXX010101000, no prefijos; sin excepciones ni existencia SAT. */
+      rfc: string
+      /** @description NULL o texto dentro del límite global de65536 bytes del cuerpo; NFC/trim y máximo200 puntos de código normalizados en servidor. */
+      tradeName: string | null
     }
     CsrfToken: {
       /** @constant */
@@ -603,11 +728,72 @@ export interface components {
       /** Format: uri */
       type: string
     }
+    /** @description Captura manual aprobada, hasta10 referencias por perfil. Código de tres dígitos sin catálogo normativo. Fechas conocidas o ambas NULL; intervalos [desde,hasta) y solapamiento del mismo código comprobados por servidor, sin inferencia fiscal. */
+    RegimeInput: {
+      /** @description Referencia manual; no catálogo SAT vigente. */
+      code: string
+      /** Format: date */
+      validFrom: string | null
+      /** Format: date */
+      validTo: string | null
+    }
+    RegimeReference: {
+      /** @description Referencia manual; no catálogo SAT vigente. */
+      code: string
+      /** @constant */
+      reviewStatus: 'PENDING_REVIEW'
+      /** @constant */
+      source: 'MANUAL'
+      /** Format: date */
+      validFrom: string | null
+      /** Format: date */
+      validTo: string | null
+    }
+    ReplaceProfile: {
+      expectedVersion: number
+      /** @description Entrada con máximo600 unidades UTF-16. NFC y trim de servidor; nombre resultante obligatorio de máximo300 puntos de código. */
+      legalName: string
+      regimes: components['schemas']['RegimeInput'][]
+      /** @description NULL o texto dentro del límite global de65536 bytes del cuerpo; NFC/trim y máximo200 puntos de código normalizados en servidor. */
+      tradeName: string | null
+    }
+    RestoreTaxpayer: {
+      expectedVersion: number
+      /** @enum {string} */
+      reasonCode: 'SERVICE_RESUMED' | 'CORRECTION'
+    }
     RevokeInvitation: {
       /** Format: uuid */
       invitationId: string
       /** Format: uuid */
       tenantId: string
+    }
+    Taxpayer: {
+      /** Format: date-time */
+      createdAt: string
+      /** Format: uuid */
+      id: string
+      legalName: string
+      /** @constant */
+      officialVerification: 'NOT_PERFORMED'
+      /** @enum {string} */
+      personType: 'INDIVIDUAL' | 'LEGAL_ENTITY'
+      regimes: components['schemas']['RegimeReference'][]
+      rfc: string
+      /** @constant */
+      rfcValidation: 'RFC_LOCAL_STRUCTURE_V1'
+      /** @enum {string} */
+      status: 'ACTIVE' | 'ARCHIVED'
+      tradeName: string | null
+      /** Format: date-time */
+      updatedAt: string
+      version: number
+    }
+    TaxpayerPage: {
+      hasNext: boolean
+      items: components['schemas']['Taxpayer'][]
+      page: number
+      size: number
     }
     TeamCommandResult: {
       replayed: boolean
@@ -728,6 +914,19 @@ export interface components {
         'application/problem+json': components['schemas']['ProblemDetails']
       }
     }
+    /** @description Se requiere application/json. */
+    MediaType: {
+      headers: {
+        /** @description Siempre no-store. */
+        'Cache-Control'?: 'no-store'
+        /** @description UUID generado por servidor. */
+        'X-Correlation-Id'?: string
+        [name: string]: unknown
+      }
+      content: {
+        'application/problem+json': components['schemas']['ProblemDetails']
+      }
+    }
     /** @description Formato de respuesta no admitido (406) */
     NotAcceptable: {
       headers: {
@@ -755,6 +954,19 @@ export interface components {
         'application/problem+json': components['schemas']['ProblemDetails']
       }
     }
+    /** @description Body excede 64 KiB. */
+    TooLarge: {
+      headers: {
+        /** @description Siempre no-store. */
+        'Cache-Control'?: 'no-store'
+        /** @description UUID generado por servidor. */
+        'X-Correlation-Id'?: string
+        [name: string]: unknown
+      }
+      content: {
+        'application/problem+json': components['schemas']['ProblemDetails']
+      }
+    }
     /** @description Sesión ausente, inválida o expirada (401). El BFF no acepta Bearer tokens. */
     Unauthorized: {
       headers: {
@@ -775,12 +987,17 @@ export interface components {
     }
   }
   parameters: {
+    /** @description Token del mecanismo CSRF BFF existente, nunca registrar. */
+    Csrf: string
     /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
     IdempotencyKey: string
     Page: number
     Size: number
     /** @description El endpoint debe restringir campos; orden secundario único por id en el repositorio */
     Sort: string
+    TaxpayerId: string
+    /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+    TenantId: string
   }
   requestBodies: never
   headers: {
@@ -1249,6 +1466,283 @@ export interface operations {
       401: components['responses']['Unauthorized']
       403: components['responses']['Forbidden']
       409: components['responses']['Conflict']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  listTaxpayers: {
+    parameters: {
+      query?: {
+        page?: number
+        /** @description Literal max80, sin controles; no guardar en URL de navegación/analytics. */
+        search?: string
+        size?: number
+        sort?:
+          | 'id,asc'
+          | 'id,desc'
+          | 'legalName,asc'
+          | 'legalName,desc'
+          | 'createdAt,asc'
+          | 'createdAt,desc'
+        status?: 'ACTIVE' | 'ARCHIVED'
+      }
+      header?: never
+      path: {
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Filas filtradas por capacidad/grants/RLS antes de paginar. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TaxpayerPage']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  createTaxpayer: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        /** @description Token del mecanismo CSRF BFF existente, nunca registrar. */
+        'X-CSRF-TOKEN': components['parameters']['Csrf']
+      }
+      path: {
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateTaxpayer']
+      }
+    }
+    responses: {
+      /** @description Replay exacto autorizado; versión original, no estado actual. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description Ruta del item; el GET posterior requiere nueva autorización. */
+          Location?: string
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CommandReceipt']
+        }
+      }
+      /** @description Expediente creado con UUID de servidor y bootstrap exacto propuesto. */
+      201: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description Ruta del item; el GET posterior requiere nueva autorización. */
+          Location?: string
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CommandReceipt']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      409: components['responses']['Conflict']
+      413: components['responses']['TooLarge']
+      415: components['responses']['MediaType']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  getTaxpayer: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Perfil y referencia manual sin verificación oficial. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Taxpayer']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      500: components['responses']['InternalError']
+    }
+  }
+  replaceTaxpayerProfile: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        /** @description Token del mecanismo CSRF BFF existente, nunca registrar. */
+        'X-CSRF-TOKEN': components['parameters']['Csrf']
+      }
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReplaceProfile']
+      }
+    }
+    responses: {
+      /** @description Recibo estable; consultar GET para estado actual. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CommandReceipt']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      413: components['responses']['TooLarge']
+      415: components['responses']['MediaType']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  archiveTaxpayer: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        /** @description Token del mecanismo CSRF BFF existente, nunca registrar. */
+        'X-CSRF-TOKEN': components['parameters']['Csrf']
+      }
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ArchiveTaxpayer']
+      }
+    }
+    responses: {
+      /** @description Recibo estable; consultar GET para estado actual. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CommandReceipt']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      413: components['responses']['TooLarge']
+      415: components['responses']['MediaType']
+      422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  restoreTaxpayer: {
+    parameters: {
+      query?: never
+      header: {
+        /** @description Convención futura: UUID sintáctico. Cada mutación debe implementar scope autorizado, huella canónica, persistencia/replay y retención antes de prometer idempotencia. No se requiere ni se utiliza en GET /public/info. */
+        'Idempotency-Key': components['parameters']['IdempotencyKey']
+        /** @description Token del mecanismo CSRF BFF existente, nunca registrar. */
+        'X-CSRF-TOKEN': components['parameters']['Csrf']
+      }
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RestoreTaxpayer']
+      }
+    }
+    responses: {
+      /** @description Recibo estable; consultar GET para estado actual. */
+      200: {
+        headers: {
+          /** @description Siempre no-store. */
+          'Cache-Control'?: 'no-store'
+          /** @description UUID generado por servidor. */
+          'X-Correlation-Id'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CommandReceipt']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      409: components['responses']['Conflict']
+      413: components['responses']['TooLarge']
+      415: components['responses']['MediaType']
       422: components['responses']['Validation']
       500: components['responses']['InternalError']
     }

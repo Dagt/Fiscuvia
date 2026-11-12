@@ -2,8 +2,9 @@ openapi: 3.1.0
 info:
   title: Fiscuvia API — contratos implementados
   version: 1.0.0
-  description: "Contratos implementados #24/#27. BFF OIDC local, sesiones JDBC e identidad/membresías. Sin proveedor de
-    producción aprobado ni módulos fiscales."
+  description: "Contratos implementados #24–34. BFF OIDC local, sesiones JDBC, despachos, equipo, límites y
+    contribuyentes. RFC validado localmente; sin verificación SAT ni proveedor de identidad de producción
+    aprobado."
 servers:
   - url: /api/v1
 security: []
@@ -149,8 +150,8 @@ paths:
             type: string
             minLength: 32
           description: Token CSRF de la sesión same-origin; no es un token de identidad.
-      description: "Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF válido de
-        la misma sesión. No acepta un returnUrl arbitrario."
+      description: "Inicio BFF real: enviar X-CSRF-TOKEN o el campo _csrf del formulario. Debe existir un token CSRF
+        válido de la misma sesión. No acepta un returnUrl arbitrario."
       requestBody:
         required: false
         content:
@@ -279,7 +280,9 @@ paths:
     post:
       operationId: acceptInvitation
       summary: Consumir invitación atómica de un solo uso con cuota productiva
-      description: V9 exige cupo USERS vigente; una invitación pendiente no consume plaza. La membresía, reserva correspondiente y auditoría/outbox se confirman juntas. QUOTA_UNAVAILABLE (409) conserva la invitación sin consumir.
+      description: V9 exige cupo USERS vigente; una invitación pendiente no consume plaza. La membresía, reserva
+        correspondiente y auditoría/outbox se confirman juntas. QUOTA_UNAVAILABLE (409) conserva la invitación
+        sin consumir.
       security:
         - SessionCookie: []
       x-implementation-status: implemented
@@ -401,8 +404,8 @@ paths:
       x-implementation-status: implemented
       responses:
         "302":
-          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve
-            tokens.
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
+            devuelve tokens.
           headers:
             Location:
               schema:
@@ -415,14 +418,14 @@ paths:
   /auth/callback/local:
     get:
       operationId: completeLocalOidc
-      summary: Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de identidad
-        genérico.
+      summary: Callback OIDC gestionado por Spring Security; valida state/nonce/PKCE y token. No es un endpoint de
+        identidad genérico.
       security: []
       x-implementation-status: implemented
       responses:
         "302":
-          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca devuelve
-            tokens.
+          description: Redirect fijo al IdP local, o a /app o /login?error=autenticacion después del callback; nunca
+            devuelve tokens.
           headers:
             Location:
               schema:
@@ -436,7 +439,8 @@ paths:
     get:
       operationId: localEmailInvitationOptions
       summary: Consultar disponibilidad de invitaciones manuales locales
-      description: Sólo owner ACTIVE con MFA reciente, MEMBERSHIP_INVITE y despacho propio. No lista personas ni invitaciones.
+      description: Sólo owner ACTIVE con MFA reciente, MEMBERSHIP_INVITE y despacho propio. No lista personas ni
+        invitaciones.
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -458,9 +462,8 @@ paths:
     get:
       operationId: listTeamInvitations
       summary: Consultar invitaciones sin tokens ni hashes
-      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE,
-        identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No
-        habilita cartera ni administración global."
+      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA
+        confiable de los últimos 10 minutos. No habilita cartera ni administración global."
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -487,8 +490,7 @@ paths:
             default: 20
         - in: query
           name: search
-          description: Subcadena literal de nombre/correo, dentro del despacho; no
-            interpreta comodines.
+          description: Subcadena literal de nombre/correo, dentro del despacho; no interpreta comodines.
           schema:
             type: string
             maxLength: 80
@@ -532,10 +534,11 @@ paths:
       operationId: createVerifiedLocalEmailInvitation
       summary: Crear invitación manual para una identidad OIDC ya verificada
       description: >
-        Exclusivamente Keycloak local/test con política de contacto explícita. Correo como localizador, nunca prueba de identidad.
-        Fija issuer/subject exactos y conserva la aceptación original. Token aleatorio mostrado una sola vez; sólo hash persistido.
-        Un replay devuelve token null, nunca el secreto anterior. No envía correo, no enumera destinatarios y no concede permisos de equipo adicionales.
-        Pendientes no reservan plazas; la aceptación conserva la validación transaccional de capacidad V9.
+        Exclusivamente Keycloak local/test con política de contacto explícita. Correo como localizador, nunca
+        prueba de identidad. Fija issuer/subject exactos y conserva la aceptación original. Token aleatorio
+        mostrado una sola vez; sólo hash persistido. Un replay devuelve token null, nunca el secreto anterior.
+        No envía correo, no enumera destinatarios y no concede permisos de equipo adicionales. Pendientes no
+        reservan plazas; la aceptación conserva la validación transaccional de capacidad V9.
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -608,11 +611,12 @@ paths:
       operationId: updateFirmSettings
       summary: Actualizar configuración con capacidad explícita y MFA reciente
       description: >
-        Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable. Política
-        limitada aprobada e instalada por V7 sólo para FIRM_OWNER_ADMIN del propio despacho; MFA confiable de los
-        últimos diez minutos. Otros roles permanecen DENY. No permite cambiar owner, estado, logo, rol ni tenant.
-        Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve la versión aplicada, incluso
-        si hubo cambios posteriores. Volver a consultar GET para obtener el estado actual.
+        Sesión, CSRF, membresía ACTIVE, despacho ACTIVE, TENANT_SETTINGS_MANAGE explícito y MFA verificable.
+        Política limitada aprobada e instalada por V7 sólo para FIRM_OWNER_ADMIN del propio despacho; MFA
+        confiable de los últimos diez minutos. Otros roles permanecen DENY. No permite cambiar owner, estado,
+        logo, rol ni tenant. Idempotencia durable por tenant/actor/comando/huella; reintento idéntico devuelve
+        la versión aplicada, incluso si hubo cambios posteriores. Volver a consultar GET para obtener el
+        estado actual.
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -655,8 +659,8 @@ paths:
     get:
       operationId: getTenantEntitlements
       summary: Consultar límites y uso del despacho con TENANT_PLAN_VIEW explícito
-      description: V9 concede consulta sólo al owner ACTIVE con MFA confiable ≤10 minutos. Configuración ausente o vencida no significa capacidad ilimitada. Recursos futuros
-        no publican consumo.
+      description: V9 concede consulta sólo al owner ACTIVE con MFA confiable ≤10 minutos. Configuración ausente o
+        vencida no significa capacidad ilimitada. Recursos futuros no publican consumo.
       security:
         - SessionCookie: []
       x-implementation-status: implemented
@@ -697,9 +701,8 @@ paths:
     get:
       operationId: listTeamMembers
       summary: Consultar colaboradores del propio despacho
-      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE,
-        identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No
-        habilita cartera ni administración global."
+      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA
+        confiable de los últimos 10 minutos. No habilita cartera ni administración global."
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -726,8 +729,7 @@ paths:
             default: 20
         - in: query
           name: search
-          description: Subcadena literal de nombre/correo, dentro del despacho; no
-            interpreta comodines.
+          description: Subcadena literal de nombre/correo, dentro del despacho; no interpreta comodines.
           schema:
             type: string
             maxLength: 80
@@ -770,9 +772,8 @@ paths:
     post:
       operationId: changeTeamMemberStatus
       summary: Suspender, revocar o reactivar SUSPENDED sujeto a cuota
-      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE,
-        identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No
-        habilita cartera ni administración global."
+      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA
+        confiable de los últimos 10 minutos. No habilita cartera ni administración global."
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -819,9 +820,8 @@ paths:
     post:
       operationId: changeTeamMemberRole
       summary: Cambiar rol operativo de otro miembro no propietario
-      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE,
-        identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No
-        habilita cartera ni administración global."
+      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA
+        confiable de los últimos 10 minutos. No habilita cartera ni administración global."
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -868,9 +868,8 @@ paths:
     post:
       operationId: revokeTeamInvitation
       summary: Revocar invitación pendiente con versión e idempotencia
-      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE,
-        identidad/membresía ACTIVE y MFA confiable de los últimos 10 minutos. No
-        habilita cartera ni administración global."
+      description: "Política A #33 aprobada: sólo owner del despacho ACTIVE, identidad/membresía ACTIVE y MFA
+        confiable de los últimos 10 minutos. No habilita cartera ni administración global."
       x-implementation-status: implemented
       security:
         - SessionCookie: []
@@ -913,6 +912,388 @@ paths:
         "409": *a6
         "422": *a7
         "500": *a8
+  /tenants/{tenantId}/taxpayers:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+    get:
+      operationId: listTaxpayers
+      summary: Consultar sólo cartera autorizada, paginada sin total global.
+      tags:
+        - Taxpayers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              - id,asc
+              - id,desc
+              - legalName,asc
+              - legalName,desc
+              - createdAt,asc
+              - createdAt,desc
+            default: id,asc
+        - name: search
+          in: query
+          description: Literal max80, sin controles; no guardar en URL de navegación/analytics.
+          schema:
+            type: string
+            maxLength: 80
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - ARCHIVED
+            default: ACTIVE
+      responses:
+        "200":
+          description: Filas filtradas por capacidad/grants/RLS antes de paginar.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxpayerPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "422":
+          $ref: "#/components/responses/Validation"
+      description: Filtra grants efectivos con última revisión ENABLE de versión/rol vigentes antes de
+        filtros/orden/LIMIT. Cambiar a ACTIVE o recuperar rol no rehabilita; sin grants efectivos devuelve
+        página vacía.
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+    post:
+      operationId: createTaxpayer
+      summary: Alta owner+MFA acotada; no acceso implícito a toda cartera.
+      tags:
+        - Taxpayers
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaxpayer"
+      responses:
+        "200":
+          description: Replay exacto autorizado; versión original, no estado actual.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+            Location:
+              description: Ruta del item; el GET posterior requiere nueva autorización.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "201":
+          description: Expediente creado con UUID de servidor y bootstrap exacto propuesto.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+            Location:
+              description: Ruta del item; el GET posterior requiere nueva autorización.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      description: "Owner propio con identidad/membresía/tenant ACTIVE, MFA confiable≤10min y cuota
+        vigente/disponible. Bootstrap atómico PRIMARY y cuatro grants exactos; sólo VIEW/EDIT/ARCHIVE reciben
+        habilitación inicial de versión/rol actuales. ASSIGN queda reservado para #36, sin política operativa
+        ni endpoint en #34. Replay no revalida grants viejos."
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+  /tenants/{tenantId}/taxpayers/{taxpayerId}:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    get:
+      operationId: getTaxpayer
+      summary: Consultar item con grant exacto; archivar no elimina historial.
+      tags:
+        - Taxpayers
+      responses:
+        "200":
+          description: Perfil y referencia manual sin verificación oficial.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Taxpayer"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes,
+        MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin
+        autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones. "
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+    patch:
+      operationId: replaceTaxpayerProfile
+      summary: Sustituir perfil completo; nunca RFC, persona, estado o tenant.
+      tags:
+        - Taxpayers
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplaceProfile"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes,
+        MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin
+        autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones. "
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+  /tenants/{tenantId}/taxpayers/{taxpayerId}/archivals:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    post:
+      operationId: archiveTaxpayer
+      summary: Archivar ACTIVE con motivo y versión.
+      tags:
+        - Taxpayers
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArchiveTaxpayer"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes,
+        MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin
+        autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones. "
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
+  /tenants/{tenantId}/taxpayers/{taxpayerId}/restorations:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    post:
+      operationId: restoreTaxpayer
+      summary: Restaurar mismo UUID con permiso y cuota vigente.
+      tags:
+        - Taxpayers
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Csrf"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RestoreTaxpayer"
+      responses:
+        "200":
+          description: Recibo estable; consultar GET para estado actual.
+          headers:
+            Cache-Control:
+              description: Siempre no-store.
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              description: UUID generado por servidor.
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommandReceipt"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/TooLarge"
+        "415":
+          $ref: "#/components/responses/MediaType"
+        "422":
+          $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      description: "Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes,
+        MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin
+        autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones. "
+      security:
+        - SessionCookie: []
+      x-implementation-status: implemented
 components:
   headers:
     CorrelationId:
@@ -956,6 +1337,29 @@ components:
       schema:
         type: string
         format: uuid
+    TenantId:
+      name: tenantId
+      in: path
+      required: true
+      description: "Candidato: validar membresía/contexto; nunca autoridad por sí solo."
+      schema:
+        type: string
+        format: uuid
+    TaxpayerId:
+      name: taxpayerId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    Csrf:
+      name: X-CSRF-TOKEN
+      in: header
+      required: true
+      description: Token del mecanismo CSRF BFF existente, nunca registrar.
+      schema:
+        type: string
+        minLength: 1
   schemas:
     TeamMember:
       type: object
@@ -1229,8 +1633,8 @@ components:
         - fieldErrors
       description: >
         RFC 9457. Mensajes españoles fijos y seguros, sin valores rechazados, rutas, consultas SQL ni datos de
-        infraestructura. El catálogo de códigos es infraestructura, no implementación de autenticación, reglas de
-        negocio o rate limiting.
+        infraestructura. El catálogo de códigos es infraestructura, no implementación de autenticación, reglas
+        de negocio o rate limiting.
       properties:
         type:
           type: string
@@ -1325,7 +1729,8 @@ components:
         role:
           $ref: "#/components/schemas/MembershipRole"
         commercialName:
-          description: Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre inventado.
+          description: Nombre persistido autorizado; null en raíces anteriores aún sin configurar. Nunca un nombre
+            inventado.
           type:
             - string
             - "null"
@@ -1338,25 +1743,25 @@ components:
     LocalInvitationOptions:
       type: object
       additionalProperties: false
-      required: [emailInvitationsAvailable, delivery]
+      required: [ emailInvitationsAvailable, delivery ]
       properties:
         emailInvitationsAvailable: { type: boolean }
         delivery: { type: string, const: MANUAL }
     LocalEmailInvitationRequest:
       type: object
       additionalProperties: false
-      required: [email, role]
+      required: [ email, role ]
       properties:
         email: { type: string, format: email, maxLength: 254 }
-        role: { type: string, enum: [FIRM_SUPERVISOR, ACCOUNTANT, ASSISTANT] }
+        role: { type: string, enum: [ FIRM_SUPERVISOR, ACCOUNTANT, ASSISTANT ] }
     LocalEmailInvitation:
       type: object
       additionalProperties: false
-      required: [invitationId, token, expiresAt, delivery, replayed]
+      required: [ invitationId, token, expiresAt, delivery, replayed ]
       properties:
         invitationId: { type: string, format: uuid }
         token:
-          type: [string, "null"]
+          type: [ string, "null" ]
           pattern: "^[A-Za-z0-9_-]{43}$"
           description: Sólo primera respuesta de creación. Null en cualquier replay; nunca en listados, logs o auditoría.
         expiresAt: { type: string, format: date-time }
@@ -1640,6 +2045,280 @@ components:
           enum:
             - MEASURED
             - NOT_INTEGRATED
+    RegimeInput:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - validFrom
+        - validTo
+      properties:
+        code:
+          type: string
+          pattern: ^[0-9]{3}$
+          description: Referencia manual; no catálogo SAT vigente.
+        validFrom:
+          type:
+            - string
+            - "null"
+          format: date
+        validTo:
+          type:
+            - string
+            - "null"
+          format: date
+      description: Captura manual aprobada, hasta10 referencias por perfil. Código de tres dígitos sin catálogo
+        normativo. Fechas conocidas o ambas NULL; intervalos [desde,hasta) y solapamiento del mismo código
+        comprobados por servidor, sin inferencia fiscal.
+    RegimeReference:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - validFrom
+        - validTo
+        - source
+        - reviewStatus
+      properties:
+        code:
+          type: string
+          pattern: ^[0-9]{3}$
+          description: Referencia manual; no catálogo SAT vigente.
+        validFrom:
+          type:
+            - string
+            - "null"
+          format: date
+        validTo:
+          type:
+            - string
+            - "null"
+          format: date
+        source:
+          type: string
+          const: MANUAL
+        reviewStatus:
+          type: string
+          const: PENDING_REVIEW
+    CreateTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - rfc
+        - personType
+        - legalName
+        - tradeName
+        - regimes
+      properties:
+        rfc:
+          type: string
+          minLength: 12
+          maxLength: 32
+          description: Entrada trim/NFC/uppercase de servidor; resultado12/13 según persona y estructura local. Rechazar
+            sólo igualdad normalizada con XAXX010101000/XEXX010101000, no prefijos; sin excepciones ni
+            existencia SAT.
+        personType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - LEGAL_ENTITY
+        legalName:
+          type: string
+          minLength: 1
+          maxLength: 600
+          description: Entrada con máximo600 unidades UTF-16. NFC y trim de servidor; nombre resultante obligatorio de
+            máximo300 puntos de código.
+        tradeName:
+          type:
+            - string
+            - "null"
+          minLength: 1
+          maxLength: 65536
+          description: NULL o texto dentro del límite global de65536 bytes del cuerpo; NFC/trim y máximo200 puntos de
+            código normalizados en servidor.
+        regimes:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/RegimeInput"
+      x-server-validation:
+        normalizedRfcRejectedValues:
+          - XAXX010101000
+          - XEXX010101000
+        prefixRejection: false
+        officialVerification: false
+    ReplaceProfile:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - legalName
+        - tradeName
+        - regimes
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        legalName:
+          type: string
+          minLength: 1
+          maxLength: 600
+          description: Entrada con máximo600 unidades UTF-16. NFC y trim de servidor; nombre resultante obligatorio de
+            máximo300 puntos de código.
+        tradeName:
+          type:
+            - string
+            - "null"
+          minLength: 1
+          maxLength: 65536
+          description: NULL o texto dentro del límite global de65536 bytes del cuerpo; NFC/trim y máximo200 puntos de
+            código normalizados en servidor.
+        regimes:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/RegimeInput"
+    ArchiveTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - reasonCode
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        reasonCode:
+          type: string
+          enum:
+            - SERVICE_ENDED
+            - DUPLICATE_REVIEW
+            - OTHER
+    RestoreTaxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - expectedVersion
+        - reasonCode
+      properties:
+        expectedVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        reasonCode:
+          type: string
+          enum:
+            - SERVICE_RESUMED
+            - CORRECTION
+    CommandReceipt:
+      type: object
+      additionalProperties: false
+      required:
+        - targetId
+        - version
+        - replayed
+      properties:
+        targetId:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        replayed:
+          type: boolean
+    Taxpayer:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - rfc
+        - personType
+        - legalName
+        - tradeName
+        - status
+        - version
+        - createdAt
+        - updatedAt
+        - regimes
+        - rfcValidation
+        - officialVerification
+      properties:
+        id:
+          type: string
+          format: uuid
+        rfc:
+          type: string
+          minLength: 12
+          maxLength: 13
+          pattern: ^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$
+        personType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - LEGAL_ENTITY
+        legalName:
+          type: string
+          minLength: 1
+          maxLength: 300
+        tradeName:
+          type:
+            - string
+            - "null"
+          minLength: 1
+          maxLength: 200
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - ARCHIVED
+        version:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        regimes:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/RegimeReference"
+        rfcValidation:
+          type: string
+          const: RFC_LOCAL_STRUCTURE_V1
+        officialVerification:
+          type: string
+          const: NOT_PERFORMED
+    TaxpayerPage:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - page
+        - size
+        - hasNext
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/Taxpayer"
+        page:
+          type: integer
+          minimum: 0
+          maximum: 10000
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        hasNext:
+          type: boolean
   responses:
     BadRequest:
       description: Sintaxis, tipo o parámetro inválido (400)
@@ -1695,10 +2374,44 @@ components:
         application/problem+json:
           schema:
             $ref: "#/components/schemas/ProblemDetails"
+    TooLarge:
+      description: Body excede 64 KiB.
+      headers:
+        Cache-Control:
+          description: Siempre no-store.
+          schema:
+            type: string
+            const: no-store
+        X-Correlation-Id:
+          description: UUID generado por servidor.
+          schema:
+            type: string
+            format: uuid
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+    MediaType:
+      description: Se requiere application/json.
+      headers:
+        Cache-Control:
+          description: Siempre no-store.
+          schema:
+            type: string
+            const: no-store
+        X-Correlation-Id:
+          description: UUID generado por servidor.
+          schema:
+            type: string
+            format: uuid
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: __Host-FiscuviaSession
-      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones requieren X-CSRF-TOKEN
-        obtenido en /auth/csrf.
+      description: Sesión BFF HttpOnly Secure SameSite=Lax. No tokens OAuth en el navegador. Mutaciones requieren
+        X-CSRF-TOKEN obtenido en /auth/csrf.

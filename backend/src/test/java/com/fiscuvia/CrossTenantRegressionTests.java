@@ -144,7 +144,7 @@ class CrossTenantRegressionTests {
         assertPortfolio("a",f.a,f.a1);assertPortfolio("peer",f.a,f.a2);
         assertThat(item("peer",f.a,f.a1).statusCode()).isEqualTo(404);
         assertThat(OidcBrowser.json(list("supervisor",f.a)).path("items").size()).isZero();
-        assertThat(list("owner",f.a).statusCode()).isEqualTo(403);assertThat(list("assistant",f.a).statusCode()).isEqualTo(403);
+        assertThat(list("owner",f.a).statusCode()).isEqualTo(200);assertThat(OidcBrowser.json(list("owner",f.a)).path("items").size()).isZero();assertThat(list("assistant",f.a).statusCode()).isEqualTo(403);
         assertThat(f.actor("assistant").browser().send("POST","/api/v1/auth/invitations",inviteBody(f.a),f.actor("assistant").browser().csrf()).statusCode()).isEqualTo(403);
     }
     @Test void validUuidAndSpoofedHeadersBodyOrQueryDoNotAuthorize() throws Exception {
@@ -427,11 +427,14 @@ class CrossTenantRegressionTests {
         f.admin(f.a,s->s.update("UPDATE identity.memberships SET status='SUSPENDED' WHERE id=?",f.members.get("a")));
         assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
         String authorization=f.function("access_control.authorize_operation(uuid,text,text,uuid)"),tenant=f.function("identity_private.authorize_active_membership(uuid,boolean)");
-        String lifecycle=f.function("identity.authorize_tenant(uuid,boolean)");
+        String lifecycle=f.function("identity.authorize_tenant(uuid,boolean)"),fiscal=f.function("taxpayer_private.grant_enabled(uuid,uuid,text,uuid)");
         try {
             f.definition(authorization.replace("AND status='ACTIVE'",""));f.definition(tenant.replace("AND status='ACTIVE'",""));f.definition(lifecycle.replace("AND status='ACTIVE'",""));
+            // V12 adds an independent, versioned membership check at the fiscal boundary.
+            assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
+            f.definition(fiscal.replace("AND mem.status='ACTIVE'", "").replace("AND last.reviewed_membership_version=mem.version", ""));
             assertThatThrownBy(()->assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404)).isInstanceOf(AssertionError.class);
-        }finally{f.definition(authorization);f.definition(tenant);f.definition(lifecycle);}
+        }finally{f.definition(authorization);f.definition(tenant);f.definition(lifecycle);f.definition(fiscal);}
         assertThat(item("a",f.a,f.a1).statusCode()).isEqualTo(404);
     }
     @Test void relaxingMfaPolicyIsCaughtByTheHttpOracle() throws Exception {

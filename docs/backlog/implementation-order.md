@@ -1,5 +1,7 @@
 # Oleadas de implementación y dependencias Fiscuvia (propuesta)
 
+**Estado de la rama C01:** #74/#92 integrado por el propietario; D74-01..05 habilitan sólo el corte inicial #34. [Implementación #34 en revisión Draft](../architecture/TAXPAYER-DOMAIN-34.md); #35/#36 no comenzados en este trabajo. No equivale a merge ni cierre de la issue.
+
 **Gate vigente SPEC01 #74:** [D74-01..05 y diferimientos aprobados](../decisions/issue-74-owner-approval.md) autorizan especificación inicial #34, con habilitación fiscal versionada y sin reactivación automática de grants. [Dependencias #34–45](../architecture/SPEC01-fiscal-domain-74.md). Faltan revisión final/merge humano de #92; no comenzar #34 en esta tarea. Siguiente trabajo tras integrar: #34 desde latest main, sin volver a aprobar decisiones ya resueltas. #35 directorio, #36 ficha/cartera; #38–45 conservan bloqueos contables propios. V1–V11 intactas.
 
 **Status:** Proposed · **Sin fechas comprometidas**, dependencias explícitas. Se utiliza el patrón *Wave 0–n* de TrailerSaaS.

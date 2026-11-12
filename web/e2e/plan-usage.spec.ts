@@ -26,11 +26,13 @@ function usage(used = 1, limit = 3) {
     version: resource === 'USERS' ? 1 : null,
     validFrom: resource === 'USERS' ? '2026-11-01T00:00:00Z' : null,
     validUntil: null,
-    measured: resource === 'USERS' ? used : null,
-    reserved: resource === 'USERS' ? 0 : null,
+    measured: resource === 'USERS' ? used : resource === 'TAXPAYERS' ? 0 : null,
+    reserved: ['USERS', 'TAXPAYERS'].includes(resource) ? 0 : null,
     available: resource === 'USERS' ? Math.max(0, limit - used) : null,
     overLimit: resource === 'USERS' ? used > limit : null,
-    integration: resource === 'USERS' ? 'MEASURED' : 'NOT_INTEGRATED',
+    integration: ['USERS', 'TAXPAYERS'].includes(resource)
+      ? 'MEASURED'
+      : 'NOT_INTEGRATED',
   }))
 }
 async function fixture(page: Page, mode: string) {

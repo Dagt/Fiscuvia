@@ -18,6 +18,7 @@ export function validator(name) {
   const ajv = new Ajv2020({ strict: true, allErrors: true })
   // OpenAPI 3.1 Schema Object annotation, not a validation rule. Keep all other strict checks.
   ajv.addKeyword({ keyword: 'example', valid: true })
+  ajv.addKeyword({ keyword: 'x-server-validation', valid: true })
   addFormats(ajv)
   return ajv.compile({ $defs: schemas, $ref: `#/$defs/${name}` })
 }
@@ -41,6 +42,34 @@ export function checkHttpResponses(responses) {
   if (!responses.some(r => r.status === 200)) throw Error('Falta evidencia HTTP pública')
   for (const code of contract.components.schemas.ProblemDetails.properties.code.enum) {
     if (!seen.has(code)) throw Error(`Falta evidencia HTTP del código ${code}`)
+  }
+  return responses.length
+}
+
+export function checkTaxpayerHttpResponses(responses) {
+  const seen = new Set()
+  const checks = new Map()
+  const dereference = value => value?.$ref
+    ? value.$ref.slice(2).split('/').reduce((node, key) => node[key], contract) : value
+  for (const response of responses) {
+    const route = response.route.replace(/^\/api\/v1/, '')
+    const operation = contract.paths[route]?.[response.method]
+    const documented = dereference(operation?.responses[String(response.status)])
+    const schema = documented?.content?.[response.contentType]?.schema?.$ref?.split('/').at(-1)
+    if (!schema) throw Error(`Respuesta fiscal no documentada: ${response.method} ${route} ${response.status}`)
+    if (!checks.has(schema)) checks.set(schema, validator(schema))
+    const check = checks.get(schema)
+    if (!check(response.body)) throw Error(`Respuesta fiscal inválida (${schema}): ${JSON.stringify(check.errors)}`)
+    if (!/^[0-9a-f-]{36}$/.test(response.correlationId) || !response.cacheControl.includes('no-store')) throw Error('Metadatos fiscales incompletos')
+    if (response.status >= 400 && (response.body.status !== response.status
+      || contract['x-error-statuses'][response.body.code] !== response.status
+      || response.body.traceId !== response.correlationId)) throw Error('Error fiscal inconsistente')
+    if (response.status < 300) seen.add(`${response.method} ${route}`)
+  }
+  for (const [route, path] of Object.entries(contract.paths).filter(([route]) => route.includes('/taxpayers'))) {
+    for (const method of ['get', 'post', 'patch'].filter(method => path[method])) {
+      if (!seen.has(`${method} ${route}`)) throw Error(`Falta evidencia fiscal HTTP real: ${method} ${route}`)
+    }
   }
   return responses.length
 }
@@ -72,5 +101,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       const count = checkHttpResponses(JSON.parse(readFileSync(resolve(root, process.argv[i + 1]), 'utf8')))
       console.log(`Contrato: ${count} respuestas HTTP reales válidas`)
     }
+    const taxpayers = process.argv.indexOf('--taxpayer-responses')
+    if (taxpayers >= 0) console.log(`Contribuyentes: ${checkTaxpayerHttpResponses(JSON.parse(readFileSync(resolve(root, process.argv[taxpayers + 1]), 'utf8')))} respuestas HTTP reales válidas`)
   }
 }

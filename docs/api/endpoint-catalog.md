@@ -1,5 +1,7 @@
 # Catálogo de endpoints — estado explícito
 
+**C01 #34:** las seis operaciones de contribuyentes están implementadas en esta rama, según [OpenAPI productivo](openapi-v1.yaml) y [frontera de alcance](../architecture/TAXPAYER-DOMAIN-34.md). Las demás rutas fiscales del catálogo conservan estado futuro.
+
 **SPEC01 #74:** [contrato #34 autorizado en alcance inicial](taxpayers-34-specification.md) por [D74-01..05](../decisions/issue-74-owner-approval.md), no implementado. Perfil cerrado, archivo/restore explícitos y grant efectivo de versión vigente; reactivación/rol no recupera acceso antiguo. Asignación/revisión de cartera y certificados siguen #36, sin endpoints #34. Matriz de módulos posteriores pendiente; V11/OpenAPI efectivo prevalecen sobre notas históricas.
 
 ## Implementado en el corte local/test #33

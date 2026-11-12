@@ -52,7 +52,7 @@ export async function tenantUsage(
       )
         return false
       if (v.overLimit !== null && typeof v.overLimit !== 'boolean') return false
-      if (v.resource !== 'USERS')
+      if (!['USERS', 'TAXPAYERS'].includes(v.resource))
         return (
           v.integration === 'NOT_INTEGRATED' &&
           v.measured === null &&
@@ -63,7 +63,8 @@ export async function tenantUsage(
       return (
         v.integration === 'MEASURED' &&
         v.measured !== null &&
-        v.reserved !== null
+        v.reserved !== null &&
+        (v.resource !== 'TAXPAYERS' || v.reserved === 0)
       )
     })
   )
