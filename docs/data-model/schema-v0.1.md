@@ -1,5 +1,7 @@
 # Esquema relacional PostgreSQL v0.1 — propuesta antes de migraciones
 
+**Revisión SPEC01 #74:** [v0.1.1](schema-v0.1.1-proposed.md) corrige discrepancias con V1–V11. [D74-01..05](../decisions/issue-74-owner-approval.md) aprueban sólo el corte de contribuyentes; propuestas de módulos posteriores siguen pendientes. v0.1 es antecedente, no DDL ni autorización de tablas/estados fiscales. No recrear identidad ni confiar sólo en GUC; en #34 prevalece la especificación inicial autorizada y su revisión de habilitación versionada.
+
 **Estado:** Proposed 2026-10-29 · **Base:** FR-###, BR-###, NFR-###, domain model, state machines, ADR-0002. Inspirado en el *nivel de precisión* del schema v1.0 de TrailerSaaS; **ninguna tabla está creada** y **no se considera aprobado** para Flyway hasta revisión de OQ fiscales bloqueantes.
 
 ## 1. Convenciones globales

@@ -1,5 +1,7 @@
 # Preguntas abiertas — OQ-### (registro formal)
 
+**Aprobación parcial SPEC01 #74 (2026-11-12):** Dagt aprueba D74-01..05 para #34 y el diferimiento explícito de OQ-001..005/023 y lo restante de OQ-006/013/015. [Registro fuente, alcance/restricciones](../decisions/issue-74-owner-approval.md), [análisis por pregunta](SPEC01-decisions-74.md). Sólo captura manual de régimen, PRIMARY inicial y matriz limitada de contribuyentes están autorizados; las OQ completas siguen Open. No bloquear de nuevo #34 por esos diferimientos tras integrar #92, ni comenzar su implementación en este PR. Regla obligatoria: grants históricos no recuperan efectividad por reactivación/cambio de rol sin revisión explícita autorizada.
+
 **Estado:** Open; ninguna respuesta se presume por la mera creación de issues. Cada resolución deberá citar decisión de propietario, experto contable o evidencia documentada y actualizar FR/BR/ADR/API/schema afectados.
 
 ## Producto/contabilidad (prioridad MVP)
@@ -8,18 +10,18 @@
 - **OQ-003 [blocking MVP]** ¿Acuses/pagos son obligatorios para cerrar una obligación, o configurables por tipo? ¿Puede capturarse 'presentada' sin acuse como provisional?
 - **OQ-004 [blocking MVP]** ¿Cómo se registra declaración complementaria, corrección, varios pagos o saldo a favor?
 - **OQ-005 [blocking MVP]** ¿Qué roles pueden aprobar y reabrir? ¿Se permite autoverificación en despacho unipersonal?
-- **OQ-006 [blocking MVP]** ¿Regímenes y obligaciones se crean manualmente, catálogo revisado o CSF parsing posterior?
+- **OQ-006 [Open, aprobación parcial #34]** ¿Regímenes y obligaciones se crean manualmente, catálogo revisado o CSF parsing posterior? D74-02 autoriza hasta10 referencias manuales con código de tres dígitos, vigencia conocida/desconocida e historial MANUAL/PENDING_REVIEW. Catálogo normativo, CSF, SAT/inferencia/periodicidad/calendarios diferidos y pendientes de contador; no resolución global.
 - **OQ-007 [pricing]** ¿Qué planes/cupos y tarifas son comercialmente viables? Validar clientes y costos.
 - **OQ-008 [pilot]** ¿Qué plazo de conservación y exportación requieren contratos y ley mexicana? ¿RPO/RTO y SLO?
 - **OQ-009 [future critical]** Custodia e.firma: agente local vs KMS/HSM, alcance/consentimiento/autorización; no resuelta.
 - **OQ-010 [MVP]** ¿Se incluyen notificaciones externas en MVP o sólo internas? Canales, consentimiento y frecuencia.
 - **OQ-011 [MVP]** ¿Cómo se define cobro recurrente, impuestos del honorario y moneda/redondeo?
 - **OQ-012 [MVP]** ¿Cómo prevenir confusión entre honorarios del despacho e impuestos del contribuyente en dashboards?
-- **OQ-013 [MVP]** ¿Soportaremos relación de un contribuyente con múltiples responsables, sucursales y contactos?
+- **OQ-013 [Open, aprobación parcial #34]** ¿Soportaremos relación de un contribuyente con múltiples responsables, sucursales y contactos? D74-03/04 autorizan sólo PRIMARY inicial del creador en #34; gestión completa de responsables/contactos/sucursales diferida, ficha/cartera #36 con política específica pendiente.
 - **OQ-014 [MVP security] — Open, autorización técnica parcial 2026-10-30:** BFF same-origin, OIDC Code+PKCE, sesiones JDBC privadas, Keycloak local/test, identidad global/membresías, cuatro roles, bootstrap interno e invitaciones exactas autorizados por el propietario en PR #83. Pendientes: proveedor de producción, semántica/factores MFA, recuperación/revocación federada, costos/operación e invitaciones por correo. [Guía efectiva](../security/AUTHENTICATION.md). No Resolved.
-- **OQ-015 [MVP]** ¿Qué permisos se aplican a auxiliares sobre datos fiscales/financieros y archivos?
+- **OQ-015 [Open, aprobación parcial #34]** ¿Qué permisos se aplican a auxiliares sobre datos fiscales/financieros y archivos? D74-03 aprueba sólo matriz de contribuyentes, bootstrap acotado, conflicto RFC genérico, MFA y no reactivación automática de grants sin revisión explícita. Auxiliar DENY; ASSIGN sólo reservado #36, sin delegación #34. Documentos/obligaciones/pagos/revisión fiscal y demás permisos siguen pendientes; no resolución global.
   #31 tiene aprobación parcial expresa para TENANT_SETTINGS_MANAGE de owner+MFA reciente sobre perfil propio, sin facultades fiscales ni de equipo: [registro del propietario](https://github.com/Dagt/Fiscuvia/pull/89#issuecomment-6649647209). Flyway V7 instala únicamente esa política; la matriz completa OQ-015 continúa pendiente. [Política aprobada y límites](../architecture/TENANT-PROVISIONING.md).
-  En #28 permanece Open: se propone capacidad explícita por rol + asignación por operación/recurso, sin acceso ilimitado implícito para owner/supervisor. Alternativa tenant-wide requeriría capacidad distinta, aprobación y pruebas propias. Sin decisión del propietario, capacidades operativas de auxiliares y demás combinaciones propuestas permanecen DENY. [Mecanismo implementado y frontera de aprobación](../security/RESOURCE-AUTHORIZATION.md).
+  En #28 permanece Open: se propone capacidad explícita por rol + asignación por operación/recurso, sin acceso ilimitado implícito para owner/supervisor. Alternativa tenant-wide requeriría capacidad distinta, aprobación y pruebas propias. Fuera de la matriz parcial #34 aprobada arriba, capacidades de auxiliares y demás combinaciones no aprobadas permanecen DENY; incluso la matriz aprobada sigue sin grants efectivos hasta implementarse en su PR. [Mecanismo implementado y frontera de aprobación](../security/RESOURCE-AUTHORIZATION.md).
 - **OQ-016 [MVP]** ¿Cómo proceden baja, portabilidad y suspensión de tenant sin destrucción prematura?
   #31 implementa suspensión/reactivación administrativa interna, versionada y auditada, sin eliminar historial ni atribuciones y sin reglas de cobro. No resuelve baja definitiva, retención, portabilidad o suspensión comercial: permanecen pendientes.
 - **OQ-017 [future]** Qué versiones CFDI/complementos y fuente de validación deben soportarse.

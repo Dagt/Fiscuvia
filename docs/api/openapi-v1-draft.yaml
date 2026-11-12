@@ -1,5 +1,7 @@
 openapi: 3.1.0
 x-implementation-status: proposed
+x-spec01-taxpayer-reference: openapi-taxpayers-34-proposed.yaml
+x-spec01-note: Fragmento histórico de contribuyentes; contrato aislado SPEC01 aprobado sólo en alcance inicial de #34 (D74-01..05), aún no implementado. No generar cliente desde este borrador ni aprobar módulos posteriores por extensión.
 info:
   title: Fiscuvia API — preliminary, incomplete draft
   version: 0.1.0-proposed

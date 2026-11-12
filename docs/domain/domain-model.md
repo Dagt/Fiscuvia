@@ -1,5 +1,7 @@
 # Modelo de dominio (conceptual, no esquema SQL)
 
+**SPEC01 #74:** [v0.1.1](fiscal-domain-v0.1.1.md) contiene corte #34 autorizado por [D74-01..05](../decisions/issue-74-owner-approval.md): perfil/régimen manual/responsable inicial/acceso efectivo/cuota. Relaciones/estados de obligaciones/documentos/honorarios continúan Proposed; no se aceptan reglas fiscales globales ni se cambian permisos efectivos V1–V11 por este documento.
+
 **Estado:** Proposed; origen: requisitos FR y relato del despacho. Evitar modelar literalmente las casillas de un HTML o Excel; distinguir el trabajo operativo de evidencia oficial.
 
 ## Agregados principales

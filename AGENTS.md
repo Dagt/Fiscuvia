@@ -1,6 +1,6 @@
 # AGENTS.md — Fiscuvia
 
-**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–29 integrada; #30 agrega regresión transversal, sin worker automático ni autoridad de negocio de sistema. Sin proveedor de producción, matriz fiscal ni dominio fiscal aprobados; gate #74. #79 cerrado tras cinco checks Ubuntu de #85; cada PR exige evidencia CI de su SHA, presupuesto $0 intacto.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** base #20–33 y #52 integrada, main `05dc33e77e290777c316d26edabb7ce1e7b28c44` (PR #91). #74 incorpora [aprobación limitada D74-01..05](docs/decisions/issue-74-owner-approval.md) por Dagt el 2026-11-12 para la especificación inicial #34 y diferimientos; sin grants, código ni migraciones fiscales en #92. Grants históricos no recuperan efectividad al reactivar/cambiar rol sin revisión explícita. #92 queda para revisión final/merge del propietario; no comenzar #34 en esta tarea. Matriz/dominio fiscales posteriores, proveedor de producción y autoridad fiscal de sistema siguen sin aprobar; sin worker automático. Cada PR exige CI de su SHA; #79 cerrado, presupuesto $0 intacto.
 
 ## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
 Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.

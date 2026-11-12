@@ -1,5 +1,7 @@
 # Contratos API — Fiscuvia
 
+**SPEC01 #74:** [especificación inicial #34 autorizada](taxpayers-34-specification.md), [fuente limitada D74-01..05](../decisions/issue-74-owner-approval.md) y [OpenAPI aislado no implementado](openapi-taxpayers-34-proposed.yaml). Sesión BFF/CSRF, grants con habilitación versionada, comandos/recibos y cuotas, sin tipos productivos ni endpoints ejecutados. No autorización de módulos posteriores. El fragmento histórico Bearer/allOf no gobierna #34; OpenAPI implementado intacto. Validar desde raíz: `node tools/ci/openapi.mjs docs/api/openapi-taxpayers-34-proposed.yaml`.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 A #33 añade listados GET members/invitations y comandos POST status/role/revoke, autorizados por owner/MFA; OpenAPI y tipos generados sin tokens en listados. [Controles y alcance](../security/TEAM-ADMINISTRATION-33.md).

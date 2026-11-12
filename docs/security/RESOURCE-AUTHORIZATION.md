@@ -1,5 +1,7 @@
 # Autorización por recurso — infraestructura #28
 
+**SPEC01 #74 — aprobación limitada, sin implementación:** [matriz #34](FISCAL-PERMISSIONS-PROPOSAL-74.md), [fuente D74-03](../decisions/issue-74-owner-approval.md) y [FK/RLS/habilitación versionada](../data-model/schema-v0.1.1-proposed.md). El futuro #34 añade validación de revisión vigente en authorize_operation/resource_allowed para TAXPAYER: grant histórico no revive al reactivar o recuperar rol. Sin nuevos endpoints de revisión/delegación; #36 pendiente. El puerto/contexto inmutable y permisos administrativos #31–33 se conservan; no código ni grants nuevos en #74.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 Aprobación limitada A #33: tres capacidades owner+MFA, versiones y serialización administrativa. No concede capacidades fiscales ni cartera. [Controles y alcance](TEAM-ADMINISTRATION-33.md).

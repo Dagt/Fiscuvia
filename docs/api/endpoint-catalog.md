@@ -1,5 +1,7 @@
 # Catálogo de endpoints — estado explícito
 
+**SPEC01 #74:** [contrato #34 autorizado en alcance inicial](taxpayers-34-specification.md) por [D74-01..05](../decisions/issue-74-owner-approval.md), no implementado. Perfil cerrado, archivo/restore explícitos y grant efectivo de versión vigente; reactivación/rol no recupera acceso antiguo. Asignación/revisión de cartera y certificados siguen #36, sin endpoints #34. Matriz de módulos posteriores pendiente; V11/OpenAPI efectivo prevalecen sobre notas históricas.
+
 ## Implementado en el corte local/test #33
 
 GET `/api/v1/tenants/{tenantId}/team/invitation-options` y POST `/api/v1/tenants/{tenantId}/team/invitations`. Owner+MFA y MEMBERSHIP_INVITE existente, opt-in Keycloak local; destinatario verificado y issuer/subject exactos. Token sólo en primera respuesta; no envío externo ni lista de miembros/invitaciones. Rutas de rol/reactivación/cartera permanecen fuera de implementación. [Alcance aprobado](../security/LOCAL-EMAIL-INVITATIONS-33.md).

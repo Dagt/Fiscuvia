@@ -1,5 +1,7 @@
 # Catálogo de capacidades (propuesto)
 
+**SPEC01 #74:** [matriz limitada #34 aprobada](FISCAL-PERMISSIONS-PROPOSAL-74.md), [fuente D74-03](../decisions/issue-74-owner-approval.md). CREATE owner propio+MFA, VIEW/EDIT owner/supervisor/contador con grant efectivo, ARCHIVE owner+MFA; auxiliar DENY. ASSIGN sólo grant reservado para #36, sin política operativa/delegación #34. El catálogo aún contiene códigos no implementados; no grants ni capacidades globales nuevas en #74. Habilitación versionada obligatoria, sin recuperación automática por membresía/rol.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 A aprobada #33: MEMBERSHIP_VIEW, MEMBERSHIP_ASSIGN_ROLE y MEMBERSHIP_REACTIVATE exclusivamente owner propio ACTIVE+MFA reciente; no autoedición/owner/REVOKED, cuota V9. OQ-015 conserva los permisos fiscales/auxiliares pendientes. [Controles y alcance](TEAM-ADMINISTRATION-33.md).
