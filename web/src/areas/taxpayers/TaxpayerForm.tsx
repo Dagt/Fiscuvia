@@ -212,6 +212,7 @@ export function TaxpayerForm({
               />
               <Field
                 label={`Término ${i + 1}`}
+                description="Fecha exclusiva: este día no forma parte de la vigencia."
                 type="date"
                 value={row.validTo}
                 error={errors[`${row.key}-to`]}

@@ -317,6 +317,7 @@ function Directory(props: Props) {
             <FilterBar
               search={search}
               searchLabel="Buscar por RFC o nombre"
+              searchMaxLength={80}
               onSearchChange={(v) => setSearch(v)}
               filters={[
                 {
@@ -362,6 +363,11 @@ function Directory(props: Props) {
                       maxLength={3}
                       placeholder="Tres dígitos"
                       value={regime}
+                      aria-describedby={
+                        regime && !/^[0-9]{3}$/.test(regime)
+                          ? 'taxpayer-regime-filter-error'
+                          : undefined
+                      }
                       aria-invalid={
                         (!!regime && !/^[0-9]{3}$/.test(regime)) || undefined
                       }
@@ -428,7 +434,11 @@ function Directory(props: Props) {
               }
             />
             {!!regime && !/^[0-9]{3}$/.test(regime) ? (
-              <p className="field-error" role="alert">
+              <p
+                id="taxpayer-regime-filter-error"
+                className="field-error"
+                role="alert"
+              >
                 Introduce los tres dígitos del régimen capturado.
               </p>
             ) : !settled || list.isFetching || list.isPending ? (

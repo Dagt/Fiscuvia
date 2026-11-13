@@ -317,7 +317,9 @@ test('grants exactos, colaborador suspendido/obsoleto, auxiliar, mismo RFC y cam
     await bob
       .getByRole('button', { name: 'Guardar cambios', exact: true })
       .click()
-    await expect(bob.getByText('Contador DEMO', { exact: true })).toBeVisible()
+    await expect(
+      bob.getByRole('dialog').getByText('Contador DEMO', { exact: true }),
+    ).toBeVisible()
     await close(bob)
     for (const [expectedVersion, status] of [
       [0, 'SUSPENDED'],

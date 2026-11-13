@@ -18,6 +18,7 @@ export function FilterBar({
   activeCount,
   pending = false,
   searchLabel = 'Buscar',
+  searchMaxLength,
   extra,
 }: {
   search: string
@@ -27,6 +28,7 @@ export function FilterBar({
   activeCount: number
   pending?: boolean
   searchLabel?: string
+  searchMaxLength?: number
   extra?: ReactNode
 }) {
   const id = useId()
@@ -37,6 +39,7 @@ export function FilterBar({
       <Field
         label={searchLabel}
         type="search"
+        maxLength={searchMaxLength}
         value={search}
         onChange={(event) => onSearchChange(event.target.value)}
         disabled={pending}
