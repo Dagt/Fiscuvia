@@ -421,9 +421,17 @@ test('Plan y uso consulta cuotas reales con OIDC y limpia al cambiar despacho', 
     limit: 2,
     available: 1,
   })
+  expect(validator('EntitlementUsage')(rows[1])).toBe(true)
+  expect(rows[1]).toMatchObject({
+    resource: 'TAXPAYERS',
+    measured: 0,
+    reserved: 0,
+    available: null,
+    integration: 'MEASURED',
+  })
   expect(
     rows
-      .slice(1)
+      .slice(2)
       .every(
         (r: { measured: unknown; integration: string }) =>
           r.measured === null && r.integration === 'NOT_INTEGRATED',

@@ -48,7 +48,7 @@ deferred('F30-CACHE', 'CONTRATO DE SEGURIDAD PARA MÓDULO FUTURO', 'Cache poison
 deferred('F30-FILES', 'CONTRATO DE SEGURIDAD PARA MÓDULO FUTURO', 'Path conocido, URL firmada y temporal compartido', 'Autorización previa, URL acotada y temporales privados', 'Almacenamiento documental y descargas reales pendientes; issues de documentos.')
 deferred('F30-JOBS', 'CONTRATO DE SEGURIDAD PARA MÓDULO FUTURO', 'tenant_id del mensaje usado como autoridad', 'Separar transporte de autoridad de negocio y revalidar', 'No hay worker fiscal productivo; #29 sólo entrega protocolo.')
 deferred('P30-OPERATIONS', 'IMPLEMENTADO CON VERIFICACIÓN PENDIENTE', 'Retención, restauración y volumen operativo', 'Journal y outbox durables en PostgreSQL', 'Esta batería no acredita recuperación de infraestructura productiva ni capacidad bajo carga sostenida.')
-deferred('D30-ROLES', 'DECISIÓN PENDIENTE DE APROBACIÓN', 'Capacidades fiscales implícitas', 'DENY y políticas sintéticas sólo en fixtures', 'OQ-015 y matriz funcional Proposed.')
-deferred('D30-FISCAL', 'DECISIÓN PENDIENTE DE APROBACIÓN', 'Esquema fiscal prematuro', 'Gate #74 vigente', 'Sin tablas fiscales definitivas.')
+deferred('D30-ROLES', 'DECISIÓN PENDIENTE DE APROBACIÓN', 'Capacidades fiscales posteriores implícitas', 'Corte #34 limitado por D74-03; DENY para operaciones no aprobadas', 'Matriz fiscal posterior y administración de cartera #36 pendientes; #34 verifica acceso exacto versionado.')
+deferred('D30-FISCAL', 'DECISIÓN PENDIENTE DE APROBACIÓN', 'Esquema fiscal posterior prematuro', 'D74-01..05 sólo habilitan contribuyentes V12', 'Obligaciones, documentos, honorarios y reglas fiscales posteriores siguen Proposed.')
 deferred('D30-OIDC', 'DECISIÓN PENDIENTE DE APROBACIÓN', 'Proveedor o MFA productivo no verificado', 'Sólo Keycloak local/test; MFA privilegiado fail-closed', 'Proveedor, semántica MFA y operación de producción pendientes.')
 export default scenarios

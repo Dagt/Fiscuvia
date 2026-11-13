@@ -60,7 +60,7 @@ jobs:
         if: ${{ always() }}
         run: node tools/ci/reports.mjs backend
       - name: Verify real HTTP responses against implemented OpenAPI
-        run: node tools/ci/contracts.mjs --responses backend/target/contract-responses.json
+        run: node tools/ci/contracts.mjs --responses backend/target/contract-responses.json --taxpayer-responses backend/target/taxpayer-contract-responses.json
       - name: Scan artifact allowlist
         run: node tools/ci/artifacts.mjs backend
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

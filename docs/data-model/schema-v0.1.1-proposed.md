@@ -1,5 +1,7 @@
 # Esquema v0.1.1 — corte #34 autorizado y dominio posterior propuesto
 
+**Actualización C01 #34:** el corte autorizado se implementa en V12. [Modelo físico efectivo y correspondencia](../architecture/TAXPAYER-DOMAIN-34.md). Las secciones siguientes son el antecedente de #74; sus módulos posteriores permanecen Proposed y no son migraciones. #92 ya fue integrado por el propietario.
+
 **Aprobación limitada de producto D74-01..05 por Dagt, 2026-11-12; Refs #74.** [Fuente y restricciones](../decisions/issue-74-owner-approval.md). El corte de contribuyentes está autorizado como especificación; las secciones de módulos posteriores siguen Proposed. Este archivo no es DDL ejecutado: #74 no añade migraciones/grants, y #34 comenzará en tarea posterior tras revisión final e integración de #92. Complementa [v0.1](schema-v0.1.md) sólo en ese corte. [Decisiones/OQ](../product/SPEC01-decisions-74.md), [contrato #34](../api/taxpayers-34-specification.md).
 
 ## Convenciones y esquema efectivo

@@ -1,5 +1,7 @@
 # Actores, roles y matriz de permisos — propuesta v0.1
 
+**C01 #34:** sólo la política limitada [D74-03 implementada](../architecture/TAXPAYER-DOMAIN-34.md) está habilitada: CREATE owner/MFA, VIEW/EDIT con expediente y revisión vigente, ARCHIVE/RESTORE owner/MFA. ASSIGN reservado sin operación. La matriz fiscal posterior sigue propuesta; no hay cartera global por pertenencia o rol.
+
 **Revisión SPEC01 #74:** [matriz inicial #34 aprobada](../security/FISCAL-PERMISSIONS-PROPOSAL-74.md) según [D74-03](../decisions/issue-74-owner-approval.md); sin grants efectivos instalados aquí. Owner/supervisor/contador requieren recurso exacto con habilitación vigente, auxiliar DENY; reactivar/cambiar rol no recupera grants históricos sin revisión explícita. La tabla orientativa histórica no concede cartera completa ni permisos de módulos posteriores. Cuatro roles iniciales, sin Billing/portal nuevos; V7/V9/V11 conservan alcance administrativo.
 
 **Estado:** Proposed. Referencias FR-001–009, BR-001–005, ADR-0002. No equiparar 'rol' con acceso universal; las capacidades son verificadas por backend y restringidas por tenant/expediente/estado.

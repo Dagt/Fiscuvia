@@ -1,5 +1,7 @@
 # Dominio fiscal v0.1.1 — propuesta revisada
 
+**C01 #34:** el corte de contribuyentes autorizado se implementa en [V12/modelo efectivo](../architecture/TAXPAYER-DOMAIN-34.md), tras integración humana de #92. El resto de este modelo conserva estado Proposed; no se aprueban OQ fiscales adicionales.
+
 **D74-01..05 aprobadas sólo para #34 por Dagt el 2026-11-12; sin implementación.** [Fuente/restricciones](../decisions/issue-74-owner-approval.md), [esquema](../data-model/schema-v0.1.1-proposed.md), [decisiones y OQ](../product/SPEC01-decisions-74.md). UUID/RFC/lifecycle, referencias manuales, bootstrap/matriz limitada, cuota y fronteras #34/#35/#36 están autorizados. Estados/reglas de módulos posteriores permanecen Proposed para revisión contable; no aprobación fiscal global.
 
 ## Límites y relaciones

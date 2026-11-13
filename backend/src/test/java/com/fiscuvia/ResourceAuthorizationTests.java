@@ -38,13 +38,16 @@ class ResourceAuthorizationTests {
         r.add("fiscuvia.identity.mfa-policy",()->"keycloak-local-otp-v1");
         r.add("spring.datasource.hikari.maximum-pool-size",()->2);
     }
-    @BeforeAll static void schema() throws Exception {
+    static boolean fixtureInstalled;
+    @BeforeEach void schema() throws Exception {
+        if(fixtureInstalled)return;
         // Spring context has not necessarily migrated at BeforeAll. Flyway same immutable sources.
         org.flywaydb.core.Flyway.configure().dataSource(DATABASE.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,DATABASE.migrationPassword)
           .defaultSchema("infrastructure").locations("classpath:db/migration").load().migrate();
         try(var c=migration();var s=c.createStatement();var in=ResourceAuthorizationTests.class.getResourceAsStream("/resource-authorization-fixture.sql")) {
             s.execute(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
         }
+        fixtureInstalled=true;
     }
     @Test void anonymousAndExpiredSessionCannotReachResource() throws Exception {
         try(var a=new OidcBrowser(TLS,OIDC)) {
@@ -105,15 +108,16 @@ class ResourceAuthorizationTests {
     }
     @Test void supervisorHasNoAutomaticPortfolioOrAdministrativeAccess() throws Exception {
         try(var f=new Fixture("FIRM_SUPERVISOR")) {
-            admin(f.tenant,s->s.update("DELETE FROM access_control.resource_grants WHERE membership_id=?",f.member));
+            admin(f.tenant,s->s.update("UPDATE access_control.resource_grants SET active=false WHERE membership_id=?",f.member));
             assertThat(f.get("item/"+f.own).statusCode()).isEqualTo(404);
             assertThat(f.get("list").body()).isEqualTo("[]");
             assertThat(f.get("admin").statusCode()).isEqualTo(403);
         }
     }
-    @Test void ownerGetsNoFiscalCapabilitiesFromRoleHierarchy() throws Exception {
+    @Test void approvedOwnerPolicyStillRequiresAnExactFiscalGrant() throws Exception {
         try(var f=new Fixture("FIRM_OWNER_ADMIN")) {
-            assertThat(f.get("list").statusCode()).isEqualTo(403);
+            var response=f.get("list");assertThat(response.statusCode()).isEqualTo(200);
+            assertThat(response.body()).contains(f.own.toString()).doesNotContain(f.other.toString());
         }
     }
     @Test void ownerCannotUseReadContextToInvokeAdministrativeSqlCommand() throws Exception {
@@ -372,7 +376,7 @@ class ResourceAuthorizationTests {
             s.update("INSERT INTO identity.membership_roles VALUES(?,?,?)",tenant,id,role); }); return id;
     }
     static UUID resource(UUID tenant,String kind) throws Exception { UUID id=UUID.randomUUID(); admin(tenant,s->s.update("INSERT INTO resource_fixture.items(tenant_id,id,kind,label) VALUES(?,?,?,'DEMO own')",tenant,id,kind)); return id; }
-    static void grant(UUID tenant,UUID member,UUID resource,String capability,String kind) throws Exception { admin(tenant,s->s.update("INSERT INTO access_control.resource_grants VALUES(?,?,?,?,?,true,?)",tenant,member,kind,resource,capability,UUID.randomUUID())); }
+    static void grant(UUID tenant,UUID member,UUID resource,String capability,String kind) throws Exception { admin(tenant,s->TaxpayerFixtures.grant(s,tenant,member,resource,capability,kind)); }
     void alterPrincipal(OidcBrowser browser,String field,long value) {
         String id=new String(Base64.getDecoder().decode(browser.sessionCookie().replace("\"","")),java.nio.charset.StandardCharsets.UTF_8);
         edit(sessions,id,session->{

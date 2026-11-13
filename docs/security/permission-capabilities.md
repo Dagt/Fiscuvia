@@ -1,5 +1,7 @@
 # Catálogo de capacidades (propuesto)
 
+**C01 #34:** [política fiscal limitada implementada](../architecture/TAXPAYER-DOMAIN-34.md) por V12 tras D74-03: ocho role_capabilities, grants exactos y última revisión ligada a versión/rol. ASSIGN reservado sin operación; no se acepta la matriz fiscal posterior por este cambio. Notas #74 anteriores describen el PR documental.
+
 **SPEC01 #74:** [matriz limitada #34 aprobada](FISCAL-PERMISSIONS-PROPOSAL-74.md), [fuente D74-03](../decisions/issue-74-owner-approval.md). CREATE owner propio+MFA, VIEW/EDIT owner/supervisor/contador con grant efectivo, ARCHIVE owner+MFA; auxiliar DENY. ASSIGN sólo grant reservado para #36, sin política operativa/delegación #34. El catálogo aún contiene códigos no implementados; no grants ni capacidades globales nuevas en #74. Habilitación versionada obligatoria, sin recuperación automática por membresía/rol.
 
 ## Administración de equipo #33 — ampliación aprobada

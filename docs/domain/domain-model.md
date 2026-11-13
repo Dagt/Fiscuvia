@@ -1,5 +1,7 @@
 # Modelo de dominio (conceptual, no esquema SQL)
 
+**C01 #34:** [agregado de contribuyentes implementado](../architecture/TAXPAYER-DOMAIN-34.md). La aprobación limitada de #74 ya se materializa en V12; obligaciones/documentos/honorarios y sus reglas siguen Proposed.
+
 **SPEC01 #74:** [v0.1.1](fiscal-domain-v0.1.1.md) contiene corte #34 autorizado por [D74-01..05](../decisions/issue-74-owner-approval.md): perfil/régimen manual/responsable inicial/acceso efectivo/cuota. Relaciones/estados de obligaciones/documentos/honorarios continúan Proposed; no se aceptan reglas fiscales globales ni se cambian permisos efectivos V1–V11 por este documento.
 
 **Estado:** Proposed; origen: requisitos FR y relato del despacho. Evitar modelar literalmente las casillas de un HTML o Excel; distinguir el trabajo operativo de evidencia oficial.

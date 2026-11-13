@@ -1,5 +1,7 @@
 # SPEC01 — modelo fiscal y preparación de #34
 
+**Documento histórico del gate #74:** #92 fue integrado por el propietario. La implementación posterior #34 se documenta en [C01/modelo efectivo V12](TAXPAYER-DOMAIN-34.md); las referencias de esta revisión a ausencia de código/políticas se refieren al PR documental #92, no al estado de la rama C01.
+
 **Estado: D74-01..05 aprobadas con alcance limitado de #34 por Dagt el 2026-11-12; resto del dominio fiscal Proposed.** Refs #74. [Fuente de aprobación y restricciones](../decisions/issue-74-owner-approval.md). Se incorporan decisiones recibidas sobre HEAD `260c53202a03a80597769f6fab80e348b0e437bd`, en la misma rama/PR #92. No implementa #34 ni habilita grants/migraciones en esta tarea; OQ completas Open. Presupuesto $0, sin merge/Ready/despliegue.
 
 ## Lectura y resultado de la revisión
