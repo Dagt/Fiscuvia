@@ -1,5 +1,7 @@
 # SPEC01 — permisos de #34 aprobados y propuestas posteriores
 
+**C02 #35:** la [proyección de presentación](../api/taxpayer-directory-35.md) evalúa exclusivamente operaciones D74-03 existentes. No agrega capacidades, grants o autoridad del navegador. Responsable se difiere por ausencia de contrato autorizado; no se amplía acceso a colaboradores.
+
 **C01 #34:** únicamente la matriz D74-03 del corte inicial está [implementada en V12](../architecture/TAXPAYER-DOMAIN-34.md); el resto continúa propuesto. La habilitación se comprueba en autorización y RLS, sin endpoints de revisión/cartera #36.
 
 **Aprobación limitada D74-03 por Dagt, 2026-11-12; Refs #74.** [Fuente/alcance/restricciones](../decisions/issue-74-owner-approval.md), [decisiones/OQ](../product/SPEC01-decisions-74.md). Ninguna fila instala políticas/grants en este PR. La [infraestructura #28](RESOURCE-AUTHORIZATION.md) y la [administración #33](TEAM-ADMINISTRATION-33.md) se conservan; su integración fiscal se implementará posteriormente.

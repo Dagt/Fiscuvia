@@ -27,9 +27,11 @@ class TaxpayerController {
     private static <T> ResponseEntity<T> safe(T body){return ResponseEntity.ok().header("Cache-Control","no-store").body(body);}
     @GetMapping ResponseEntity<PageResponse<TaxpayerService.Taxpayer>> list(@PathVariable UUID tenantId,
         @RequestParam(required=false) Integer page,@RequestParam(required=false) Integer size,@RequestParam(required=false) String sort,
-        @RequestParam(defaultValue="") String search,@RequestParam(defaultValue="ACTIVE") String status){
-        return safe(service.list(tenantId,PageQuery.parse(page,size,sort,Set.of("id","legalName","createdAt")),search,status));
+        @RequestParam(defaultValue="") String search,@RequestParam(defaultValue="ACTIVE") String status,@RequestParam(defaultValue="") String regime){
+        return safe(service.list(tenantId,PageQuery.parse(page,size,sort,Set.of("id","legalName","createdAt")),search,status,regime));
     }
+    @GetMapping("/presentation") ResponseEntity<TaxpayerService.Presentation> presentation(@PathVariable UUID tenantId){return safe(service.presentation(tenantId,null));}
+    @GetMapping("/{taxpayerId}/presentation") ResponseEntity<TaxpayerService.Presentation> itemPresentation(@PathVariable UUID tenantId,@PathVariable UUID taxpayerId){return safe(service.presentation(tenantId,taxpayerId));}
     @GetMapping("/{taxpayerId}") ResponseEntity<TaxpayerService.Taxpayer> get(@PathVariable UUID tenantId,@PathVariable UUID taxpayerId){return safe(service.get(tenantId,taxpayerId));}
     @PostMapping ResponseEntity<TaxpayerService.Receipt> create(@PathVariable UUID tenantId,@RequestHeader("Idempotency-Key") String key,@Valid @RequestBody Create body){
         var result=service.command(tenantId,ApiIdentifiers.idempotencyKey(key),null,null,TaxpayerService.Action.CREATE,body.rfc(),body.personType(),body.legalName(),body.tradeName(),body.regimes(),null);

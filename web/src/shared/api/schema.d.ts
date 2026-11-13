@@ -349,6 +349,27 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tenants/{tenantId}/taxpayers/{taxpayerId}/presentation': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    /** Consultar señales de presentación de contribuyentes autorizados */
+    get: operations['getTaxpayerItemPresentation']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/tenants/{tenantId}/taxpayers/{taxpayerId}/restorations': {
     parameters: {
       query?: never
@@ -367,6 +388,26 @@ export interface paths {
      * @description Requiere capacidad aprobada y grant exacto con última revisión ENABLE de versión/rol vigentes, MFA donde corresponda. Grant histórico no revive por reactivación/cambio de rol. Sin autorización/habilitación efectiva,404 uniforme; replay reautoriza y no renueva habilitaciones.
      */
     post: operations['restoreTaxpayer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tenants/{tenantId}/taxpayers/presentation': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    /** Consultar señales de presentación de contribuyentes autorizados */
+    get: operations['getTaxpayerCollectionPresentation']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -794,6 +835,17 @@ export interface components {
       items: components['schemas']['Taxpayer'][]
       page: number
       size: number
+    }
+    /** @description Indicación momentánea de presentación de operaciones D74-03. No autoriza comandos ni concede grants. canRestore requiere verificar cuota al ejecutar. version NULL para colección; coincide con el detalle para item. */
+    TaxpayerPresentation: {
+      canArchive: boolean
+      canCreate: boolean
+      canEdit: boolean
+      canRestore: boolean
+      /** @enum {string} */
+      createBlock:
+        'NONE' | 'NOT_AUTHORIZED' | 'MFA_REQUIRED' | 'QUOTA_UNAVAILABLE'
+      version: number | null
     }
     TeamCommandResult: {
       replayed: boolean
@@ -1474,6 +1526,8 @@ export interface operations {
     parameters: {
       query?: {
         page?: number
+        /** @description Código manual capturado. Se aplica al snapshot vigente autorizado antes de LIMIT/OFFSET; no catálogo normativo. */
+        regime?: string
         /** @description Literal max80, sin controles; no guardar en URL de navegación/analytics. */
         search?: string
         size?: number
@@ -1701,6 +1755,37 @@ export interface operations {
       500: components['responses']['InternalError']
     }
   }
+  getTaxpayerItemPresentation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        taxpayerId: components['parameters']['TaxpayerId']
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Acciones sobre capacidad/grant/revisión/MFA y estado actuales; alta también cupo disponible, sin números ni identificadores privados. */
+      200: {
+        headers: {
+          'Cache-Control'?: 'no-store'
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TaxpayerPresentation']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
+      500: components['responses']['InternalError']
+    }
+  }
   restoreTaxpayer: {
     parameters: {
       query?: never
@@ -1744,6 +1829,36 @@ export interface operations {
       413: components['responses']['TooLarge']
       415: components['responses']['MediaType']
       422: components['responses']['Validation']
+      500: components['responses']['InternalError']
+    }
+  }
+  getTaxpayerCollectionPresentation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Candidato: validar membresía/contexto; nunca autoridad por sí solo. */
+        tenantId: components['parameters']['TenantId']
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Acciones sobre capacidad/grant/revisión/MFA y estado actuales; alta también cupo disponible, sin números ni identificadores privados. */
+      200: {
+        headers: {
+          'Cache-Control'?: 'no-store'
+          'X-Correlation-Id': components['headers']['CorrelationId']
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TaxpayerPresentation']
+        }
+      }
+      400: components['responses']['BadRequest']
+      401: components['responses']['Unauthorized']
+      403: components['responses']['Forbidden']
+      404: components['responses']['NotFound']
       500: components['responses']['InternalError']
     }
   }

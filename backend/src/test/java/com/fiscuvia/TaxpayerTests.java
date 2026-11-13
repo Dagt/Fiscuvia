@@ -38,7 +38,7 @@ class TaxpayerTests {
         ownerId=UUID.fromString(owner.login("alice").path("userId").asText());personId=UUID.fromString(person.login("bob").path("userId").asText());otherId=UUID.fromString(other.login("carol").path("userId").asText());}
     @AfterAll static void close() throws Exception {java.nio.file.Files.writeString(java.nio.file.Path.of("target/taxpayer-contract-responses.json"),OidcBrowser.JSON.writeValueAsString(EVIDENCE));if(owner!=null)owner.close();if(person!=null)person.close();if(other!=null)other.close();}
     static HttpResponse<String> evidence(String method,String path,HttpResponse<String> response) {
-        String route=path.split("\\?")[0].replaceAll("/tenants/[^/]+/taxpayers","/tenants/{tenantId}/taxpayers").replaceAll("/taxpayers/[^/]+","/taxpayers/{taxpayerId}");
+        String route=path.split("\\?")[0].replaceAll("/tenants/[^/]+/taxpayers","/tenants/{tenantId}/taxpayers").replaceAll("/taxpayers/(?!presentation(?:/|$))[^/]+","/taxpayers/{taxpayerId}");
         if(path.contains("/taxpayers"))EVIDENCE.add(Map.of("method",method.toLowerCase(Locale.ROOT),"route",route,"status",response.statusCode(),"contentType",response.headers().firstValue("Content-Type").orElse(""),"correlationId",response.headers().firstValue("X-Correlation-Id").orElse(""),"cacheControl",response.headers().firstValue("Cache-Control").orElse(""),"body",OidcBrowser.json(response)));
         return response;
     }
@@ -344,6 +344,52 @@ class TaxpayerTests {
             .isIn(List.of(200,409),List.of(201,409));
         // CREATE wins with 201, RESTORE wins with 200; exactly one must fail capacity.
         admin(t,s->assertThat(s.queryForObject("SELECT count(*) FROM taxpayers.taxpayers WHERE status='ACTIVE'",Integer.class)).isEqualTo(1));
+    }
+    tools.jackson.databind.JsonNode presentation(UUID t,UUID id,OidcBrowser actor) throws Exception {
+        String path=path(t)+(id==null?"":"/"+id)+"/presentation";
+        var response=evidence("GET",path,actor.get(path));assertThat(response.statusCode()).withFailMessage("Presentation failed: %s",response.body()).isEqualTo(200);return OidcBrowser.json(response);
+    }
+    @Test void presentationUsesEffectivePolicyAndExactCurrentGrantsWithoutExposingPortfolio() throws Exception {
+        UUID t=firm(ownerId,2),id=created(t,"DEM000101001"),m=member(t,personId,"ACCOUNTANT");
+        assertThat(presentation(t,null,owner).path("canCreate").asBoolean()).isTrue();
+        var item=presentation(t,id,owner);assertThat(item.path("canEdit").asBoolean()).isTrue();assertThat(item.path("canArchive").asBoolean()).isTrue();assertThat(item.path("version").asLong()).isZero();
+        assertThat(presentation(t,null,person).path("canCreate").asBoolean()).isFalse();
+        grant(t,m,id,"TAXPAYER_VIEW");assertThat(presentation(t,id,person).path("canEdit").asBoolean()).isFalse();
+        grant(t,m,id,"TAXPAYER_EDIT");assertThat(presentation(t,id,person).path("canEdit").asBoolean()).isTrue();assertThat(presentation(t,id,person).path("canArchive").asBoolean()).isFalse();
+        assertThat(team(t,m,0,"status","SUSPENDED").statusCode()).isEqualTo(200);assertThat(person.get(path(t)+"/presentation").statusCode()).isEqualTo(403);
+        assertThat(team(t,m,1,"status","ACTIVE").statusCode()).isEqualTo(200);assertThat(person.get(path(t)+"/"+id+"/presentation").statusCode()).isEqualTo(404);
+        assertThat(archive(t,id,0).statusCode()).isEqualTo(200);item=presentation(t,id,owner);assertThat(item.path("canEdit").asBoolean()).isFalse();assertThat(item.path("canArchive").asBoolean()).isFalse();assertThat(item.path("canRestore").asBoolean()).isTrue();
+    }
+    @Test void presentationCountsHiddenActiveTaxpayersWithoutLeakingCountOrRetainingMeasureScope() throws Exception {
+        UUID t=firm(ownerId,1),id=created(t,"DEM000101001");
+        admin(t,s->s.update("UPDATE access_control.resource_grants SET active=false WHERE resource_id=? AND capability='TAXPAYER_VIEW'",id));
+        var hint=presentation(t,null,owner);assertThat(hint.path("canCreate").asBoolean()).isFalse();assertThat(hint.path("createBlock").asText()).isEqualTo("QUOTA_UNAVAILABLE");assertThat(hint.size()).isEqualTo(6);assertThat(hint.toString()).doesNotContain(id.toString(),"DEM000101001","count","total");
+        try(var c=connection()){var sql=runtime(c);authorize(sql,t,null,"TAXPAYER_VIEW","alice");sql.queryForObject("SELECT taxpayers.presentation(?,NULL)",Object.class,t);assertThat(sql.queryForList("SELECT id FROM taxpayers.taxpayers")).isEmpty();c.rollback();}
+    }
+    @Test void presentationRequiresBoundViewContextAndCannotProbeForeignItemsOrPrivateHelpers() throws Exception {
+        UUID a=firm(),b=firm(),id=created(a,"DEM000101001");
+        assertThat(owner.get(path(b)+"/"+id+"/presentation").statusCode()).isEqualTo(404);
+        assertThat(other.get(path(a)+"/presentation").statusCode()).isEqualTo(403);
+        try(var c=connection()){var sql=runtime(c);assertThatThrownBy(()->sql.queryForObject("SELECT taxpayers.presentation(?,NULL)",Object.class,a)).isInstanceOf(org.springframework.dao.DataAccessException.class);c.rollback();
+            assertThatThrownBy(()->sql.queryForObject("SELECT taxpayer_private.action_available(?,?,?,'TAXPAYER_EDIT')",Object.class,a,ownerId,id)).isInstanceOf(org.springframework.dao.DataAccessException.class);c.rollback();}
+    }
+    @Test void presentationRequiresRecentMfaButStillAllowsApprovedProfileEdit() throws Exception {
+        UUID t=firm(),id=created(t,"DEM000101001");Runnable reset=ThreatHarness.principalField(sessions,new ThreatHarness.Actor("alice",ownerId,owner),"mfaAt",1L);
+        try {var h=presentation(t,null,owner);assertThat(h.path("createBlock").asText()).isEqualTo("MFA_REQUIRED");assertThat(h.path("canCreate").asBoolean()).isFalse();h=presentation(t,id,owner);assertThat(h.path("canEdit").asBoolean()).isTrue();assertThat(h.path("canArchive").asBoolean()).isFalse();}finally{reset.run();}
+    }
+    @Test void manualRegimeFilterRunsBeforeLimitAndDoesNotExposeHiddenOrOldReferences() throws Exception {
+        UUID t=firm(),one=created(t,"DEM000101001"),two=created(t,"DEM000101002"),hidden=created(t,"DEM000101003");
+        for(UUID id:List.of(two,hidden))assertThat(request(owner,"PATCH",path(t)+"/"+id,UUID.randomUUID(),edit(0,"Referencia DEMO",List.of(regime("000",null,null)))).statusCode()).isEqualTo(200);
+        admin(t,s->s.update("UPDATE access_control.resource_grants SET active=false WHERE resource_id=? AND capability='TAXPAYER_VIEW'",hidden));
+        var page=OidcBrowser.json(owner.get(path(t)+"?regime=000&size=1&sort=legalName,asc"));assertThat(page.path("items").size()).isEqualTo(1);assertThat(page.path("items").get(0).path("id").asText()).isEqualTo(two.toString());assertThat(page.path("hasNext").asBoolean()).isFalse();assertThat(page.has("total")).isFalse();
+        assertThat(request(owner,"PATCH",path(t)+"/"+two,UUID.randomUUID(),edit(1,"Cambio DEMO",List.of())).statusCode()).isEqualTo(200);
+        assertThat(OidcBrowser.json(owner.get(path(t)+"?regime=000")).path("items").size()).isZero();assertThat(owner.get(path(t)+"?regime=00").statusCode()).isEqualTo(422);
+        assertThat(other.get(path(t)+"?regime=000").statusCode()).isEqualTo(403);assertThat(get(t,one).path("regimes").size()).isZero();
+    }
+    @Test void startupGuardRejectsPresentationFunctionPrivilegeDrift() throws Exception {
+        admin(null,s->s.execute("GRANT EXECUTE ON FUNCTION taxpayers.presentation(uuid,uuid) TO fiscuvia_sessions"));
+        try {assertThatThrownBy(this::guard).isInstanceOf(IllegalStateException.class);}
+        finally{admin(null,s->s.execute("REVOKE EXECUTE ON FUNCTION taxpayers.presentation(uuid,uuid) FROM fiscuvia_sessions"));}guard();
     }
     void waitForDatabaseWait() throws Exception {long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(System.nanoTime()<deadline){boolean[] waiting={false};admin(null,s->waiting[0]=s.queryForObject("SELECT EXISTS(SELECT 1 FROM pg_locks l JOIN pg_stat_activity a ON a.pid=l.pid WHERE NOT l.granted AND a.datname=current_database())",Boolean.class));if(waiting[0])return;java.util.concurrent.locks.LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(10));}throw new AssertionError("Expected real database lock wait");}
     void guard() throws Exception {((org.springframework.boot.ApplicationRunner)application.getBean("taxpayerGuards")).run(null);}

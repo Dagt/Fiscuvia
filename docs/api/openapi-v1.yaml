@@ -961,6 +961,14 @@ paths:
               - ACTIVE
               - ARCHIVED
             default: ACTIVE
+        - name: regime
+          in: query
+          description: Código manual capturado. Se aplica al snapshot vigente autorizado antes de LIMIT/OFFSET; no
+            catálogo normativo.
+          schema:
+            type: string
+            pattern: ^$|^[0-9]{3}$
+            default: ""
       responses:
         "200":
           description: Filas filtradas por capacidad/grants/RLS antes de paginar.
@@ -985,10 +993,10 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-        "500":
-          $ref: "#/components/responses/InternalError"
         "422":
           $ref: "#/components/responses/Validation"
+        "500":
+          $ref: "#/components/responses/InternalError"
       description: Filtra grants efectivos con última revisión ENABLE de versión/rol vigentes antes de
         filtros/orden/LIMIT. Cambiar a ACTIVE o recuperar rol no rehabilita; sin grants efectivos devuelve
         página vacía.
@@ -1294,6 +1302,79 @@ paths:
       security:
         - SessionCookie: []
       x-implementation-status: implemented
+  /tenants/{tenantId}/taxpayers/presentation:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+    get:
+      operationId: getTaxpayerCollectionPresentation
+      summary: Consultar señales de presentación de contribuyentes autorizados
+      security:
+        - SessionCookie: []
+      tags:
+        - Taxpayers
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Acciones sobre capacidad/grant/revisión/MFA y estado actuales; alta también cupo disponible, sin
+            números ni identificadores privados.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxpayerPresentation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /tenants/{tenantId}/taxpayers/{taxpayerId}/presentation:
+    parameters:
+      - $ref: "#/components/parameters/TenantId"
+      - $ref: "#/components/parameters/TaxpayerId"
+    get:
+      operationId: getTaxpayerItemPresentation
+      summary: Consultar señales de presentación de contribuyentes autorizados
+      security:
+        - SessionCookie: []
+      tags:
+        - Taxpayers
+      x-implementation-status: implemented
+      responses:
+        "200":
+          description: Acciones sobre capacidad/grant/revisión/MFA y estado actuales; alta también cupo disponible, sin
+            números ni identificadores privados.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                const: no-store
+            X-Correlation-Id:
+              $ref: "#/components/headers/CorrelationId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxpayerPresentation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
 components:
   headers:
     CorrelationId:
@@ -2319,6 +2400,41 @@ components:
           maximum: 100
         hasNext:
           type: boolean
+    TaxpayerPresentation:
+      type: object
+      additionalProperties: false
+      required:
+        - canCreate
+        - createBlock
+        - canEdit
+        - canArchive
+        - canRestore
+        - version
+      description: Indicación momentánea de presentación de operaciones D74-03. No autoriza comandos ni concede
+        grants. canRestore requiere verificar cuota al ejecutar. version NULL para colección; coincide con el
+        detalle para item.
+      properties:
+        canCreate:
+          type: boolean
+        createBlock:
+          type: string
+          enum:
+            - NONE
+            - NOT_AUTHORIZED
+            - MFA_REQUIRED
+            - QUOTA_UNAVAILABLE
+        canEdit:
+          type: boolean
+        canArchive:
+          type: boolean
+        canRestore:
+          type: boolean
+        version:
+          type:
+            - integer
+            - "null"
+          minimum: 0
+          maximum: 9007199254740991
   responses:
     BadRequest:
       description: Sintaxis, tipo o parámetro inválido (400)

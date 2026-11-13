@@ -5,6 +5,7 @@ import type { PropsWithChildren } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as api from '../../shared/api/session-client'
 import { ApiClientError } from '../../shared/api/client'
+import { NotificationProvider } from '../../shared/presentation/NotificationProvider'
 import { useAuthorizedSession } from './useAuthorizedSession'
 
 vi.mock('../../shared/api/session-client', () => ({
@@ -38,7 +39,9 @@ async function setup() {
   function Wrapper({ children }: PropsWithChildren) {
     return (
       <QueryClientProvider client={client}>
-        <MemoryRouter>{children}</MemoryRouter>
+        <NotificationProvider>
+          <MemoryRouter>{children}</MemoryRouter>
+        </NotificationProvider>
       </QueryClientProvider>
     )
   }

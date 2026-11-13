@@ -91,8 +91,8 @@ test('AppShell autenticado, selector y navegación móvil con OIDC real', async 
         page.getByRole('dialog', { name: 'Navegación de Fiscuvia' }),
       ).toBeVisible()
       await expect(
-        page.getByRole('button', { name: 'Contribuyentes', exact: true }),
-      ).toBeDisabled()
+        page.getByRole('link', { name: 'Contribuyentes', exact: true }),
+      ).toHaveAttribute('href', '/app/taxpayers')
       await page.keyboard.press('Escape')
       await expect(trigger).toBeFocused()
     }

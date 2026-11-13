@@ -46,7 +46,11 @@ export function bffBase(
 export async function sessionRequest(
   path: string,
   body?: unknown,
-  options: { signal?: AbortSignal | undefined; idempotencyKey?: string } = {},
+  options: {
+    signal?: AbortSignal | undefined
+    idempotencyKey?: string
+    method?: 'PATCH'
+  } = {},
 ): Promise<unknown> {
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (body !== undefined) {
@@ -58,7 +62,7 @@ export async function sessionRequest(
   let response: Response
   try {
     response = await fetch(`${bffBase()}${path}`, {
-      method: body === undefined ? 'GET' : 'POST',
+      method: body === undefined ? 'GET' : (options.method ?? 'POST'),
       credentials: 'same-origin',
       redirect: 'error',
       cache: 'no-store',

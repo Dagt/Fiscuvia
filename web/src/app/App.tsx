@@ -11,7 +11,10 @@ export function App() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/app" element={<SessionPage />} />
+      <Route element={<SessionPage />}>
+        <Route path="/app" element={null} />
+        <Route path="/app/taxpayers" element={null} />
+      </Route>
       <Route
         path="/desarrollo/componentes"
         element={

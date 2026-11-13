@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
+import { useNotification } from '../../shared/presentation/notification-context'
 import { ApiClientError } from '../../shared/api/client'
 import {
   authorizeTenant,
@@ -11,6 +12,7 @@ import {
 
 /** Presentation context only. Every protected backend operation must authorize again. */
 export function useAuthorizedSession() {
+  const notify = useNotification()
   const navigate = useNavigate()
   const client = useQueryClient()
   const identity = useQuery({
@@ -48,6 +50,7 @@ export function useAuthorizedSession() {
       ? freshMember
       : null
   async function clearContext() {
+    notify(null)
     const filters = {
       predicate: (query: { queryKey: readonly unknown[] }) =>
         !['current-identity', 'auth-status', 'login-csrf'].includes(

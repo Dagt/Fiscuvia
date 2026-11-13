@@ -66,20 +66,21 @@ describe('rutas y shell', () => {
     expect(screen.queryByRole('form')).not.toBeInTheDocument()
   })
 
-  it.each(['/inexistente', '/app/taxpayers', '/registro-no-disponible'])(
-    'no simula un módulo en %s y permite volver',
-    async (path) => {
-      const user = userEvent.setup()
-      renderRoute(path)
-      expect(
-        screen.getByRole('heading', { name: 'No encontramos esta página' }),
-      ).toBeInTheDocument()
-      await user.click(screen.getByRole('link', { name: 'Volver al inicio' }))
-      expect(
-        screen.getByRole('heading', { name: 'Bienvenido a Fiscuvia' }),
-      ).toBeInTheDocument()
-    },
-  )
+  it.each([
+    '/inexistente',
+    '/app/modulo-no-disponible',
+    '/registro-no-disponible',
+  ])('no simula un módulo en %s y permite volver', async (path) => {
+    const user = userEvent.setup()
+    renderRoute(path)
+    expect(
+      screen.getByRole('heading', { name: 'No encontramos esta página' }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('link', { name: 'Volver al inicio' }))
+    expect(
+      screen.getByRole('heading', { name: 'Bienvenido a Fiscuvia' }),
+    ).toBeInTheDocument()
+  })
 })
 
 describe('estados de presentación', () => {

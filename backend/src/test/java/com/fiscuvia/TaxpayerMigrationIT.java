@@ -21,6 +21,19 @@ class TaxpayerMigrationIT {
         flyway().migrate();
     }
     void copy() throws Exception {Files.copy(Path.of("src/main/resources/db/migration/"+NAME),dir.resolve(NAME),StandardCopyOption.REPLACE_EXISTING);}
+    @Test void presentationUpgradeIsAdditiveAtomicAndPreservesV1ThroughV12() throws Exception {
+        base();copy();flyway().migrate();var before=flyway().info().applied();
+        String name="V13__taxpayer_presentation.sql";Path source=Path.of("src/main/resources/db/migration/"+name);
+        Files.copy(source,dir.resolve(name));Files.writeString(dir.resolve(name),"\nTHIS IS NOT SQL;\n",StandardOpenOption.APPEND);
+        assertThatThrownBy(()->flyway().migrate()).isInstanceOf(FlywayException.class);
+        assertThat(flyway().info().current().getVersion().toString()).isEqualTo("12");
+        try(var c=DriverManager.getConnection(db.getJdbcUrl(),PostgresTestDatabase.MIGRATION_USER,db.migrationPassword);var s=c.createStatement();var r=s.executeQuery("SELECT to_regprocedure('taxpayers.presentation(uuid,uuid)')")){
+            r.next();assertThat(r.getObject(1)).isNull();
+        }
+        Files.copy(source,dir.resolve(name),StandardCopyOption.REPLACE_EXISTING);assertThat(flyway().migrate().migrationsExecuted).isEqualTo(1);
+        var after=flyway().info().applied();for(int n=0;n<before.length;n++)assertThat(after[n].getChecksum()).isEqualTo(before[n].getChecksum());
+        flyway().validate();assertThat(flyway().migrate().migrationsExecuted).isZero();
+    }
     @Test void upgradePreservesEveryHistoricalChecksumAndRunsOnlyOnce() throws Exception {
         base();var before=flyway().info().applied();copy();assertThat(flyway().migrate().migrationsExecuted).isEqualTo(1);
         var after=flyway().info().applied();assertThat(after).hasSize(before.length+1);

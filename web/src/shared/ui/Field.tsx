@@ -14,7 +14,7 @@ export function Field({
 }: ComponentProps<'input'> & {
   label: string
   description?: string
-  error?: string
+  error?: string | undefined
 }) {
   const generated = useId()
   const id = providedId ?? generated

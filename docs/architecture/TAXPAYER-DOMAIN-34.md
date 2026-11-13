@@ -1,5 +1,7 @@
 # C01 #34 — contribuyentes, API y frontera de seguridad
 
+**Extensión C02 #35:** [directorio y proyección de acciones](../api/taxpayer-directory-35.md). V13 sólo añade funciones de lectura, no tablas, grants ni políticas. Filtro manual por snapshot vigente antes de paginar. V1–V12 y los comandos de C01 permanecen intactos.
+
 Estado de esta rama: implementación del alcance inicial autorizado por Dagt en [D74-01..05](../decisions/issue-74-owner-approval.md), después del merge humano de #92. Base exacta `4c748a833a1ca2f0deef5c6fbd7702c0f66996cd`. La aceptación limitada no aprueba las restantes OQ fiscales. [Validación y límites de evidencia](../delivery/VALIDATION-34.md).
 
 Trazabilidad: FR-004/007/009/012..017 (contactos y gestión completa de responsables diferidos a #36), BR-001..004/010..014, NFR-001..009/010/013/015/020/021/026/030..036/040/044. Se conserva el estado de cada ADR; implementar este corte no acepta íntegramente ADR Proposed ni declara todos esos FR completos.

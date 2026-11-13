@@ -16,11 +16,13 @@ function evidence() {
     ['patch', `${root}/{taxpayerId}`, receipt, 200],
     ['post', `${root}/{taxpayerId}/archivals`, receipt, 200],
     ['post', `${root}/{taxpayerId}/restorations`, receipt, 200],
+    ['get', `${root}/presentation`, {canCreate:true,createBlock:'NONE',canEdit:false,canArchive:false,canRestore:false,version:null}, 200],
+    ['get', `${root}/{taxpayerId}/presentation`, {canCreate:false,createBlock:'NOT_AUTHORIZED',canEdit:true,canArchive:true,canRestore:false,version:0}, 200],
   ].map(([method, route, body, status]) => ({ method, route, body: structuredClone(body), status,
     contentType: 'application/json', correlationId: id, cacheControl: 'no-store' }))
 }
-test('contrato fiscal exige evidencia de las seis operaciones y rechaza éxito con datos adicionales', () => {
-  assert.equal(checkTaxpayerHttpResponses(evidence()), 6)
+test('contrato fiscal exige evidencia de las ocho operaciones y rechaza éxito con datos adicionales', () => {
+  assert.equal(checkTaxpayerHttpResponses(evidence()), 8)
   assert.throws(() => checkTaxpayerHttpResponses(evidence().slice(1)))
   const values = evidence(); values[2].body.grants = ['unapproved']
   assert.throws(() => checkTaxpayerHttpResponses(values))

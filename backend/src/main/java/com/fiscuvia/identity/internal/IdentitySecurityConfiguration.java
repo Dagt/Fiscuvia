@@ -64,7 +64,7 @@ class IdentitySecurityConfiguration {
                 .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/v1/tenants/*/team/invitations").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/team/members","/api/v1/tenants/*/team/invitations").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/v1/tenants/*/team/members/*/status","/api/v1/tenants/*/team/members/*/role","/api/v1/tenants/*/team/invitations/*/revoke").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/taxpayers","/api/v1/tenants/*/taxpayers/*").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/v1/tenants/*/taxpayers","/api/v1/tenants/*/taxpayers/*","/api/v1/tenants/*/taxpayers/*/presentation").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/v1/tenants/*/taxpayers","/api/v1/tenants/*/taxpayers/*/archivals","/api/v1/tenants/*/taxpayers/*/restorations").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.PATCH,"/api/v1/tenants/*/taxpayers/*").authenticated()
                 .anyRequest().denyAll())
@@ -74,7 +74,7 @@ class IdentitySecurityConfiguration {
             .exceptionHandling(errors->errors
                 .authenticationEntryPoint((request,response,error)->problems.write(
                         request.getRequestURI().equals("/api/v1/me") || request.getRequestURI().startsWith("/api/v1/auth/")
-                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/taxpayers(?:/[^/]+(?:/(?:archivals|restorations))?)?")
+                                || request.getRequestURI().matches("/api/v1/tenants/[^/]+/taxpayers(?:/[^/]+(?:/(?:archivals|restorations|presentation))?)?")
                                 || request.getRequestURI().matches("/api/v1/tenants/[^/]+/(settings|entitlements|team/invitation-options|team/invitations|team/members|team/members/[^/]+/(status|role)|team/invitations/[^/]+/revoke)")
                                 ? ApiErrorCode.AUTHENTICATION_REQUIRED : ApiErrorCode.NOT_FOUND,request,response))
                 .accessDeniedHandler((request,response,error)->problems.write(ApiErrorCode.ACCESS_DENIED,request,response)))

@@ -1,5 +1,7 @@
 # Especificación visual y funcional de pantallas
 
+**Entrega C02 #35:** el concepto Clientes se implementa como Contribuyentes en `/app/taxpayers`, conectado a PostgreSQL/APIs #34 y al shell #52. [Composición y estados efectivos](TAXPAYER-DIRECTORY-35.md). Sin conteos ficticios, responsable supuesto o ficha 360°; la referencia conceptual posterior conserva su carácter de planeación.
+
 Inventario **conceptual**: no es avance funcional. [Layouts de referencia](reference-library/SCREENS-BASELINE.md) aprobados como dirección visual por Dagt el 2026-11-03, opción B OQ-021; [decisión y límites](reference-library/README.md). El original continúa ausente. `/app` presenta sesión/selección autorizada dentro del shell compartido, no dashboard fiscal. [Componentes implementados #52](DESIGN-SYSTEM-52.md), [auditoría histórica #19](reference-library/CURRENT-UI-AUDIT.md). OQ-021 Resolved para implementación visual; funciones fiscales y permisos siguen sus gates.
 
 1. **Login /login:** panel de marca Fiscuvia + acceso OIDC real, errores claros, móvil columna única. Credenciales/MFA/recuperación en el proveedor configurado; Fiscuvia no añade formulario de correo/contraseña propio. Card/composición exacta son propuestas de referencia, no autorización para cambiar BFF.
