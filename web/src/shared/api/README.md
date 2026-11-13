@@ -1,5 +1,7 @@
 # Cliente API público — #24
 
+**Extensión efectiva C02 #35:** `taxpayer-client.ts` consume contratos reales de contribuyentes, paginación hasNext y señales de presentación cerradas. Utiliza session-client/BFF mismo origen, CSRF para POST/PATCH, Idempotency-Key, expectedVersion, AbortSignal y validación runtime de DTOs generados. No persiste ni registra RFC, nombres o búsquedas. [Contrato](../../../../docs/api/taxpayer-directory-35.md) y [flujos](../../../../docs/ux/TAXPAYER-DIRECTORY-35.md). Las notas #24 siguientes describen únicamente el cliente público original.
+
 `createApiClient().getPlatformInfo(signal?)` consume únicamente `/api/v1/public/info`, con tipos generados del contrato implementado y validación runtime. La UI no lo invoca al montar; QueryClient continúa por instancia. No hay DTO de negocio, identidad/tenant ficticios ni nuevas pantallas.
 
 `schema.d.ts` y `contract-metadata.ts` se generan con `npm run generate:api --prefix tools/ci` desde la raíz. `npm run openapi --prefix tools/ci` comprueba generación exacta y ambos documentos OpenAPI. No editar estos archivos a mano. TypeScript no valida JSON: el decoder verifica campos/tipos/constantes exactos antes de retornar el DTO.

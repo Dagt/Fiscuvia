@@ -166,6 +166,16 @@ export async function take(page: Page, scenario: string) {
   ]) {
     await page.setViewportSize({ width: width!, height: height! })
     await page.evaluate(() => document.fonts.ready)
+    // Audit the settled interface; a disabled-to-enabled button may still be
+    // inside its finite CSS transition after the command response arrives.
+    await page.evaluate(async () => {
+      await Promise.all(
+        document
+          .getAnimations()
+          .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+          .map((a) => a.finished.catch(() => undefined)),
+      )
+    })
     const text = await page.locator('body').innerText()
     expect(
       text.includes(settings.password) || text.includes(settings.otpSecret),
