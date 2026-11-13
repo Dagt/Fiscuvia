@@ -167,6 +167,22 @@ it('un 403 retira datos y muestra permiso, nunca una cartera vacía', async () =
   expect(screen.queryByText('Cliente DEMO')).not.toBeInTheDocument()
   expect(screen.queryByText('Tu cartera empieza aquí')).not.toBeInTheDocument()
 })
+
+it('no conserva un alta habilitada si falla la actualización de su señal', async () => {
+  view()
+  await screen.findByRole('button', { name: 'Nuevo contribuyente' })
+  vi.mocked(api.taxpayerPresentation).mockRejectedValue(
+    new ApiClientError('INTERNAL_ERROR', 500),
+  )
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Actualizar directorio' }),
+  )
+  await screen.findByText('No pudimos verificar las acciones disponibles.')
+  expect(
+    screen.queryByRole('button', { name: 'Nuevo contribuyente' }),
+  ).not.toBeInTheDocument()
+  expect(await screen.findByText('Cliente DEMO')).toBeVisible()
+})
 it('un 401 retira el contexto mediante el flujo de sesión existente', async () => {
   vi.mocked(api.listTaxpayers).mockRejectedValue(
     new ApiClientError('AUTHENTICATION_REQUIRED', 401),

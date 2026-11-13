@@ -88,6 +88,8 @@ export function commandMessage(error: ApiClientError | null, creating = false) {
     return 'No hay cupo disponible o el límite no está vigente. Solicita revisar el plan del despacho.'
   if (error.code === 'STALE_VERSION')
     return 'La información cambió mientras trabajabas. Actualiza los datos y revísalos antes de volver a guardar.'
+  if (error.code === 'IDEMPOTENCY_KEY_REUSED')
+    return 'El identificador de esta solicitud ya se utilizó para otra operación. Revisa el directorio antes de volver a intentarlo.'
   if (error.code === 'CONFLICT')
     return creating
       ? 'No se pudo registrar el contribuyente. El RFC puede estar registrado, incluso archivado. Solicita una revisión autorizada.'
@@ -96,5 +98,7 @@ export function commandMessage(error: ApiClientError | null, creating = false) {
     return 'Revisa los campos y las referencias de régimen antes de continuar.'
   if (error.status === 401 || error.status === 403 || error.status === 404)
     return 'No se pudo autorizar la operación. Tu acceso, estado o verificación MFA pueden haber cambiado.'
+  if (error.status !== undefined && error.status >= 400 && error.status < 500)
+    return 'No se pudo completar la operación. Revisa la información y vuelve a intentarlo si tu acceso continúa vigente.'
   return 'No pudimos confirmar el resultado. Conservamos la misma solicitud en esta vista; recupera su resultado antes de iniciar otra operación.'
 }

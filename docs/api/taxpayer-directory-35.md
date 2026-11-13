@@ -17,3 +17,5 @@ V13 añade exclusivamente las funciones de presentación y su helper privado. Ni
 React usa AbortSignal, cache por actor/tenant/membresía, search en memoria, PATCH con CSRF y UUID idempotente, comandos con expectedVersion y motivos cerrados. Obtiene detalle y proyección con versiones coincidentes; si cambian entre ambos GET, muestra error recuperable y no mezcla las señales. [Flujos y estados](../ux/TAXPAYER-DIRECTORY-35.md).
 
 Filtro/columna responsable pendientes de #36: no se publica la relación PRIMARY ni se amplía acceso a colaboradores mediante TAXPAYER_VIEW. No hay endpoint genérico de permisos.
+
+Despliegue previsto para revisión humana: aplicar V13 con el rol migrador antes de arrancar este backend; el guard rechaza su ausencia o privilegios incorrectos. Recuperación: volver al binario anterior conservando V13 aditiva; no borrar funciones en uso, editar checksums históricos o ejecutar repair para ocultar diferencias. Una corrección posterior se entrega mediante otra migración aditiva. Este issue no despliega nada.

@@ -263,7 +263,10 @@ function Directory(props: Props) {
           title="Contribuyentes"
           description="Administra los contribuyentes y su información fiscal registrada en el despacho."
           primaryAction={
-            !blocked && !hints.isFetching && hints.data?.canCreate ? (
+            !blocked &&
+            !hints.isFetching &&
+            !hints.isError &&
+            hints.data?.canCreate ? (
               <Button
                 onClick={(e) => open({ kind: 'create' }, e.currentTarget)}
               >
