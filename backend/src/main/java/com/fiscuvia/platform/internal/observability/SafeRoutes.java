@@ -10,6 +10,7 @@ public final class SafeRoutes {
             "/api/v1/auth/csrf", "/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/tenant",
             "/api/v1/auth/authorize/local", "/api/v1/auth/callback/local", "/api/v1/auth/invitations",
             "/api/v1/auth/invitations/accept", "/api/v1/auth/invitations/revoke", "/api/v1/auth/memberships/status",
+            "/api/v1/tenants/{tenantId}/taxpayers/presentation", "/api/v1/tenants/{tenantId}/taxpayers/{taxpayerId}/presentation",
             "/api/v1/tenants/{tenantId}/taxpayers", "/api/v1/tenants/{tenantId}/taxpayers/{taxpayerId}",
             "/api/v1/tenants/{tenantId}/taxpayers/{taxpayerId}/archivals", "/api/v1/tenants/{tenantId}/taxpayers/{taxpayerId}/restorations",
             "/api/v1/tenants/{tenantId}/settings", "/api/v1/tenants/{tenantId}/entitlements",

@@ -16,7 +16,9 @@ export function SideDrawer({
   open,
   onOpenChange,
   onCloseAutoFocus,
+  className = '',
 }: {
+  className?: string
   title: string
   description: string
   trigger?: ReactNode
@@ -34,7 +36,7 @@ export function SideDrawer({
       <Dialog.Portal>
         <Dialog.Overlay className="layer-overlay" />
         <Dialog.Content
-          className="side-drawer"
+          className={`side-drawer ${className}`}
           aria-busy={state === 'loading'}
           onCloseAutoFocus={onCloseAutoFocus}
         >
@@ -99,7 +101,9 @@ export function ConfirmationDialog({
   onConfirm,
   failureMessage = 'No pudimos completar la acción. Puedes reintentar.',
   destructive = false,
+  children,
 }: {
+  children?: ReactNode
   trigger: ReactNode
   title: string
   description: string
@@ -156,6 +160,7 @@ export function ConfirmationDialog({
         >
           <Dialog.Title>{title}</Dialog.Title>
           <Dialog.Description>{description}</Dialog.Description>
+          {children}
           {failed && (
             <p className="field-error" role="alert">
               {failureMessage}

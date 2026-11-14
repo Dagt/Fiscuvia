@@ -1,5 +1,7 @@
 # #34 — especificación técnica autorizada en su alcance inicial
 
+**Extensión C02 #35:** [lectura/presentación y filtro de régimen](taxpayer-directory-35.md), publicados en el OpenAPI implementado. Conserva íntegramente las escrituras y política D74-03 de C01. La lista original de seis operaciones siguiente describe el corte #34.
+
 **Implementación C01 #34 en esta rama, posterior al merge humano de #92:** [modelo físico, seguridad y diferencias de transporte](../architecture/TAXPAYER-DOMAIN-34.md), [OpenAPI implementado generador](openapi-v1.yaml), [validación](../delivery/VALIDATION-34.md). D74-01..05 conserva su alcance limitado. El contrato openapi-taxpayers-34-proposed.yaml queda como antecedente de aprobación de #74; no genera clientes. Este documento conserva las reglas aprobadas; metadatos HTTP efectivos se detallan en el contrato implementado.
 
 ## Alcance aprobado y frontera de implementación

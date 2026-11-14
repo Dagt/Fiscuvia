@@ -1,6 +1,6 @@
 import { useEffect, type PropsWithChildren } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link, useSearchParams } from 'react-router'
+import { Link, useLocation, useSearchParams } from 'react-router'
 import {
   ArrowRight,
   Building2,
@@ -18,6 +18,7 @@ import { roleLabel } from './role-labels'
 import { useAuthorizedSession } from './useAuthorizedSession'
 import { authStatus, bffBase, getCsrf } from '../../shared/api/session-client'
 import './auth.css'
+import { TaxpayerDirectory } from '../taxpayers/TaxpayerDirectory'
 import { FirmWorkspace } from '../tenants/FirmWorkspace'
 
 function AuthFrame({ children }: PropsWithChildren) {
@@ -155,6 +156,7 @@ export function LoginPage() {
   )
 }
 export function SessionPage() {
+  const directory = useLocation().pathname === '/app/taxpayers'
   const {
     identity,
     selected,
@@ -191,7 +193,13 @@ export function SessionPage() {
   return (
     <AppShell
       authenticated
-      pageTitle={selected ? 'Tu despacho' : 'Elige tu despacho'}
+      pageTitle={
+        selected
+          ? directory
+            ? 'Contribuyentes'
+            : 'Tu despacho'
+          : 'Elige tu despacho'
+      }
       tenantContext={
         selected ? (
           <Button
@@ -222,22 +230,26 @@ export function SessionPage() {
       }
     >
       <div className="page-container session-page">
-        <PageHeader
-          eyebrow="IDENTIDAD VERIFICADA"
-          title={selected ? 'Configuración del despacho' : 'Elige tu despacho'}
-          description={
-            selected
-              ? `${roleLabel[selected.role]} · Datos de contacto e identidad para tu equipo.`
-              : 'Sólo aparecen los despachos con una membresía activa para tu identidad.'
-          }
-          secondaryActions={
-            selected ? (
-              <Button variant="secondary" onClick={() => void change()}>
-                Cambiar de despacho
-              </Button>
-            ) : undefined
-          }
-        />
+        {(!directory || !selected) && (
+          <PageHeader
+            eyebrow="IDENTIDAD VERIFICADA"
+            title={
+              selected ? 'Configuración del despacho' : 'Elige tu despacho'
+            }
+            description={
+              selected
+                ? `${roleLabel[selected.role]} · Datos de contacto e identidad para tu equipo.`
+                : 'Sólo aparecen los despachos con una membresía activa para tu identidad.'
+            }
+            secondaryActions={
+              selected ? (
+                <Button variant="secondary" onClick={() => void change()}>
+                  Cambiar de despacho
+                </Button>
+              ) : undefined
+            }
+          />
+        )}
         {denied && (
           <div role="alert">
             <PermissionState />
@@ -252,12 +264,22 @@ export function SessionPage() {
           <LoadingState />
         ) : selected ? (
           <>
-            <FirmWorkspace
-              key={`${identity.data.userId}:${selected.tenantId}`}
-              userId={identity.data.userId}
-              tenantId={selected.tenantId}
-              onUnavailable={(status) => void unavailable(status)}
-            />
+            {directory ? (
+              <TaxpayerDirectory
+                key={`${identity.data.userId}:${selected.tenantId}:${selected.membershipId}:${selected.role}`}
+                userId={identity.data.userId}
+                tenantId={selected.tenantId}
+                membershipId={selected.membershipId}
+                onUnavailable={(status) => void unavailable(status)}
+              />
+            ) : (
+              <FirmWorkspace
+                key={`${identity.data.userId}:${selected.tenantId}`}
+                userId={identity.data.userId}
+                tenantId={selected.tenantId}
+                onUnavailable={(status) => void unavailable(status)}
+              />
+            )}
           </>
         ) : (
           <AuthorizedTenantContext

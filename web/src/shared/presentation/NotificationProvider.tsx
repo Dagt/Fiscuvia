@@ -1,4 +1,4 @@
-import { useState, type PropsWithChildren } from 'react'
+import { useCallback, useState, type PropsWithChildren } from 'react'
 import { X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { NotificationContext, type Notification } from './notification-context'
@@ -6,12 +6,13 @@ import { StatusPill } from '../ui/StatusPill'
 
 export function NotificationProvider({ children }: PropsWithChildren) {
   const [notice, setNotice] = useState<Notification | null>(null)
+  const notify = useCallback(
+    (value: string | Notification | null) =>
+      setNotice(typeof value === 'string' ? { message: value } : value),
+    [],
+  )
   return (
-    <NotificationContext
-      value={(value) =>
-        setNotice(typeof value === 'string' ? { message: value } : value)
-      }
-    >
+    <NotificationContext value={notify}>
       {children}
       <div
         className="notification-region"

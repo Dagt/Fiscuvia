@@ -7,7 +7,7 @@ test('contrato implementado publica infraestructura, identidad y contribuyentes 
     '/auth/tenant','/auth/invitations','/auth/invitations/accept','/auth/invitations/revoke','/auth/memberships/status',
     '/auth/authorize/local','/auth/callback/local','/tenants/{tenantId}/team/invitation-options','/tenants/{tenantId}/team/invitations','/tenants/{tenantId}/settings','/tenants/{tenantId}/entitlements','/tenants/{tenantId}/team/members','/tenants/{tenantId}/team/members/{memberId}/status','/tenants/{tenantId}/team/members/{memberId}/role','/tenants/{tenantId}/team/invitations/{invitationId}/revoke',
     '/tenants/{tenantId}/taxpayers','/tenants/{tenantId}/taxpayers/{taxpayerId}',
-    '/tenants/{tenantId}/taxpayers/{taxpayerId}/archivals','/tenants/{tenantId}/taxpayers/{taxpayerId}/restorations'])
+    '/tenants/{tenantId}/taxpayers/{taxpayerId}/archivals','/tenants/{tenantId}/taxpayers/{taxpayerId}/restorations', '/tenants/{tenantId}/taxpayers/presentation', '/tenants/{tenantId}/taxpayers/{taxpayerId}/presentation'])
   assert.deepEqual(contract.security, [])
   assert.equal(contract.paths['/public/info'].get['x-implementation-status'], 'implemented')
   await generatedTypes()

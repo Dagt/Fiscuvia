@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId, useState, type ReactNode } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { Button } from './button'
 import { Field } from './Field'
@@ -18,6 +18,8 @@ export function FilterBar({
   activeCount,
   pending = false,
   searchLabel = 'Buscar',
+  searchMaxLength,
+  extra,
 }: {
   search: string
   onSearchChange: (value: string) => void
@@ -26,6 +28,8 @@ export function FilterBar({
   activeCount: number
   pending?: boolean
   searchLabel?: string
+  searchMaxLength?: number
+  extra?: ReactNode
 }) {
   const id = useId()
   const compact = useCompactLayout()
@@ -35,6 +39,7 @@ export function FilterBar({
       <Field
         label={searchLabel}
         type="search"
+        maxLength={searchMaxLength}
         value={search}
         onChange={(event) => onSearchChange(event.target.value)}
         disabled={pending}
@@ -43,7 +48,7 @@ export function FilterBar({
         <Button
           variant="secondary"
           aria-expanded={expanded}
-          aria-controls={id}
+          aria-controls={extra ? `${id} ${id}-extra` : id}
           onClick={() => setExpanded((value) => !value)}
         >
           <SlidersHorizontal size={18} aria-hidden="true" />
@@ -81,6 +86,15 @@ export function FilterBar({
         {activeCount}{' '}
         {activeCount === 1 ? 'filtro aplicado' : 'filtros aplicados'}
       </p>
+      {extra && (
+        <div
+          id={`${id}-extra`}
+          className="filter-extra"
+          hidden={compact && !expanded}
+        >
+          {extra}
+        </div>
+      )}
     </div>
   )
 }

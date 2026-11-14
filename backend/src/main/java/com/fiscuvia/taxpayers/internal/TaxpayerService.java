@@ -18,6 +18,11 @@ class TaxpayerService {
     record Taxpayer(UUID id,String rfc,String personType,String legalName,String tradeName,String status,long version,
                     Instant createdAt,Instant updatedAt,List<Regime> regimes,String rfcValidation,String officialVerification) {}
     record Receipt(UUID targetId,long version,boolean replayed) {}
+    record Presentation(boolean canCreate,String createBlock,boolean canEdit,boolean canArchive,boolean canRestore,Long version) {}
+    Presentation presentation(UUID tenant,UUID id){
+        return operations.execute(tenant,Capability.TAXPAYER_VIEW,id==null?ResourceTarget.collection(ResourceTarget.Kind.TAXPAYER):ResourceTarget.item(ResourceTarget.Kind.TAXPAYER,id),access->
+            json.readValue(sql.queryForObject("SELECT taxpayers.presentation(?,?)::text",String.class,tenant,id),Presentation.class));
+    }
     enum Action { CREATE, UPDATE_PROFILE, ARCHIVE, RESTORE }
     private final AuthorizedTenantOperations operations;
     private final AuditJournal journal;
@@ -41,16 +46,16 @@ class TaxpayerService {
             if(values.isEmpty())throw new ApiFailure(ApiErrorCode.NOT_FOUND);return values.getFirst();
         });
     }
-    PageResponse<Taxpayer> list(UUID tenant,PageQuery page,String search,String status){
+    PageResponse<Taxpayer> list(UUID tenant,PageQuery page,String search,String status,String regime){
         if(search==null||search.codePointCount(0,search.length())>80||search.codePoints().anyMatch(Character::isISOControl)
-            ||!(status.equals("ACTIVE")||status.equals("ARCHIVED")))throw TaxpayerValidation.invalid();
+            ||!(status.equals("ACTIVE")||status.equals("ARCHIVED"))||!(regime.isEmpty()||regime.matches("[0-9]{3}")))throw TaxpayerValidation.invalid();
         // Values remain bound; sort fragments come exclusively from this closed server map.
         String column=switch(page.sort()){case "legalName"->"t.legal_name";case "createdAt"->"t.created_at";default->"t.id";};
         String order=page.direction()==PageQuery.Direction.ASC?"ASC":"DESC";
         String term="%"+search.replace("\\","\\\\").replace("%","\\%").replace("_","\\_")+"%";
         return operations.execute(tenant,Capability.TAXPAYER_VIEW,ResourceTarget.collection(ResourceTarget.Kind.TAXPAYER),access->{
-            var values=sql.query(ROW+" WHERE t.tenant_id=? AND t.status=? AND (t.legal_name ILIKE ? ESCAPE E'\\\\' OR t.rfc_normalized ILIKE ? ESCAPE E'\\\\') ORDER BY "+column+" "+order+",t.id ASC LIMIT ? OFFSET ?",
-                (r,n)->json.readValue(r.getString(1),Taxpayer.class),tenant,status,term,term,page.size()+1,page.offset());
+            var values=sql.query(ROW+" WHERE t.tenant_id=? AND t.status=? AND (t.legal_name ILIKE ? ESCAPE E'\\\\' OR t.rfc_normalized ILIKE ? ESCAPE E'\\\\') AND (?='' OR EXISTS(SELECT 1 FROM taxpayers.taxpayer_regime_references f WHERE f.tenant_id=t.tenant_id AND f.taxpayer_id=t.id AND f.taxpayer_version=t.version AND f.regime_code=?)) ORDER BY "+column+" "+order+",t.id ASC LIMIT ? OFFSET ?",
+                (r,n)->json.readValue(r.getString(1),Taxpayer.class),tenant,status,term,term,regime,regime,page.size()+1,page.offset());
             boolean next=values.size()>page.size();return new PageResponse<>(List.copyOf(values.subList(0,Math.min(values.size(),page.size()))),page.page(),page.size(),next);
         });
     }

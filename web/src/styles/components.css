@@ -467,3 +467,11 @@
 .brand-light .brand-dot {
   color: var(--primary);
 }
+
+@media (max-width: 699px) {
+  .breadcrumb-current {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

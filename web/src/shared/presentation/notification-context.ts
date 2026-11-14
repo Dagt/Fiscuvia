@@ -8,7 +8,7 @@ export type Notification = {
 }
 
 export const NotificationContext = createContext<
-  ((message: string | Notification) => void) | null
+  ((message: string | Notification | null) => void) | null
 >(null)
 
 export function useNotification() {

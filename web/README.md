@@ -1,5 +1,11 @@
 # Fiscuvia web — design system y AppShell #52
 
+## Contribuyentes C02 #35 — estado vigente de esta rama
+
+`/app/taxpayers` comparte sesión, selección autorizada, shell y navegación con `/app`. Directorio real, búsqueda/filtros/orden/paginación de servidor sin total ficticio, alta, información administrativa, edición, archivo y restauración sobre PostgreSQL/APIs C01. Capacidades presentadas por señales cerradas del backend; cada comando se reautoriza, sin inferir privilegios del rol. Consultas cancelables por identidad/tenant/membresía, borrado del contexto y sin persistencia fiscal local. Filtro de régimen manual; responsable y ficha 360° siguen en #36.
+
+[Contratos, seguridad y estados](../docs/ux/TAXPAYER-DIRECTORY-35.md), [lectura/presentación](../docs/api/taxpayer-directory-35.md), [pruebas](../docs/delivery/VALIDATION-35.md), [capturas reales](../docs/ux/evidence/issue-35/README.md). Esta sección prevalece sobre las descripciones históricas #19/#24/#27/#31/#52 siguientes. No hay integración SAT, obligaciones, documentos u honorarios.
+
 ## Administración de equipo #33 — ampliación aprobada
 
 Equipo #33 incorpora directorio/invitaciones, filtros/paginación y acciones confirmadas en panel lateral, con datos autorizados reales. Mantiene correo local/test y cartera diferida. [Controles y alcance](../docs/security/TEAM-ADMINISTRATION-33.md).

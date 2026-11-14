@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 
 const futureAreas = [
-  { label: 'Contribuyentes', Icon: UsersRound },
   { label: 'Obligaciones', Icon: CalendarDays },
   { label: 'Tareas', Icon: CheckSquare2 },
   { label: 'Documentos', Icon: Files },
@@ -32,7 +31,7 @@ export function Navigation({
     <nav aria-label="Navegación principal">
       <p className="nav-heading">TU ESPACIO</p>
       {authenticated && (
-        <NavLink to="/app" className="nav-link" onClick={onNavigate}>
+        <NavLink end to="/app" className="nav-link" onClick={onNavigate}>
           <Home size={19} aria-hidden="true" />
           Tu despacho
         </NavLink>
@@ -59,8 +58,22 @@ export function Navigation({
       </NavLink>
       <div className="nav-section-heading">
         <p className="nav-heading">GESTIÓN DEL DESPACHO</p>
-        <span>Próximamente</span>
       </div>
+      {authenticated ? (
+        <NavLink to="/app/taxpayers" className="nav-link" onClick={onNavigate}>
+          <UsersRound size={19} aria-hidden="true" />
+          Contribuyentes
+        </NavLink>
+      ) : (
+        <button
+          disabled
+          className="nav-link nav-future"
+          title="Inicia sesión y elige un despacho"
+        >
+          <UsersRound size={19} aria-hidden="true" />
+          Contribuyentes
+        </button>
+      )}
       <ul className="future-navigation">
         {futureAreas.map(({ label, Icon }) => (
           <li key={label}>

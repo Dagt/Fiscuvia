@@ -23,12 +23,14 @@ export function DataTable<T>({
   page,
   pageSize,
   total,
+  hasNext,
   onPageChange,
   sort,
   onSortChange,
   state = 'ready',
   onRetry,
   renderMobile,
+  compactBelow,
 }: {
   label: string
   rows: readonly T[]
@@ -37,15 +39,17 @@ export function DataTable<T>({
   rowLabel: (row: T) => string
   page: number
   pageSize: number
-  total: number
+  total?: number
+  hasNext?: boolean
   onPageChange: (page: number) => void
   sort?: TableSort
   onSortChange?: (sort: TableSort) => void
   state?: ViewState
   onRetry: () => void
   renderMobile?: (row: T) => ReactNode
+  compactBelow?: number
 }) {
-  const compact = useCompactLayout()
+  const compact = useCompactLayout(compactBelow)
   const id = useId()
   if (state === 'loading') return <LoadingState />
   if (state === 'error') return <ErrorState onRetry={onRetry} />
@@ -57,7 +61,8 @@ export function DataTable<T>({
         description="Prueba otros filtros o limpia la búsqueda."
       />
     )
-  const pages = Math.max(1, Math.ceil(total / pageSize))
+  const pages =
+    total === undefined ? undefined : Math.max(1, Math.ceil(total / pageSize))
   return (
     <section className="data-table" aria-label={label}>
       {compact ? (
@@ -156,8 +161,14 @@ export function DataTable<T>({
       )}
       <nav className="table-pagination" aria-label={`Paginación: ${label}`}>
         <p aria-live="polite">
-          {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} de{' '}
-          {total} · Página {page} de {pages}
+          {total === undefined ? (
+            `Página ${page} · ${rows.length} en esta página`
+          ) : (
+            <>
+              {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} de{' '}
+              {total} · Página {page} de {pages}
+            </>
+          )}
         </p>
         <div className="component-actions">
           <Button
@@ -169,7 +180,9 @@ export function DataTable<T>({
           </Button>
           <Button
             variant="secondary"
-            disabled={page >= pages}
+            disabled={
+              pages === undefined ? !hasNext || page >= 10001 : page >= pages
+            }
             onClick={() => onPageChange(page + 1)}
           >
             Siguiente

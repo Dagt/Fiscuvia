@@ -1,0 +1,241 @@
+.taxpayer-area {
+  display: grid;
+  gap: var(--space-24);
+  min-width: 0;
+}
+.taxpayer-directory-surface {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  padding: var(--space-24);
+}
+.taxpayer-directory-surface .data-table {
+  border: 0;
+  border-radius: 0;
+}
+.taxpayer-secondary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  align-items: end;
+  padding-bottom: var(--space-24);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-16);
+}
+.taxpayer-secondary-filters > .field {
+  flex: 1;
+  min-width: 140px;
+}
+.taxpayer-name {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 200px;
+  max-width: 340px;
+  overflow-wrap: anywhere;
+}
+.taxpayer-name strong {
+  font-weight: 600;
+}
+.taxpayer-name > span,
+.taxpayer-identity > span + span,
+.taxpayer-regime-summary small {
+  color: var(--muted);
+  font-size: var(--text-help);
+}
+.taxpayer-identity,
+.taxpayer-regime-summary {
+  display: grid;
+  gap: var(--space-4);
+}
+.taxpayer-rfc {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+  font-weight: 600;
+}
+.taxpayer-scope-note,
+.taxpayer-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  font-size: var(--text-help);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.taxpayer-scope-note > svg,
+.taxpayer-disclaimer > svg {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.taxpayer-drawer {
+  width: min(700px, 100%);
+}
+.taxpayer-form {
+  display: grid;
+  gap: var(--space-24);
+}
+.taxpayer-form fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-16);
+}
+.taxpayer-form legend {
+  font-weight: 600;
+  font-size: var(--text-subheading);
+  padding-bottom: var(--space-16);
+}
+.taxpayer-field-grid,
+.taxpayer-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-16);
+}
+.taxpayer-regime-editor {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  padding: var(--space-16);
+  background: var(--canvas);
+}
+.taxpayer-regime-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+.taxpayer-regime-fields {
+  display: grid;
+  grid-template-columns: minmax(80px, 0.7fr) repeat(2, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+.taxpayer-no-regimes {
+  padding: var(--space-16);
+  background: var(--canvas);
+  border-radius: var(--radius-control);
+  color: var(--muted);
+  font-size: var(--text-body);
+}
+.taxpayer-form-actions {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-16);
+  display: flex;
+  justify-content: flex-end;
+}
+.taxpayer-command-notice {
+  background: var(--warning-light);
+  color: var(--ink);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-control);
+  padding: var(--space-16);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+.taxpayer-command-notice p {
+  margin: 0 0 var(--space-8);
+}
+.taxpayer-detail-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+}
+.taxpayer-detail-heading h2 {
+  flex: 1 1 70%;
+  overflow-wrap: anywhere;
+  font-size: var(--text-section);
+}
+.taxpayer-avatar {
+  display: grid;
+  place-items: center;
+  padding: var(--space-12);
+  border-radius: var(--radius-control);
+  background: var(--teal-light);
+  color: var(--primary);
+}
+.taxpayer-detail-heading > .taxpayer-rfc {
+  flex-basis: 70%;
+}
+.taxpayer-detail-grid {
+  margin: 0;
+  padding: var(--space-24);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+}
+.taxpayer-detail-grid dt {
+  color: var(--muted);
+  font-size: var(--text-label);
+}
+.taxpayer-detail-grid dd {
+  margin: var(--space-8) 0 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-body);
+}
+.taxpayer-detail-regimes {
+  display: grid;
+  gap: var(--space-12);
+}
+.taxpayer-reference {
+  display: grid;
+  gap: var(--space-8);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-16) 0;
+  font-size: var(--text-body);
+}
+.taxpayer-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+.taxpayer-mobile-identity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+@media (max-width: 699px) {
+  .taxpayer-directory-surface {
+    padding: var(--space-16);
+  }
+  .taxpayer-secondary-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .taxpayer-field-grid,
+  .taxpayer-detail-grid,
+  .taxpayer-regime-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .taxpayer-form-actions > .button {
+    width: 100%;
+  }
+  .taxpayer-drawer .drawer-body,
+  .taxpayer-drawer .panel-heading {
+    padding: var(--space-16);
+  }
+}
+
+.taxpayer-directory-surface .filter-extra {
+  flex-basis: 100%;
+  min-width: 0;
+}
+.taxpayer-directory-surface .taxpayer-secondary-filters {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.taxpayer-directory-surface .data-table td {
+  min-width: 80px;
+}
+.taxpayer-directory-surface .data-table td:nth-child(2) {
+  min-width: 155px;
+}
+.taxpayer-directory-surface .data-table td:last-child {
+  min-width: 60px;
+}
+
+.taxpayer-area .data-mobile-list h3 {
+  overflow-wrap: anywhere;
+}

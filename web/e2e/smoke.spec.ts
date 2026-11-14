@@ -41,7 +41,7 @@ test('navegación, estados, entrada directa y ausencia de solicitudes API', asyn
   await expect(
     page.getByRole('heading', { name: 'Necesitas permisos para continuar' }),
   ).toBeVisible()
-  await page.goto('/app/taxpayers')
+  await page.goto('/app/modulo-no-disponible')
   await expect(
     page.getByRole('heading', { name: 'No encontramos esta página' }),
   ).toBeVisible()
