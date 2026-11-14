@@ -18,11 +18,9 @@ const shots: object[] = []
 let chromium = ''
 const git = (args: string[]) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
+const sourceSha = git(['rev-parse', 'HEAD'])
 export async function take(page: Page, scenario: string) {
   if (
-    !['04-registro-confirmado', '14-restauracion-confirmada'].includes(
-      scenario,
-    ) &&
     !(await page.getByRole('dialog').count()) &&
     !(await page.getByRole('alertdialog').count())
   ) {
@@ -103,6 +101,8 @@ export async function take(page: Page, scenario: string) {
 }
 export function finish() {
   if (!capture) return
+  if (git(['rev-parse', 'HEAD']) !== sourceSha)
+    throw Error('Capture source changed during the browser run')
   if (
     git([
       'diff',
@@ -119,7 +119,7 @@ export function finish() {
     resolve(folder, 'capture-manifest.json'),
     JSON.stringify(
       {
-        sourceSha: git(['rev-parse', 'HEAD']),
+        sourceSha,
         applicationTree: git(['rev-parse', 'HEAD:web']),
         backendTree: git(['rev-parse', 'HEAD:backend/src/main']),
         fixtureTree: git(['rev-parse', 'HEAD:backend/src/test']),

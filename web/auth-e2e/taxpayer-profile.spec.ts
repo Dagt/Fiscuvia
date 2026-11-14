@@ -132,6 +132,14 @@ test('ficha real: navegación, perfil, referencias, conflicto, edición, archivo
   ).toBeVisible()
   await take(page, '11-referencias-vacias')
   await page.getByRole('link', { name: 'Volver a contribuyentes' }).click()
+  await expect(page).toHaveURL(/\/app\/taxpayers$/)
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: 'Contribuyentes',
+      exact: true,
+    }),
+  ).toBeVisible()
   await expect(page.getByText(name, { exact: true })).toBeVisible()
 })
 

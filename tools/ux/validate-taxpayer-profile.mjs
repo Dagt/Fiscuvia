@@ -23,6 +23,10 @@ for (const shot of manifest.screenshots) {
     || createHash('sha256').update(bytes).digest('hex') !== shot.sha256) throw Error('Image dimensions/hash mismatch')
 }
 if (readdirSync(folder).filter(f => f.endsWith('.png')).length !== scenarios.length * 2) throw Error('Unexpected screenshots')
+for (const [key,path] of [['applicationTree','web'],['backendTree','backend/src/main'],['fixtureTree','backend/src/test']]) {
+  const sourceTree = execFileSync('git',['rev-parse',`${manifest.sourceSha}:${path}`],{cwd:root,encoding:'utf8'}).trim()
+  if (manifest[key] !== sourceTree) throw Error(`Manifest source provenance differs: ${path}`)
+}
 if (process.argv.includes('--current')) {
   for (const [key,path] of [['applicationTree','web'],['backendTree','backend/src/main'],['fixtureTree','backend/src/test']]) {
     const tree = execFileSync('git',['rev-parse',`HEAD:${path}`],{cwd:root,encoding:'utf8'}).trim()
