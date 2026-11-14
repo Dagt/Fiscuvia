@@ -1,0 +1,223 @@
+{
+  "sourceSha": "e9b7d18cfa0863ab9bcfbec472529c78ff6e40c3",
+  "applicationTree": "137228b8a841c45aa466cc88f83630166a12cd29",
+  "backendTree": "00ca630aa94ba51085863938f734ce8ab6073e55",
+  "fixtureTree": "9772b5c57204dc5675ae8fa22b134001e0062570",
+  "chromium": "156.0.8078.4",
+  "capturedAt": "2026-11-14T07:08:23.608Z",
+  "additionalReflowViewports": [
+    {
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 320,
+      "height": 844
+    }
+  ],
+  "source": "Actual React application, PostgreSQL 18, V1–V13, real Keycloak OTP; synthetic test identities and administrative commands; no mocked success/data/permissions",
+  "screenshots": [
+    {
+      "file": "01-ficha-resumen-1440.png",
+      "scenario": "01-ficha-resumen",
+      "width": 1440,
+      "height": 900,
+      "sha256": "c120d8e79f4715325d4e7d72b1928b7ff3ac1cdfe030432fa535e6e3cfc2e66f",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "01-ficha-resumen-390.png",
+      "scenario": "01-ficha-resumen",
+      "width": 390,
+      "height": 844,
+      "sha256": "15f8608ce65338aa87dd43faf4f2924c144bc083927fd8896aeed23bd475f8c1",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "02-informacion-alcance-pendiente-1440.png",
+      "scenario": "02-informacion-alcance-pendiente",
+      "width": 1440,
+      "height": 900,
+      "sha256": "5ebcd4e4fe26207e28bb4f62a53525e1683de5630f84ff26bb24ad34fe9ef395",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "02-informacion-alcance-pendiente-390.png",
+      "scenario": "02-informacion-alcance-pendiente",
+      "width": 390,
+      "height": 844,
+      "sha256": "d4f3c68afbf824b971d1a911f7f048c0f27f962586c5b9cd111e026fb3dabd38",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "03-formulario-administrativo-1440.png",
+      "scenario": "03-formulario-administrativo",
+      "width": 1440,
+      "height": 900,
+      "sha256": "2271a4464714a18d7514a0566070c6b205a612a374ef8646e406051931ed331f",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "03-formulario-administrativo-390.png",
+      "scenario": "03-formulario-administrativo",
+      "width": 390,
+      "height": 844,
+      "sha256": "d0ddc4c8be1ae032437406fb369ff50b33db6d7acd13db9a07477eb81cf2b723",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "04-conflicto-version-1440.png",
+      "scenario": "04-conflicto-version",
+      "width": 1440,
+      "height": 900,
+      "sha256": "feb138c6cbc6eacbff52f5c08471eaa162353810b28e909c7fe645aff538b0ed",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "04-conflicto-version-390.png",
+      "scenario": "04-conflicto-version",
+      "width": 390,
+      "height": 844,
+      "sha256": "f659f59cc743efb18ab3a1882f3766a5c73a6008fd3a8a3d7a994e6f3f00f77e",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "05-edicion-confirmada-1440.png",
+      "scenario": "05-edicion-confirmada",
+      "width": 1440,
+      "height": 900,
+      "sha256": "db020f8ede2110179afe21a808d8e82fa4f3dc985fc0898c2c2b789fcf6ec2b9",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "05-edicion-confirmada-390.png",
+      "scenario": "05-edicion-confirmada",
+      "width": 390,
+      "height": 844,
+      "sha256": "66cc6698f7ce74e483c382e00bd98c20048b13e6dac4b31d7fa403e6ce64c825",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "06-confirmacion-archivado-1440.png",
+      "scenario": "06-confirmacion-archivado",
+      "width": 1440,
+      "height": 900,
+      "sha256": "e8975b3eeacb5a257de339eac6dfc4dd47dab42fcaa036196544337591925e2e",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "06-confirmacion-archivado-390.png",
+      "scenario": "06-confirmacion-archivado",
+      "width": 390,
+      "height": 844,
+      "sha256": "7a4ab5000032c6c3bdb39b42a1044c6450f43b733ad7b10842ce7e186196ee67",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "07-ficha-archivada-1440.png",
+      "scenario": "07-ficha-archivada",
+      "width": 1440,
+      "height": 900,
+      "sha256": "f8264674dc850f85a29e23673359dcc624efbc1f4c40b55f99d5c85cc7a94cce",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "07-ficha-archivada-390.png",
+      "scenario": "07-ficha-archivada",
+      "width": 390,
+      "height": 844,
+      "sha256": "c172bd8009b5e82a7e877414c118ba8c404c05691bee44e3de5aa73e5c47033e",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "08-error-recuperable-1440.png",
+      "scenario": "08-error-recuperable",
+      "width": 1440,
+      "height": 900,
+      "sha256": "fbcc981656424339f80a3ebcffa59c852653cc9dc8c66a7cbb909abd4d131455",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "08-error-recuperable-390.png",
+      "scenario": "08-error-recuperable",
+      "width": 390,
+      "height": 844,
+      "sha256": "6d81c7249b24f8a808ee621497d57bbb815768df2c17923856928fa727b3e017",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "11-referencias-vacias-1440.png",
+      "scenario": "11-referencias-vacias",
+      "width": 1440,
+      "height": 900,
+      "sha256": "c348fb7aaa90e8b88816c891b9390c10d14b836587deae924bf4c2765ec55568",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "11-referencias-vacias-390.png",
+      "scenario": "11-referencias-vacias",
+      "width": 390,
+      "height": 844,
+      "sha256": "ab3bde588bca6356ccf88783f4d4fb6394aa993d5e235ae3be738dc52ffbea17",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "10-contador-con-grant-1440.png",
+      "scenario": "10-contador-con-grant",
+      "width": 1440,
+      "height": 900,
+      "sha256": "13eef97237c22857e6060e6eb6515d8e96796ff83758e8759e635e1da021616d",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "10-contador-con-grant-390.png",
+      "scenario": "10-contador-con-grant",
+      "width": 390,
+      "height": 844,
+      "sha256": "e4c83411ec3e0b06199c2e745d2a67b7317e393a4dd508fb0fb64d8a590edfb5",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "09-sin-permiso-1440.png",
+      "scenario": "09-sin-permiso",
+      "width": 1440,
+      "height": 900,
+      "sha256": "359ffc33e27abccd88b1d64004921c205fc843e188d0720f642957bc626661e0",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    },
+    {
+      "file": "09-sin-permiso-390.png",
+      "scenario": "09-sin-permiso",
+      "width": 390,
+      "height": 844,
+      "sha256": "31fcf724794b92e51a836c5e6518491fcf1a9cf39ae0f67c8819f42e1c472b8c",
+      "axeViolations": 0,
+      "horizontalOverflow": false
+    }
+  ]
+}

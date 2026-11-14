@@ -40,13 +40,13 @@ npm run lint --prefix web
 npm run format:check --prefix web
 npm test --prefix web -- --reporter=default --reporter=json --outputFile=../.ci-work/vitest.json
 npm run build --prefix web
-# desde backend/: ./mvnw -B -ntp clean verify (mvnw.cmd en Windows)
+(cd backend && ./mvnw -B -ntp clean verify) # mvnw.cmd en Windows
 node tools/ci/reports.mjs backend
 node tools/ci/contracts.mjs --responses backend/target/contract-responses.json --taxpayer-responses backend/target/taxpayer-contract-responses.json
-# desde web/, PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json:
-npm run test:e2e --prefix web -- --reporter=line,json
+PLAYWRIGHT_JSON_OUTPUT_FILE=../.ci-work/playwright.json npm run test:e2e --prefix web -- --reporter=line,json
 node tools/ci/auth-browser.mjs
 node tools/ci/reports.mjs web
+backend/mvnw -f backend/pom.xml -B -ntp org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeBom -DincludeTestScope=true -DoutputFormat=json
 npm run security --prefix tools/ci
 node tools/ci/artifacts.mjs backend
 node tools/ci/artifacts.mjs web
@@ -62,4 +62,13 @@ La entrega es parcial por decisión pendiente, no un módulo 360 completo. Aprob
 
 Las referencias de régimen y futuras fechas de certificados son administrativas. No hay validación SAT, calendario legal ni regla fiscal nueva. Un especialista debe validar cualquier interpretación tributaria futura; el umbral propuesto no es un plazo legal. Offset del directorio mantiene sus limitaciones ante cambios concurrentes. La recuperación idempotente actual se conserva mientras viva el contexto; recargar elimina borradores por privacidad.
 
-Resultados locales y CI definitivos se registran en el cuerpo del PR con sus SHA, sin afirmar verde por commits anteriores. Las secciones históricas #34/35 siguen como evidencia de sus fuentes, no como estado de #36.
+## Resultados locales y procedencia
+
+- Maven clean verify: **529/529** (480 Surefire +49 Failsafe), cero fallos/errores/omitidos, 20:32min. Worktree aislado `b9765e89dab162f39414dfc5e1514eb984f84e03`, finalizado2026-11-14T01:17:44-06:00. El árbol backend `00ca630aa94ba51085863938f734ce8ab6073e55` y fixtures `9772b5c57204dc5675ae8fa22b134001e0062570` coinciden con la entrega; no se mezclaron target/classes del harness OIDC y clean verify.
+- Parser/gates backend y artifacts allowlist:529 y cero omisiones; contratos HTTP:52 generales +175 de contribuyentes, todos válidos. La matriz de regresión conserva sus pendientes históricos; aprobar pruebas actuales no autoriza filas futuras.
+- Reporte web en `e9b7d18cfa0863ab9bcfbec472529c78ff6e40c3`:192 Vitest,61 foundation y26 OIDC reales, cero omitidos/fallos/flaky/retries. Los61 foundation se ejecutaron antes de cambios exclusivos del harness de captura; no hubo cambios productivos entre ambas ejecuciones. npm ci/typecheck/ESLint/Prettier/build y26 gates pasaron.
+- OpenAPI implementado y generación TypeScript sin diff. Vínculos locales de los Markdown afectados verificados sin roturas; validadores de referencia/#52 y42 imágenes históricas C02 conservados.
+- Evidencia C03:22 PNG de fuente `e9b7d18cfa0863ab9bcfbec472529c78ff6e40c3`, árboles coincidentes, Chromium156.0.8078.4; dimensiones/hashes/axe/reflow verificados. [Manifiesto](../ux/evidence/issue-36/capture-manifest.json).
+- Gitleaks/Actionlint/Zizmor/Trivy pasaron el gate HIGH/CRITICAL sin exclusiones nuevas. La comprobación remota debe volver a probar el SHA final, incluyendo los commits de evidencia/documentación.
+
+Los cinco resultados CI definitivos se registran en el cuerpo del PR con head SHA y SHA probado del candidato de merge, sin afirmar verde por commits anteriores. Las secciones históricas #34/35 siguen como evidencia de sus fuentes, no como estado de #36. El CI del SHA final es la prueba completa de la entrega final; estas ejecuciones locales tienen la procedencia anterior explícita.
