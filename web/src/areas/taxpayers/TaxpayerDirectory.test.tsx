@@ -1,5 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { TaxpayerDirectory } from './TaxpayerDirectory'
@@ -58,12 +59,14 @@ function view() {
   const component = (tenant = t) => (
     <QueryClientProvider client={client}>
       <NotificationProvider>
-        <TaxpayerDirectory
-          userId={t}
-          tenantId={tenant}
-          membershipId={tenant}
-          onUnavailable={onUnavailable}
-        />
+        <MemoryRouter>
+          <TaxpayerDirectory
+            userId={t}
+            tenantId={tenant}
+            membershipId={tenant}
+            onUnavailable={onUnavailable}
+          />
+        </MemoryRouter>
       </NotificationProvider>
     </QueryClientProvider>
   )

@@ -1,3 +1,5 @@
+**C03 #36 — alcance efectivo de esta rama:** [ficha real y límites](ux/TAXPAYER-PROFILE-36.md), [decisiones propuestas D36-01..03](decisions/issue-36-approval-proposal.md), [validación y criterios](delivery/VALIDATION-36.md). Base main `05f1d0b58783438e193ae9ad86e7181b0e62c135` (PR #94). Perfil C01 y comandos existentes integrados; contactos/certificados/actividad/responsables pendientes de autorización. Sin DDL ni permisos nuevos; V1–V13 intactas. Esta nota prevalece sobre estados históricos siguientes.
+
 # Fiscuvia — mapa de documentación
 
 **C02 #35 en esta rama:** [directorio real y estados](ux/TAXPAYER-DIRECTORY-35.md), [contrato frontend/lectura](api/taxpayer-directory-35.md), [validación](delivery/VALIDATION-35.md). Base main `518bc327173c355b2e6f843442f74248b980ff5c` (merge #93). V13 aditiva de presentación, V1–V12 intactas y matriz D74-03 conservada. Responsable y ficha 360° #36 pendientes. Esta nota prevalece sobre estados históricos siguientes.

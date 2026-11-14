@@ -1,6 +1,6 @@
 # AGENTS.md — Fiscuvia
 
-**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** C02 #35 sobre main `518bc327173c355b2e6f843442f74248b980ff5c` (merge humano #93). [Directorio real](docs/ux/TAXPAYER-DIRECTORY-35.md) sobre APIs C01 y D74-01..05. V13 sólo funciones de presentación; V1–V12 intactas, sin nuevas tablas, capacidades ni grants. Responsable/ficha 360° #36 y módulos fiscales posteriores pendientes. Sin worker automático, proveedor productivo o autoridad fiscal de sistema. Mantener PR Draft, sin merge/despliegue/cierre manual; CI por SHA y presupuesto $0 intacto.
+**Producto:** Fiscuvia — Todo tu despacho, una sola vía. **Estado de esta rama:** C03 #36 sobre main `05f1d0b58783438e193ae9ad86e7181b0e62c135` (merge humano #94). [Ficha real y límites](docs/ux/TAXPAYER-PROFILE-36.md) reutiliza perfil/edición/archivo/restauración C01/C02. D36-01..03 siguen Proposed: contactos, responsables, certificados y actividad pendientes, sin DDL ni permisos nuevos. V1–V13 intactas. Sin merge/despliegue/cierre ni #37/38; CI por SHA y presupuesto $0 intacto.
 
 ## Contrato para Codex (inspirado en el proceso real de TrailerSaaS)
 Este documento establece reglas obligatorias para agentes/colaboradores. **Trabaja exclusivamente desde una issue hija acotada**, nunca desde una épica o el tracker #73 directamente. No confundir archivo propuesto con funcionalidad realizada.
