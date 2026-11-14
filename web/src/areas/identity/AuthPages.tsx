@@ -1,6 +1,12 @@
 import { useEffect, type PropsWithChildren } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link, useLocation, useSearchParams } from 'react-router'
+import {
+  Link,
+  useLocation,
+  useSearchParams,
+  useParams,
+  useNavigate,
+} from 'react-router'
 import {
   ArrowRight,
   Building2,
@@ -18,6 +24,7 @@ import { roleLabel } from './role-labels'
 import { useAuthorizedSession } from './useAuthorizedSession'
 import { authStatus, bffBase, getCsrf } from '../../shared/api/session-client'
 import './auth.css'
+import { TaxpayerProfile } from '../taxpayers/TaxpayerProfile'
 import { TaxpayerDirectory } from '../taxpayers/TaxpayerDirectory'
 import { FirmWorkspace } from '../tenants/FirmWorkspace'
 
@@ -156,7 +163,10 @@ export function LoginPage() {
   )
 }
 export function SessionPage() {
+  const { taxpayerId } = useParams()
+  const navigate = useNavigate()
   const directory = useLocation().pathname === '/app/taxpayers'
+  const taxpayerArea = directory || taxpayerId !== undefined
   const {
     identity,
     selected,
@@ -168,6 +178,13 @@ export function SessionPage() {
     exit,
     unavailable,
   } = useAuthorizedSession()
+  async function changeFirm() {
+    try {
+      await change()
+    } finally {
+      if (taxpayerId) void navigate('/app/taxpayers', { replace: true })
+    }
+  }
   useEffect(() => {
     if (selected) document.getElementById('contenido')?.focus()
   }, [selected])
@@ -195,8 +212,10 @@ export function SessionPage() {
       authenticated
       pageTitle={
         selected
-          ? directory
-            ? 'Contribuyentes'
+          ? taxpayerArea
+            ? taxpayerId
+              ? 'Ficha del contribuyente'
+              : 'Contribuyentes'
             : 'Tu despacho'
           : 'Elige tu despacho'
       }
@@ -206,7 +225,7 @@ export function SessionPage() {
             variant="ghost"
             aria-label={`Contexto actual: ${selected.commercialName || 'Nombre comercial pendiente'}`}
             title={selected.commercialName || 'Nombre comercial pendiente'}
-            onClick={() => void change()}
+            onClick={() => void changeFirm()}
           >
             <Building2 size={18} aria-hidden="true" />
             <span className="firm-context-name">
@@ -230,7 +249,7 @@ export function SessionPage() {
       }
     >
       <div className="page-container session-page">
-        {(!directory || !selected) && (
+        {(!taxpayerArea || !selected) && (
           <PageHeader
             eyebrow="IDENTIDAD VERIFICADA"
             title={
@@ -243,7 +262,7 @@ export function SessionPage() {
             }
             secondaryActions={
               selected ? (
-                <Button variant="secondary" onClick={() => void change()}>
+                <Button variant="secondary" onClick={() => void changeFirm()}>
                   Cambiar de despacho
                 </Button>
               ) : undefined
@@ -264,7 +283,16 @@ export function SessionPage() {
           <LoadingState />
         ) : selected ? (
           <>
-            {directory ? (
+            {taxpayerId ? (
+              <TaxpayerProfile
+                key={`${identity.data.userId}:${selected.tenantId}:${selected.membershipId}:${selected.role}:${taxpayerId}`}
+                userId={identity.data.userId}
+                tenantId={selected.tenantId}
+                membershipId={selected.membershipId}
+                id={taxpayerId}
+                onUnavailable={(status) => void unavailable(status)}
+              />
+            ) : directory ? (
               <TaxpayerDirectory
                 key={`${identity.data.userId}:${selected.tenantId}:${selected.membershipId}:${selected.role}`}
                 userId={identity.data.userId}

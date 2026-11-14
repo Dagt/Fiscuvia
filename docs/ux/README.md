@@ -1,3 +1,5 @@
+**C03 #36 — alcance efectivo de esta rama:** [ficha real y límites](TAXPAYER-PROFILE-36.md), [decisiones propuestas D36-01..03](../decisions/issue-36-approval-proposal.md), [validación y criterios](../delivery/VALIDATION-36.md). Base main `05f1d0b58783438e193ae9ad86e7181b0e62c135` (PR #94). Perfil C01 y comandos existentes integrados; contactos/certificados/actividad/responsables pendientes de autorización. Sin DDL ni permisos nuevos; V1–V13 intactas. Esta nota prevalece sobre estados históricos siguientes.
+
 # UX por rol y flujos Fiscuvia (Proposed)
 
 ## Documentos

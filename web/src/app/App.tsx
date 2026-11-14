@@ -14,6 +14,7 @@ export function App() {
       <Route element={<SessionPage />}>
         <Route path="/app" element={null} />
         <Route path="/app/taxpayers" element={null} />
+        <Route path="/app/taxpayers/:taxpayerId" element={null} />
       </Route>
       <Route
         path="/desarrollo/componentes"
